@@ -29,7 +29,9 @@ jobs:
           CH_API_KEY: ${{ secrets.CH_API_KEY }}
           ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
           ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
-        run: python pull_and_build.py
+        run: |
+          pip install --quiet curl_cffi
+          python pull_and_build.py
 
       - name: Save job-ad history
         run: |
