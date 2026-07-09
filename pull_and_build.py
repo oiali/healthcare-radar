@@ -17,6 +17,11 @@ import os, json, time, base64, urllib.request, urllib.parse, urllib.error
 from datetime import datetime, timezone, date, timedelta
 from statistics import mean
 
+try:
+    from curl_cffi import requests as _cffi  # browser-TLS client, passes Cloudflare
+except Exception:
+    _cffi = None
+
 UA = {"User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                      "(KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"),
       "Accept": "application/json, text/plain, */*",
@@ -24,14 +29,21 @@ UA = {"User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.
 
 
 def get_json(url, headers=None, timeout=30, retries=2):
+    hdrs = {**UA, **(headers or {})}
     for attempt in range(retries + 1):
         try:
-            req = urllib.request.Request(url, headers={**UA, **(headers or {})})
-            with urllib.request.urlopen(req, timeout=timeout) as r:
-                return json.loads(r.read().decode("utf-8"))
+            if _cffi is not None:
+                r = _cffi.get(url, headers=hdrs, timeout=timeout, impersonate="chrome")
+                if r.status_code == 200:
+                    return r.json()
+            else:
+                req = urllib.request.Request(url, headers=hdrs)
+                with urllib.request.urlopen(req, timeout=timeout) as resp:
+                    return json.loads(resp.read().decode("utf-8"))
         except Exception:
-            if attempt < retries:
-                time.sleep(1.5)
+            pass
+        if attempt < retries:
+            time.sleep(1.5)
     return None
 
 
@@ -278,14 +290,8 @@ document.querySelectorAll('th[data-k]').forEach(th=>th.onclick=()=>{
 
 
 def main():
-    try:
-        _req = urllib.request.Request(
-            "https://openprescribing.net/api/1.0/spending/?code=0404&format=json", headers=UA)
-        with urllib.request.urlopen(_req, timeout=30) as _r:
-            _b = _r.read(200).decode("utf-8", "replace")
-            print("DEBUG OP status", getattr(_r, "status", "?"), "body:", _b[:150])
-    except Exception as _e:
-        print("DEBUG OP error:", repr(_e))
+    _t = get_json("https://openprescribing.net/api/1.0/spending/?code=0404&format=json")
+    print("DEBUG OP:", (len(_t) if isinstance(_t, list) else _t), "cffi=", _cffi is not None)
     pres = prescribing()
     inc = incorporations()
     jobs = adzuna()
