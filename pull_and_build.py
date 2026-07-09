@@ -17,16 +17,22 @@ import os, json, time, base64, urllib.request, urllib.parse, urllib.error
 from datetime import datetime, timezone, date, timedelta
 from statistics import mean
 
-UA = {"User-Agent": "healthcare-radar"}
+UA = {"User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                     "(KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"),
+      "Accept": "application/json, text/plain, */*",
+      "Accept-Encoding": "identity"}
 
 
-def get_json(url, headers=None, timeout=30):
-    try:
-        req = urllib.request.Request(url, headers={**UA, **(headers or {})})
-        with urllib.request.urlopen(req, timeout=timeout) as r:
-            return json.loads(r.read().decode("utf-8"))
-    except Exception:
-        return None
+def get_json(url, headers=None, timeout=30, retries=2):
+    for attempt in range(retries + 1):
+        try:
+            req = urllib.request.Request(url, headers={**UA, **(headers or {})})
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                return json.loads(r.read().decode("utf-8"))
+        except Exception:
+            if attempt < retries:
+                time.sleep(1.5)
+    return None
 
 
 def pct(now, then):
@@ -272,6 +278,14 @@ document.querySelectorAll('th[data-k]').forEach(th=>th.onclick=()=>{
 
 
 def main():
+    try:
+        _req = urllib.request.Request(
+            "https://openprescribing.net/api/1.0/spending/?code=0404&format=json", headers=UA)
+        with urllib.request.urlopen(_req, timeout=30) as _r:
+            _b = _r.read(200).decode("utf-8", "replace")
+            print("DEBUG OP status", getattr(_r, "status", "?"), "body:", _b[:150])
+    except Exception as _e:
+        print("DEBUG OP error:", repr(_e))
     pres = prescribing()
     inc = incorporations()
     jobs = adzuna()
