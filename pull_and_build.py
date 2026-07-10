@@ -220,15 +220,13 @@ h3{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:#6b7280;ma
 <div class="head"><h1>UK Healthcare Niche Radar</h1><span class="upd">Server data updated {{UPDATED}} &middot; interest &amp; prescribing live &middot; click any % column to sort</span></div>
 <div class="tabs">
   <div class="tab on" data-p="ov">Overview</div>
-  <div class="tab" data-p="wk">Public interest</div>
-  <div class="tab" data-p="tr">Search demand</div>
+  <div class="tab" data-p="tr">Public interest (Google)</div>
   <div class="tab" data-p="pr">Prescribing</div>
   <div class="tab" data-p="in">New companies</div>
   <div class="tab" data-p="jb">Job ads</div>
 </div>
 <div class="panel on ov" id="ov"><div id="ovbody" class="msg">Loading live signals&hellip;</div></div>
-<div class="panel" id="wk"><div id="wkbody" class="msg">Fetching Wikipedia interest&hellip;</div></div>
-<div class="panel" id="tr"><div id="trbody"></div></div>
+<div class="panel" id="tr"><div id="trbody" class="msg">Loading Google search demand&hellip;</div></div>
 <div class="panel" id="pr"><div id="prbody" class="msg">Fetching live prescribing&hellip;</div></div>
 <div class="panel" id="in"><div id="inbody"></div></div>
 <div class="panel" id="jb"><div id="jbbody"></div></div>
@@ -364,12 +362,10 @@ function bul(r,unit){var a=(r.accel!=null&&r.accel>5)?' <span class="accel">acce
   return '<li><b>'+r.name+'</b>'+(r.niche?' <span class="niche">'+r.niche+'</span>':'')+' '+
     (r.g12>=0?'<span class="up">':'<span class="dn">')+fmt(r.g12)+'</span> '+unit+a+'</li>';}
 
-function overview(wiki,presc){
+function overview(presc){
   var h='<div class="ov big">';
-  h+='<h3>Earliest signal &mdash; public interest (Wikipedia, 12-mth)</h3><ul>';
-  wiki.slice(0,4).forEach(function(r){h+=bul(r,'in pageviews');});h+='</ul>';
-  if(RADAR.trends&&RADAR.trends.length){h+='<h3>Search demand (Google Trends, 12-mth)</h3><ul>';
-    RADAR.trends.slice(0,4).forEach(function(r){h+=bul(r,'in search interest');});h+='</ul>';}
+  if(RADAR.trends&&RADAR.trends.length){h+='<h3>Public interest &mdash; Google search demand (12-mth)</h3><ul>';
+    RADAR.trends.slice(0,5).forEach(function(r){h+=bul(r,'in search interest');});h+='</ul>';}
   h+='<h3>Prescribing by drug/niche (12-mth)</h3><ul>';
   presc.slice(0,4).forEach(function(r){h+=bul(r,'in prescription volume');});h+='</ul>';
   h+='<h3>New companies by niche (12-mth)</h3><ul>';
@@ -377,27 +373,17 @@ function overview(wiki,presc){
   var jb=(RADAR.jobs||[]).slice(0,3);
   h+='<h3>Where hiring is concentrated</h3><ul>';
   jb.forEach(function(r){h+='<li><b>'+r.name+'</b> &mdash; '+num(r.latest)+' live ads</li>';});h+='</ul>';
-  h+='<div class="note">Signals ordered earliest&rarr;latest in the demand chain. Public interest &amp; prescribing fetched live in your browser; search, companies &amp; jobs refresh on the server. Not investment advice.</div></div>';
+  h+='<div class="note">Signals ordered earliest&rarr;latest in the demand chain. Search demand (Google Trends) &amp; new-company niches refresh on the server; prescribing is fetched live in your browser. Not investment advice.</div></div>';
   return h;
 }
 
-var W=[],P=[];
-loadWiki().then(function(w){W=w;
-  document.getElementById('wkbody').innerHTML=tableRows(w,'Views / mo',{firstCol:'Topic'})+
-    '<div class="note">Wikipedia pageviews per topic (last complete month), the earliest awareness signal. Fetched live in your browser. Ranked by 12-month growth; click a column to sort.</div>';
-  wireSort(document.getElementById('wk'));maybeOverview();
-}).catch(function(){document.getElementById('wkbody').innerHTML='<div class="msg">Could not load Wikipedia data.</div>';maybeOverview();});
-loadPresc().then(function(p){P=p;
-  if(!p.length){document.getElementById('prbody').innerHTML='<div class="msg">Could not load prescribing.</div>';maybeOverview();return;}
+loadPresc().then(function(p){
+  if(!p.length){document.getElementById('prbody').innerHTML='<div class="msg">Could not load prescribing.</div>';document.getElementById('ovbody').innerHTML=overview([]);return;}
   document.getElementById('prbody').innerHTML=tableRows(p,'Items / mo',{drug:true,firstCol:'Drug'})+
     '<div class="note">Individual drugs (NHS items, England), each mapped to its niche. <b>Hover a drug</b> for what it treats &amp; its trend. Latest month '+p[0].date+', live in your browser. Click a column to sort.</div>';
-  wireSort(document.getElementById('pr'));maybeOverview();
-}).catch(function(){document.getElementById('prbody').innerHTML='<div class="msg">Could not load prescribing.</div>';maybeOverview();});
-
-var built=false,doneCount=0;
-function maybeOverview(){doneCount++;if(built)return;
-  if(doneCount>=2){built=true;document.getElementById('ovbody').innerHTML=overview(W,P);}}
-setTimeout(function(){if(!built){built=true;document.getElementById('ovbody').innerHTML=overview(W,P);}},9000);
+  wireSort(document.getElementById('pr'));
+  document.getElementById('ovbody').innerHTML=overview(p);
+}).catch(function(){document.getElementById('prbody').innerHTML='<div class="msg">Could not load prescribing.</div>';document.getElementById('ovbody').innerHTML=overview([]);});
 </script></body></html>"""
 
 
