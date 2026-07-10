@@ -51,7 +51,11 @@ STOP = set(("the and of for to in a an ltd limited uk gb london clinic clinics h
             "healthcare care medical medicine group holdings company co consulting consultancy "
             "practice practices centre center llp cic community trust nhs solutions services "
             "service management associates partners international global national services "
-            "wellbeing well being ltd co uk therapy therapies treatment treatments and").split())
+            "wellbeing well being ltd co uk therapy therapies treatment treatments and "
+            "devon cornwall essex kent surrey sussex yorkshire lancashire cheshire midlands "
+            "forest first best new prime elite smart digital online mobile home family city "
+            "north south east west greater park house lodge road street hall court view green "
+            "hill professional quality complete total pure life live your local premier").split())
 
 
 def ch_page(sic, dfrom, dto, start):
@@ -74,9 +78,7 @@ def name_terms(dfrom, dto):
             for it in items:
                 nm = (it.get("company_name") or "").lower()
                 toks = [t for t in re.findall(r"[a-z]+", nm) if len(t) > 3 and t not in STOP]
-                for t in toks:
-                    cnt[t] += 1
-                for i in range(len(toks) - 1):
+                for i in range(len(toks) - 1):          # 2-word phrases only = niche-level, low noise
                     cnt[toks[i] + " " + toks[i + 1]] += 1
             start += 100
             if len(items) < 100:
@@ -92,7 +94,7 @@ def incorporations():
     prior = name_terms(add_months(t, -15).isoformat(), add_months(t, -12).isoformat())
     rows = []
     for term, c in recent.items():
-        if c < 6:                                 # min volume so it's signal not noise
+        if c < 4:                                 # min volume so it's signal not noise
             continue
         p = prior.get(term, 0)
         g12 = pct(c, p) if p > 0 else None         # None = brand-new term (flag below)
@@ -143,7 +145,7 @@ def trends():
     except Exception:
         cached = None
     # only refresh weekly (Mondays) or on first run - conserves SerpApi free quota
-    if cached and date.today().weekday() != 0:
+    if cached and cached.get("rows") and date.today().weekday() != 0:
         return cached.get("rows")
     rows = []
     for q in TREND_Q:
@@ -151,6 +153,8 @@ def trends():
                f"&q={urllib.parse.quote(q)}&geo=GB&data_type=TIMESERIES"
                "&date=today%2012-m&api_key=" + SERP)
         d = get_json(url)
+        if q == TREND_Q[0]:
+            print("DEBUG SERP:", (json.dumps(d)[:250] if d else "None"))
         try:
             tl = d["interest_over_time"]["timeline_data"]
             v = [pt["values"][0]["extracted_value"] for pt in tl]
