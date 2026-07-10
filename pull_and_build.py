@@ -174,19 +174,93 @@ def trends():
     return rows
 
 
+# ===================================================== CQC new registrations
+CQC_KEY = os.environ.get("CQC_KEY", "").strip()
+CQC_HDR = {"Ocp-Apim-Subscription-Key": CQC_KEY,
+           "User-Agent": "Mozilla/5.0 (compatible; healthcare-radar)"}
+
+
+def cqc():
+    if not CQC_KEY:
+        return None
+    from datetime import timedelta
+    now = datetime.now(timezone.utc)
+    start = (now - timedelta(days=75)).strftime("%Y-%m-%dT00:00:00Z")
+    end = now.strftime("%Y-%m-%dT00:00:00Z")
+    ids = []
+    for page in range(1, 4):
+        u = ("https://api.cqc.org.uk/public/v1/changes/location"
+             f"?startTimestamp={start}&endTimestamp={end}&page={page}&perPage=1000")
+        d = get_json(u, headers=CQC_HDR)
+        if page == 1:
+            print("DEBUG CQC changes:", (list(d.keys()) if isinstance(d, dict) else repr(d)[:90]))
+        chg = d.get("changes") if isinstance(d, dict) else None
+        if not chg:
+            break
+        ids += chg
+        if len(chg) < 1000:
+            break
+    cnt = Counter()
+    kept = 0
+    cutoff = (now - timedelta(days=90)).date().isoformat()
+    for lid in ids[:700]:
+        loc = get_json(f"https://api.cqc.org.uk/public/v1/locations/{lid}", headers=CQC_HDR)
+        if not isinstance(loc, dict) or (loc.get("registrationDate") or "9999") < cutoff:
+            continue
+        name = (loc.get("name") or "").lower()
+        svc = " ".join((s.get("name") or "") for s in (loc.get("gacServiceTypes") or [])).lower()
+        toks = [t for t in re.findall(r"[a-z]+", name + " " + svc) if len(t) > 3 and t not in STOP]
+        for i in range(len(toks) - 1):
+            cnt[toks[i] + " " + toks[i + 1]] += 1
+        kept += 1
+    print(f"DEBUG CQC ids={len(ids)} kept={kept}")
+    rows = [{"name": t, "code": "", "latest": c, "g1": None, "g3": None, "g12": None, "accel": None}
+            for t, c in cnt.items() if c >= 3]
+    rows.sort(key=lambda r: r["latest"], reverse=True)
+    return rows[:40]
+
+
+# ============================================================ NICE pipeline
+def get_text(url):
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (compatible; healthcare-radar)"})
+        with urllib.request.urlopen(req, timeout=45) as r:
+            return r.read().decode("utf-8", "replace")
+    except Exception:
+        return None
+
+
+def nice():
+    html = get_text("https://www.nice.org.uk/guidance/indevelopment?ndt=Guidance&ngt=Technology%20appraisal%20guidance")
+    if not html:
+        print("DEBUG NICE: fetch failed")
+        return None
+    titles = re.findall(r'/indevelopment/gid-[a-z0-9]+"[^>]*>\s*([^<]{6,150}?)\s*<', html, re.I)
+    seen = []
+    for t in titles:
+        t = re.sub(r"\s+", " ", t).strip()
+        if t and t not in seen:
+            seen.append(t)
+    print(f"DEBUG NICE titles={len(seen)}")
+    return [{"name": t, "code": "", "latest": None, "g1": None, "g3": None, "g12": None, "accel": None}
+            for t in seen[:40]]
+
+
 # ------------------------------------------------------------------- render
 def main():
     inc = incorporations() or []
     jobs = adzuna() or []
     tr = trends() or []
+    cq = cqc() or []
+    nc = nice() or []
     updated = datetime.now(timezone.utc).strftime("%d %b %Y, %H:%M UTC")
-    payload = json.dumps({"inc": inc, "jobs": jobs, "trends": tr}).replace("</", "<\\/")
+    payload = json.dumps({"inc": inc, "jobs": jobs, "trends": tr, "cqc": cq, "nice": nc}).replace("</", "<\\/")
     os.makedirs("data", exist_ok=True)
-    json.dump({"updated": datetime.now(timezone.utc).isoformat(), "inc": inc, "jobs": jobs, "trends": tr},
-              open("data.json", "w"), indent=2)
+    json.dump({"updated": datetime.now(timezone.utc).isoformat(), "inc": inc, "jobs": jobs,
+               "trends": tr, "cqc": cq, "nice": nc}, open("data.json", "w"), indent=2)
     with open("dashboard.html", "w", encoding="utf-8") as f:
         f.write(TEMPLATE.replace("{{UPDATED}}", updated).replace("{{DATA}}", payload))
-    print(f"incorporations={len(inc)} jobs={len(jobs)} trends={len(tr)}")
+    print(f"incorporations={len(inc)} jobs={len(jobs)} trends={len(tr)} cqc={len(cq)} nice={len(nc)}")
 
 
 TEMPLATE = r"""<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8">
@@ -224,12 +298,16 @@ h3{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:#6b7280;ma
   <div class="tab" data-p="pr">Prescribing</div>
   <div class="tab" data-p="in">New companies</div>
   <div class="tab" data-p="jb">Job ads</div>
+  <div class="tab" data-p="cq">New clinics</div>
+  <div class="tab" data-p="nc">Pipeline (NICE)</div>
 </div>
 <div class="panel on ov" id="ov"><div id="ovbody" class="msg">Loading live signals&hellip;</div></div>
 <div class="panel" id="tr"><div id="trbody" class="msg">Loading Google search demand&hellip;</div></div>
 <div class="panel" id="pr"><div id="prbody" class="msg">Fetching live prescribing&hellip;</div></div>
 <div class="panel" id="in"><div id="inbody"></div></div>
 <div class="panel" id="jb"><div id="jbbody"></div></div>
+<div class="panel" id="cq"><div id="cqbody"></div></div>
+<div class="panel" id="nc"><div id="ncbody"></div></div>
 </div>
 <script>
 var RADAR = {{DATA}};
@@ -320,6 +398,8 @@ document.getElementById('jbbody').innerHTML=tableRows(RADAR.jobs,'Live ads',{noG
 document.getElementById('trbody').innerHTML=(RADAR.trends&&RADAR.trends.length?
   tableRows(RADAR.trends,'Index',{firstCol:'Search term'}):'<div class="msg">Search-demand data will appear after the next weekly run.</div>')+
   '<div class="note">Google Trends search interest in the UK (via SerpApi), refreshed weekly. Ranked by 12-month growth; click a column to sort.</div>';
+document.getElementById('cqbody').innerHTML=(RADAR.cqc&&RADAR.cqc.length?tableRows(RADAR.cqc,'New (90d)',{noGrowth:true,firstCol:'Clinic niche'}):'<div class="msg">No CQC data this run — check the run log.</div>')+'<div class="note">Rising 2-word phrases in the names + service types of clinics <b>newly registered with CQC</b> in the last 90 days. Clinics register ~12–24 months before they trade — a supply-side discovery signal. Ranked by count; growth builds as snapshots accumulate.</div>';
+document.getElementById('ncbody').innerHTML=(RADAR.nice&&RADAR.nice.length?('<ul>'+RADAR.nice.map(function(r){return '<li>'+r.name+'</li>';}).join('')+'</ul>'):'<div class="msg">No NICE items this run — check the run log.</div>')+'<div class="note">NICE technology appraisals <b>in development</b> — the "next Ozempic" calendar. Each is a treatment heading toward NHS + private availability, ~12–24 months out.</div>';
 document.querySelectorAll('.panel').forEach(wireSort);
 
 // ---- Wikipedia public interest (client-side) ----
