@@ -189,7 +189,7 @@ def cqc():
     end = now.strftime("%Y-%m-%dT00:00:00Z")
     ids = []
     for page in range(1, 4):
-        u = ("https://api.cqc.org.uk/public/v1/changes/location"
+        u = ("https://api.service.cqc.org.uk/public/v1/changes/location"
              f"?startTimestamp={start}&endTimestamp={end}&page={page}&perPage=1000")
         d = get_json(u, headers=CQC_HDR)
         if page == 1:
@@ -204,7 +204,7 @@ def cqc():
     kept = 0
     cutoff = (now - timedelta(days=90)).date().isoformat()
     for lid in ids[:700]:
-        loc = get_json(f"https://api.cqc.org.uk/public/v1/locations/{lid}", headers=CQC_HDR)
+        loc = get_json(f"https://api.service.cqc.org.uk/public/v1/locations/{lid}", headers=CQC_HDR)
         if not isinstance(loc, dict) or (loc.get("registrationDate") or "9999") < cutoff:
             continue
         name = (loc.get("name") or "").lower()
@@ -230,20 +230,46 @@ def get_text(url):
         return None
 
 
+# Large-population / private-pay-relevant conditions. NICE's in-development list is
+# dominated by rare oncology - these keywords keep only the market-CREATING appraisals.
+BIG_COND = [
+    "obesity", "weight", "diabet", "adhd", "attention deficit", "menopaus", "depress", "anxiet",
+    "dementia", "alzheim", "migraine", "eczema", "atopic", "psorias", "osteoporos", "hair loss",
+    "alopecia", "erectile", "acne", "insomnia", "sleep apnoea", "irritable bowel", "arthrit",
+    "chronic pain", "hypertens", "cholesterol", "asthma", "copd", "fertil", "endometrios",
+    "polycystic", "incontinen", "overactive bladder", "prostat", "rosacea", "vitiligo",
+    "smoking", "alcohol", "opioid", "macular", "hearing loss", "fibromyalgia", "long covid",
+    "testosterone", "hypogonad", "crohn", "colitis", "hidradenitis", "urticaria", "rhinitis",
+]
+
+
 def nice():
-    html = get_text("https://www.nice.org.uk/guidance/indevelopment?ndt=Guidance&ngt=Technology%20appraisal%20guidance")
-    if not html:
-        print("DEBUG NICE: fetch failed")
-        return None
-    titles = re.findall(r'/indevelopment/gid-[a-z0-9]+"[^>]*>\s*([^<]{6,150}?)\s*<', html, re.I)
-    seen = []
+    titles = []
+    for page in range(1, 26):
+        html = get_text("https://www.nice.org.uk/guidance/indevelopment"
+                        f"?ndt=Guidance&ngt=Technology%20appraisal%20guidance&page={page}")
+        if not html:
+            break
+        found = re.findall(r'/indevelopment/gid-[a-z0-9]+"[^>]*>\s*([^<]{6,180}?)\s*<', html, re.I)
+        if not found:
+            break
+        new = 0
+        for t in found:
+            t = re.sub(r"\s+", " ", t).strip()
+            if t and t not in titles:
+                titles.append(t)
+                new += 1
+        if new == 0:
+            break
+    rows = []
     for t in titles:
-        t = re.sub(r"\s+", " ", t).strip()
-        if t and t not in seen:
-            seen.append(t)
-    print(f"DEBUG NICE titles={len(seen)}")
-    return [{"name": t, "code": "", "latest": None, "g1": None, "g3": None, "g12": None, "accel": None}
-            for t in seen[:40]]
+        tl = t.lower()
+        hit = next((c for c in BIG_COND if c in tl), None)
+        if hit:
+            rows.append({"name": t, "code": hit, "latest": None,
+                         "g1": None, "g3": None, "g12": None, "accel": None})
+    print(f"DEBUG NICE scanned={len(titles)} big-market={len(rows)}")
+    return rows[:40]
 
 
 # ------------------------------------------------------------------- render
@@ -399,7 +425,7 @@ document.getElementById('trbody').innerHTML=(RADAR.trends&&RADAR.trends.length?
   tableRows(RADAR.trends,'Index',{firstCol:'Search term'}):'<div class="msg">Search-demand data will appear after the next weekly run.</div>')+
   '<div class="note">Google Trends search interest in the UK (via SerpApi), refreshed weekly. Ranked by 12-month growth; click a column to sort.</div>';
 document.getElementById('cqbody').innerHTML=(RADAR.cqc&&RADAR.cqc.length?tableRows(RADAR.cqc,'New (90d)',{noGrowth:true,firstCol:'Clinic niche'}):'<div class="msg">No CQC data this run — check the run log.</div>')+'<div class="note">Rising 2-word phrases in the names + service types of clinics <b>newly registered with CQC</b> in the last 90 days. Clinics register ~12–24 months before they trade — a supply-side discovery signal. Ranked by count; growth builds as snapshots accumulate.</div>';
-document.getElementById('ncbody').innerHTML=(RADAR.nice&&RADAR.nice.length?('<ul>'+RADAR.nice.map(function(r){return '<li>'+r.name+'</li>';}).join('')+'</ul>'):'<div class="msg">No NICE items this run — check the run log.</div>')+'<div class="note">NICE technology appraisals <b>in development</b> — the "next Ozempic" calendar. Each is a treatment heading toward NHS + private availability, ~12–24 months out.</div>';
+document.getElementById('ncbody').innerHTML=(RADAR.nice&&RADAR.nice.length?('<ul>'+RADAR.nice.map(function(r){return '<li>'+r.name+' <span class="niche">'+r.code+'</span></li>';}).join('')+'</ul>'):'<div class="msg">No large-market NICE items this run.</div>')+'<div class="note">NICE technology appraisals <b>in development</b>, filtered to <b>large-population conditions only</b> (obesity, ADHD, menopause, dementia, derm, pain…) — the rare-oncology long tail that dominates NICE\'s list is stripped out. These are the treatments that could <b>create a private-pay market</b>, surfaced ~12–24 months before they land.</div>';
 document.querySelectorAll('.panel').forEach(wireSort);
 
 // ---- Wikipedia public interest (client-side) ----
