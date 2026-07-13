@@ -27,9 +27,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -38,9 +43,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -60,9 +70,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -220,14 +235,35 @@
     }
    ]
   },
+  "adult": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "advanced": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 3,
+     "periods": [
+      1,
+      2,
+      0
+     ]
     }
    ]
   },
@@ -236,9 +272,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 8,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 8
+     "operators": 8,
+     "periods": null
     }
    ]
   },
@@ -418,6 +455,22 @@
     }
    ]
   },
+  "albans": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "alchemy": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -434,9 +487,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 3,
+     "periods": [
+      0,
+      1,
+      2
+     ]
     }
    ]
   },
@@ -459,6 +517,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "alexandra": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -489,9 +563,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      0,
+      1,
+      1
+     ]
     }
    ]
   },
@@ -616,14 +695,35 @@
     }
    ]
   },
+  "andrew": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "anna": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -635,6 +735,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "anne": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -654,9 +770,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 21,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 21
+     "operators": 21,
+     "periods": null
     }
    ]
   },
@@ -679,6 +796,38 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "are with": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
+    }
+   ]
+  },
+  "are with you": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -742,9 +891,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -797,9 +951,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -808,9 +967,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -896,9 +1060,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -962,9 +1131,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 3,
+     "periods": [
+      0,
+      1,
+      2
+     ]
     }
    ]
   },
@@ -1001,14 +1175,47 @@
     }
    ]
   },
+  "back": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "balance": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 8,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 8
+     "operators": 8,
+     "periods": null
+    }
+   ]
+  },
+  "barking": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -1028,9 +1235,46 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  "barnet": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "barnsley": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -1061,9 +1305,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 4,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 4
+     "operators": 3,
+     "periods": [
+      2,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -1075,6 +1324,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "basingstoke": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -1111,14 +1376,35 @@
     }
    ]
   },
+  "bath": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "battersea": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -1138,9 +1424,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      2,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -1193,9 +1484,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -1292,9 +1588,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -1303,9 +1604,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -1347,9 +1653,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -1457,9 +1768,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  "blackberry clinic": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -1468,9 +1800,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -1490,9 +1827,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 2,
+     "periods": [
+      1,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -1534,9 +1876,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 10,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 10,
+     "periods": null
     }
    ]
   },
@@ -1556,9 +1899,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -1570,6 +1918,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "body clinic": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -1589,9 +1953,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -1622,9 +1991,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -1650,14 +2024,35 @@
     }
    ]
   },
+  "bourn": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "bournemouth": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -1666,9 +2061,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -1688,9 +2088,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -1702,6 +2107,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "brain": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -1727,6 +2148,22 @@
     }
    ]
   },
+  "brentwood": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "brewood": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -1743,9 +2180,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      1,
+      0
+     ]
+    }
+   ]
+  },
+  "bridge clinic": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 2,
+     "periods": [
+      1,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -1804,6 +2262,22 @@
     }
    ]
   },
+  "bromsgrove": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "brooksby": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -1837,14 +2311,51 @@
     }
    ]
   },
+  "buckinghamshire": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "building": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      1,
+      0
+     ]
+    }
+   ]
+  },
+  "bump": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -1853,9 +2364,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      0,
+      1,
+      1
+     ]
     }
    ]
   },
@@ -1919,9 +2435,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -1941,9 +2462,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 3,
+     "periods": [
+      1,
+      1,
+      1
+     ]
     }
    ]
   },
@@ -2029,9 +2555,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 3,
+     "periods": [
+      0,
+      0,
+      3
+     ]
     }
    ]
   },
@@ -2040,9 +2571,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 3,
+     "periods": [
+      0,
+      0,
+      3
+     ]
+    }
+   ]
+  },
+  "cancer": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -2062,9 +2614,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -2073,9 +2630,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -2084,9 +2646,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -2117,9 +2684,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -2128,9 +2700,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -2156,14 +2733,35 @@
     }
    ]
   },
+  "castle": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "cavendish": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -2211,14 +2809,35 @@
     }
    ]
   },
+  "chambers": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "change": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 9,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -2227,9 +2846,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -2277,14 +2901,35 @@
     }
    ]
   },
+  "chec": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "chelmsford": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -2315,9 +2960,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      0,
+      1,
+      1
+     ]
     }
    ]
   },
@@ -2354,14 +3004,35 @@
     }
    ]
   },
+  "chester": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "chesterfield": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -2370,9 +3041,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -2381,9 +3057,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -2392,9 +3073,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -2420,14 +3106,51 @@
     }
    ]
   },
+  "chiswick": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "choice": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "choices": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -2436,9 +3159,46 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "choices regional treatment": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "christie": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -2458,9 +3218,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      0,
+      1,
+      1
+     ]
     }
    ]
   },
@@ -2469,9 +3234,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -2486,14 +3256,51 @@
     }
    ]
   },
+  "circumcision clinic": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "clapham": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "clare": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -2590,9 +3397,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -2656,9 +3468,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -2667,9 +3484,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -2678,9 +3500,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -2744,9 +3571,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      1,
+      0
+     ]
+    }
+   ]
+  },
+  "colchester": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -2854,9 +3702,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      1,
+      0
+     ]
+    }
+   ]
+  },
+  "consultants": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -2876,9 +3745,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 16,
+     "age": null,
      "date": "2026-07-13",
-     "operators": null
+     "operators": null,
+     "periods": null
     }
    ]
   },
@@ -2887,9 +3757,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 3,
+     "periods": [
+      3,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -2970,6 +3845,38 @@
     }
    ]
   },
+  "cottage": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "council": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "country": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -2992,6 +3899,22 @@
     }
    ]
   },
+  "county": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "covid": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -3008,9 +3931,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -3041,9 +3969,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -3091,6 +4024,22 @@
     }
    ]
   },
+  "cromwell": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "cumberland": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -3099,6 +4048,54 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "cumbria": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "curie": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "curie hospice": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -3129,9 +4126,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 6,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 6
+     "operators": 6,
+     "periods": null
     }
    ]
   },
@@ -3140,9 +4138,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -3190,6 +4193,22 @@
     }
    ]
   },
+  "darlington": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "dave": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -3201,14 +4220,35 @@
     }
    ]
   },
+  "davita": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "days": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -3289,14 +4329,35 @@
     }
    ]
   },
+  "department": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "derma": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 3,
+     "periods": [
+      1,
+      2,
+      0
+     ]
     }
    ]
   },
@@ -3338,9 +4399,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 5,
+     "age": null,
      "date": "2026-07-13",
-     "operators": null
+     "operators": null,
+     "periods": null
     }
    ]
   },
@@ -3371,9 +4433,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
+    }
+   ]
+  },
+  "diet": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -3426,9 +4509,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
+    }
+   ]
+  },
+  "disability": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -3462,6 +4566,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "district": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -3514,9 +4634,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -3528,6 +4653,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "dorset": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -3564,14 +4705,67 @@
     }
    ]
   },
+  "drpa": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "recent",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "drpa secure": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "recent",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "drpa secure hmp": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "recent",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "drug": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      0,
+      0,
+      2
+     ]
     }
    ]
   },
@@ -3580,9 +4774,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -3619,14 +4818,83 @@
     }
    ]
   },
+  "durham": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "ealing": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  "ear care": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 2,
+     "periods": [
+      0,
+      2,
+      0
+     ]
+    }
+   ]
+  },
+  "ear clinic": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
+    }
+   ]
+  },
+  "early": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -3635,9 +4903,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -3649,6 +4922,38 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "eden": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "edgbaston": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -3668,9 +4973,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -3773,6 +5083,22 @@
     }
    ]
   },
+  "elizabeth": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "ellesmere": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -3789,9 +5115,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -3811,9 +5142,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -3861,14 +5197,35 @@
     }
    ]
   },
+  "enfield": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "enhance": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -3877,9 +5234,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "enhanced access": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -3891,6 +5269,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "enterprises": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -3954,9 +5348,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 4,
+     "age": null,
      "date": "2026-07-13",
-     "operators": null
+     "operators": null,
+     "periods": null
     }
    ]
   },
@@ -4097,9 +5492,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      0,
+      0,
+      2
+     ]
     }
    ]
   },
@@ -4119,9 +5519,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 4,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -4136,14 +5541,63 @@
     }
    ]
   },
+  "extended": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "extended access": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "face": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "facials": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 4,
+     "age": null,
      "date": "2026-07-13",
-     "operators": null
+     "operators": null,
+     "periods": null
     }
    ]
   },
@@ -4155,6 +5609,70 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "farm": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "farnham": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "fast": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "federation": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -4185,9 +5703,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 3,
+     "periods": [
+      0,
+      1,
+      2
+     ]
     }
    ]
   },
@@ -4246,14 +5769,35 @@
     }
    ]
   },
+  "fitness": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "fitzrovia": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -4273,9 +5817,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 14,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 1
+     "operators": null,
+     "periods": null
     }
    ]
   },
@@ -4339,9 +5884,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 3,
+     "periods": [
+      0,
+      3,
+      0
+     ]
     }
    ]
   },
@@ -4400,6 +5950,38 @@
     }
    ]
   },
+  "fortius": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "fortius clinic": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "fosse": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -4419,6 +6001,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "francis": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -4444,14 +6042,35 @@
     }
    ]
   },
+  "fulham": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "functional": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 3,
+     "periods": [
+      2,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -4482,9 +6101,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -4504,9 +6128,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -4532,14 +6161,51 @@
     }
    ]
   },
+  "gardens": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "gateshead": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "gateway": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -4548,9 +6214,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -4576,14 +6247,67 @@
     }
    ]
   },
+  "general": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "genesis": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "genesis care": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "genesiscare": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -4680,9 +6404,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -4724,9 +6453,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -4735,9 +6469,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -4757,9 +6496,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 286,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 1
+     "operators": null,
+     "periods": null
     }
    ]
   },
@@ -4807,14 +6547,35 @@
     }
    ]
   },
+  "grange": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "great": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -4837,6 +6598,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "greenwich": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -4867,9 +6644,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 8,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 8
+     "operators": 8,
+     "periods": null
     }
    ]
   },
@@ -4878,9 +6656,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -4911,9 +6694,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -4933,9 +6721,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -5021,9 +6814,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -5054,9 +6852,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
+    }
+   ]
+  },
+  "hampshire": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -5082,6 +6901,22 @@
     }
    ]
   },
+  "haringey": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "harleydoc": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -5090,6 +6925,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "harpenden": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -5109,9 +6960,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      0,
+      1,
+      1
+     ]
     }
    ]
   },
@@ -5142,9 +6998,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -5247,6 +7108,38 @@
     }
    ]
   },
+  "haywards": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "haywards heath": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "heal": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -5307,9 +7200,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -5362,9 +7260,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      1,
+      1
+     ]
+    }
+   ]
+  },
+  "heart clinic": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -5376,6 +7295,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "heath": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -5395,9 +7330,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -5555,6 +7495,22 @@
     }
    ]
   },
+  "herts": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "hesta": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -5610,14 +7566,35 @@
     }
    ]
   },
+  "hey baby": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
+    }
+   ]
+  },
   "high": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -5648,9 +7625,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -5687,6 +7669,22 @@
     }
    ]
   },
+  "hm prison": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "holborn": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -5703,9 +7701,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -5808,14 +7811,35 @@
     }
    ]
   },
+  "horder": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "horizon": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -5835,9 +7859,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -5846,9 +7875,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "hormone clinic": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -5868,9 +7918,46 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 3,
+     "periods": [
+      2,
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  "hospice at": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  "hospice care": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -5885,14 +7972,35 @@
     }
    ]
   },
+  "hours": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "hove": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -5934,9 +8042,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -5978,9 +8091,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "independent": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -5989,9 +8123,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      0,
+      1,
+      1
+     ]
     }
    ]
   },
@@ -6000,9 +8139,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      0,
+      1,
+      1
+     ]
     }
    ]
   },
@@ -6033,9 +8177,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 7,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 2,
+     "periods": [
+      0,
+      2,
+      1
+     ]
     }
    ]
   },
@@ -6080,6 +8229,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "injury": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -6165,9 +8330,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -6204,6 +8374,22 @@
     }
    ]
   },
+  "institute": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "instruments": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -6220,9 +8406,26 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 8,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 8,
+     "periods": null
+    }
+   ]
+  },
+  "intrahealth": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -6358,6 +8561,22 @@
     }
    ]
   },
+  "james": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "jenny": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -6388,6 +8607,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "john": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -6429,9 +8664,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -6462,9 +8702,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -6495,9 +8740,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -6550,9 +8800,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -6586,6 +8841,38 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "kidney": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "kidney treatment": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -6627,9 +8914,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      2,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -6649,9 +8941,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -6781,9 +9078,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -6792,9 +9094,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -6806,6 +9113,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "ladms": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -6850,6 +9173,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "lane": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -6952,6 +9291,22 @@
     }
    ]
   },
+  "leaders": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "leading": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -6993,6 +9348,54 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "learning": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "learning disability": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "leicestershire": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -7051,6 +9454,38 @@
     }
    ]
   },
+  "lewis": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "lewisham": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "library": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -7084,14 +9519,31 @@
     }
    ]
   },
+  "lifestyle": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "lift": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 17,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 1
+     "operators": null,
+     "periods": null
     }
    ]
   },
@@ -7100,9 +9552,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 9,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "lighthouse": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -7111,9 +9584,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -7122,9 +9600,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -7227,6 +9710,22 @@
     }
    ]
   },
+  "litfield": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "liver": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -7235,6 +9734,22 @@
      "count": 2,
      "date": "2026-07-13",
      "operators": 2
+    }
+   ]
+  },
+  "living": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -7331,9 +9846,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 2,
+     "periods": [
+      2,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -7364,9 +9884,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -7386,9 +9911,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 28,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 28
+     "operators": 28,
+     "periods": null
     }
    ]
   },
@@ -7397,9 +9923,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -7458,6 +9989,22 @@
     }
    ]
   },
+  "luke": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "lunascan": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -7474,9 +10021,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -7535,6 +10087,22 @@
     }
    ]
   },
+  "maidstone": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "malden": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -7543,6 +10111,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "mall": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -7609,6 +10193,54 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "marie": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "marie curie": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "marie curie hospice": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -7694,9 +10326,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -7760,9 +10397,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 7,
+     "age": null,
      "date": "2026-07-13",
-     "operators": null
+     "operators": null,
+     "periods": null
     }
    ]
   },
@@ -7799,14 +10437,35 @@
     }
    ]
   },
+  "medic": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "medica": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      0,
+      1,
+      1
+     ]
     }
    ]
   },
@@ -7821,14 +10480,47 @@
     }
    ]
   },
+  "medicals": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "medicare": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "medicolegal": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 9,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 9
+     "operators": 9,
+     "periods": null
     }
    ]
   },
@@ -7837,9 +10529,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 4,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 4
+     "operators": 4,
+     "periods": [
+      3,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -7903,9 +10600,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
+    }
+   ]
+  },
+  "meet": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -7950,6 +10668,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "memorial": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -8013,9 +10747,46 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
+    }
+   ]
+  },
+  "michael": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "middlesbrough": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -8041,6 +10812,22 @@
     }
    ]
   },
+  "mill": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "millwood": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -8057,9 +10844,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -8068,9 +10860,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -8101,9 +10898,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -8123,9 +10925,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -8137,6 +10944,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "miracle": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -8170,6 +10993,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "misuse": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -8277,9 +11116,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -8332,9 +11176,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      0,
+      1,
+      1
+     ]
     }
    ]
   },
@@ -8398,9 +11247,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 14,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 14
+     "operators": 14,
+     "periods": null
     }
    ]
   },
@@ -8412,6 +11262,38 @@
      "count": 2,
      "date": "2026-07-13",
      "operators": 2
+    }
+   ]
+  },
+  "msi reproductive": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "msi reproductive choices": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -8434,6 +11316,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "my baby": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -8464,9 +11362,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 29,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 29
+     "operators": 29,
+     "periods": null
     }
    ]
   },
@@ -8475,9 +11374,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -8574,9 +11478,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 4,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 4
+     "operators": 3,
+     "periods": [
+      2,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -8602,14 +11511,35 @@
     }
    ]
   },
+  "nelson": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "network": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -8618,9 +11548,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -8679,14 +11614,35 @@
     }
    ]
   },
+  "newham": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "newmedica": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -8706,9 +11662,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -8805,9 +11766,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "northampton": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -8849,9 +11831,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -8910,6 +11897,22 @@
     }
    ]
   },
+  "nova": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "nuestra": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -8921,14 +11924,35 @@
     }
    ]
   },
+  "nuffield": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "numi": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -8965,6 +11989,22 @@
     }
    ]
   },
+  "nupas": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "nurses": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -8981,9 +12021,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -9064,6 +12109,22 @@
     }
    ]
   },
+  "oaks": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "oaktree": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -9080,9 +12141,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -9091,9 +12157,42 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 9,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 9
+     "operators": 9,
+     "periods": null
+    }
+   ]
+  },
+  "offices": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "oldham": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -9157,9 +12256,158 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 6,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 6
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "oncology care": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "one heart": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  "one heart clinic": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  "onewelbeck": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "operational": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "operational base": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "optegra": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "optimax": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "optimise": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -9201,9 +12449,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 28,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 28
+     "operators": 28,
+     "periods": null
     }
    ]
   },
@@ -9212,9 +12461,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -9267,9 +12521,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      2,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -9292,6 +12551,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "outpatients": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -9333,9 +12608,46 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
+    }
+   ]
+  },
+  "pall": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "pall mall": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -9432,9 +12744,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -9479,6 +12796,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "passport": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -9581,6 +12914,22 @@
     }
    ]
   },
+  "peek": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "pelican": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -9614,6 +12963,22 @@
     }
    ]
   },
+  "people": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "peppy": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -9641,9 +13006,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -9674,9 +13044,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -9685,9 +13060,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -9696,9 +13076,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -9710,6 +13095,54 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "place": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "plastic": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "plastic surgery": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -9740,9 +13173,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 7,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 3,
+     "periods": [
+      2,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -9751,9 +13189,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  "point": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -9806,9 +13265,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -9872,9 +13336,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -9883,9 +13352,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -9938,9 +13412,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 3,
+     "periods": [
+      0,
+      3,
+      0
+     ]
     }
    ]
   },
@@ -9960,9 +13439,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 9,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 9,
+     "periods": null
     }
    ]
   },
@@ -9974,6 +13454,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "pregnancy": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -9993,9 +13489,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -10004,9 +13505,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 11,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 4
+     "operators": 3,
+     "periods": [
+      1,
+      2,
+      0
+     ]
     }
    ]
   },
@@ -10015,9 +13521,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 11,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 11
+     "operators": 3,
+     "periods": [
+      1,
+      2,
+      0
+     ]
+    }
+   ]
+  },
+  "primary care network": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -10048,9 +13575,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -10062,6 +13594,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "prison": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -10164,6 +13712,22 @@
     }
    ]
   },
+  "project": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "projuvenate": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -10246,9 +13810,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -10282,6 +13851,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "queen": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -10362,6 +13947,22 @@
     }
    ]
   },
+  "randox": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "rapie": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -10395,14 +13996,35 @@
     }
    ]
   },
+  "re cognition": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "recovery": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 20,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 3,
+     "periods": [
+      0,
+      2,
+      1
+     ]
     }
    ]
   },
@@ -10455,9 +14077,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -10505,14 +14132,51 @@
     }
    ]
   },
+  "region": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "regional": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "regional treatment": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -10521,9 +14185,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -10615,6 +14284,22 @@
     }
    ]
   },
+  "renal": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "renaliv": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -10642,9 +14327,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -10653,9 +14343,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "reproductive choices regional": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -10667,6 +14378,22 @@
      "count": 2,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "research": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -10708,9 +14435,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      0,
+      2,
+      0
+     ]
     }
    ]
   },
@@ -10719,9 +14451,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 10,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 10
+     "operators": 10,
+     "periods": null
     }
    ]
   },
@@ -10769,6 +14502,22 @@
     }
    ]
   },
+  "revive": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "rhys": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -10796,9 +14545,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -10832,6 +14586,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "riding": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -10873,9 +14643,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -10887,6 +14662,54 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "romford": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "rose": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "rotherham": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -10934,6 +14757,22 @@
     }
    ]
   },
+  "ryder": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "saba": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -10953,6 +14792,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "salford": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -10983,9 +14838,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -11022,14 +14882,47 @@
     }
    ]
   },
+  "sarah": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "sarc": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "sauna": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 26,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 26
+     "operators": 26,
+     "periods": null
     }
    ]
   },
@@ -11038,9 +14931,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1052,
+     "age": null,
      "date": "2026-07-13",
-     "operators": null
+     "operators": null,
+     "periods": null
     }
    ]
   },
@@ -11071,9 +14965,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 2,
+     "periods": [
+      1,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -11085,6 +14984,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "school": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -11126,9 +15041,42 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 49,
+     "age": null,
      "date": "2026-07-13",
-     "operators": null
+     "operators": null,
+     "periods": null
+    }
+   ]
+  },
+  "secure": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "recent",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "secure hmp": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "recent",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -11236,9 +15184,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -11247,9 +15200,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 5,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 3,
+     "periods": [
+      0,
+      3,
+      0
+     ]
     }
    ]
   },
@@ -11258,9 +15216,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
+    }
+   ]
+  },
+  "sexual assault referral": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -11335,9 +15314,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 6,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 6,
+     "periods": null
     }
    ]
   },
@@ -11390,9 +15370,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -11440,14 +15425,31 @@
     }
    ]
   },
+  "sight": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "signature": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 8,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 8
+     "operators": 8,
+     "periods": null
     }
    ]
   },
@@ -11462,14 +15464,47 @@
     }
    ]
   },
+  "simply": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "simply clinics": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "sisters": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 7,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 7
+     "operators": 7,
+     "periods": null
     }
    ]
   },
@@ -11489,9 +15524,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -11517,6 +15557,22 @@
     }
    ]
   },
+  "sloane": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "sobia": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -11533,9 +15589,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -11544,9 +15605,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
+    }
+   ]
+  },
+  "solihull": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -11561,14 +15643,67 @@
     }
    ]
   },
+  "somerset": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "southampton": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "southend": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  "southwest": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -11632,9 +15767,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -11665,9 +15805,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -11676,9 +15821,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -11731,9 +15881,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -11745,6 +15900,38 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "sports": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "sports medicine": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -11830,9 +16017,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -11866,6 +16058,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "stockton": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -11913,6 +16121,22 @@
     }
    ]
   },
+  "stratford": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "stratum": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -11932,6 +16156,38 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "studies": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "studio": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -11957,6 +16213,38 @@
     }
    ]
   },
+  "substance": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "substance misuse": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "suburb": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -11965,6 +16253,38 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "sue ryder": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "suffolk": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -12006,9 +16326,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 23,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -12039,9 +16364,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 23,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 3,
+     "periods": [
+      2,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -12053,6 +16383,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "sutton": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -12116,9 +16462,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      0,
+      2,
+      0
+     ]
     }
    ]
   },
@@ -12152,6 +16503,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "synnovis": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -12265,6 +16632,22 @@
     }
    ]
   },
+  "taunton": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "taylor": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -12292,9 +16675,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -12317,6 +16705,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "tees": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -12372,6 +16776,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "telford": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -12457,9 +16877,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 22,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 22
+     "operators": 22,
+     "periods": null
     }
    ]
   },
@@ -12468,9 +16889,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 11,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 11
+     "operators": 11,
+     "periods": null
     }
    ]
   },
@@ -12479,9 +16901,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -12490,9 +16917,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -12545,9 +16977,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 13,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -12617,14 +17054,67 @@
     }
    ]
   },
+  "thmg sk": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "recent",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  "thomas": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "thornbury": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "three": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -12721,9 +17211,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -12765,9 +17260,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 9,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 9
+     "operators": 9,
+     "periods": null
     }
    ]
   },
@@ -12787,9 +17283,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      2,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -12826,14 +17327,35 @@
     }
    ]
   },
+  "training": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "transplant": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -12842,9 +17364,46 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      1,
+      1,
+      0
+     ]
+    }
+   ]
+  },
+  "travel clinic": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "tree": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -12867,6 +17426,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "trinity": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -12897,9 +17472,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
     }
    ]
   },
@@ -12908,9 +17488,46 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  "turning": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "turning point": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -12944,6 +17561,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "tyneside": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -13035,6 +17668,22 @@
     }
    ]
   },
+  "university": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "upminster": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -13051,9 +17700,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -13073,9 +17727,46 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      2,
+      1,
+      0
+     ]
+    }
+   ]
+  },
+  "urgent care": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "urgent treatment": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 2,
+     "periods": [
+      2,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -13150,9 +17841,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -13183,9 +17879,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 7,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 7
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "vascular studies": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -13200,14 +17917,51 @@
     }
    ]
   },
+  "vein": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "vein clinic": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "veincentre": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "recent",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -13304,9 +18058,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 3,
+     "periods": [
+      1,
+      2,
+      0
+     ]
     }
    ]
   },
@@ -13315,9 +18074,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -13348,9 +18112,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -13403,9 +18172,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -13475,6 +18249,70 @@
     }
    ]
   },
+  "wakefield": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "walk": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "wall": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "walsall": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "walton": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -13483,6 +18321,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "wandsworth": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -13502,9 +18356,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -13524,9 +18383,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -13538,6 +18402,38 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "we are with": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
+    }
+   ]
+  },
+  "welbeck": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -13560,6 +18456,22 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "wellington": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -13590,9 +18502,62 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  "wessex": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "westminster": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "weston": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -13623,9 +18588,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 3,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 3
+     "operators": 3,
+     "periods": [
+      0,
+      0,
+      3
+     ]
     }
    ]
   },
@@ -13645,9 +18615,46 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "whiteley clinic": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "wigan": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -13656,9 +18663,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 13,
+     "age": null,
      "date": "2026-07-13",
-     "operators": 13
+     "operators": 13,
+     "periods": null
     }
    ]
   },
@@ -13667,9 +18675,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -13689,9 +18702,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -13711,9 +18729,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -13722,9 +18745,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      0,
+      1,
+      1
+     ]
     }
    ]
   },
@@ -13744,9 +18772,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      1,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -13772,6 +18805,22 @@
     }
    ]
   },
+  "wirral": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "witcombe": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -13788,9 +18837,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -13805,6 +18859,22 @@
     }
    ]
   },
+  "with you": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
+    }
+   ]
+  },
   "witney": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
@@ -13813,6 +18883,38 @@
      "count": 1,
      "date": "2026-07-13",
      "operators": 1
+    }
+   ]
+  },
+  "woking": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "wokingham": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -13832,9 +18934,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      0,
+      1,
+      1
+     ]
     }
    ]
   },
@@ -13865,9 +18972,30 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  "woodford": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -13904,14 +19032,35 @@
     }
    ]
   },
+  "worthing": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
   "wound": {
    "first_seen": "2026-07-13",
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 1,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 1
+     "operators": 1,
+     "periods": [
+      0,
+      1,
+      0
+     ]
     }
    ]
   },
@@ -13942,9 +19091,14 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -13964,9 +19118,46 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 2,
+     "age": "established",
      "date": "2026-07-13",
-     "operators": 2
+     "operators": 2,
+     "periods": [
+      0,
+      2,
+      0
+     ]
+    }
+   ]
+  },
+  "young": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "young people": {
+   "first_seen": "2026-07-13",
+   "last_seen": "2026-07-13",
+   "trail": [
+    {
+     "age": "established",
+     "date": "2026-07-13",
+     "operators": 0,
+     "periods": [
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
@@ -13975,9 +19166,10 @@
    "last_seen": "2026-07-13",
    "trail": [
     {
-     "count": 21,
+     "age": null,
      "date": "2026-07-13",
-     "operators": null
+     "operators": null,
+     "periods": null
     }
    ]
   },
@@ -13996,5 +19188,5 @@
  "runs": [
   "2026-07-13"
  ],
- "version": 1
+ "version": 2
 }
