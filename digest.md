@@ -1,6 +1,6 @@
 # Radar 13 Jul 2026: no baseline yet
 
-Week to 13 Jul 2026. Data last refreshed 2026-07-13 19:35 UTC. Baseline: none.
+Week to 13 Jul 2026. Data last refreshed 2026-07-13 19:49 UTC. Baseline: none.
 
 ## What crossed a line
 
