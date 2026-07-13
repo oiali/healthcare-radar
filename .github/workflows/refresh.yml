@@ -52,14 +52,16 @@ jobs:
           git commit -m "update radar data + digest" || echo "no changes to commit"
           git push || echo "nothing to push"
 
-      # PRIVACY: this repo is public, so NOTHING substantive goes to GitHub Pages.
-      # The dashboard and digest are committed to the repo and uploaded as artifacts
-      # instead. Once the repo is private, restore the two cp lines below.
-      - name: Assemble site (deliberately blank while the repo is public)
+      # The dashboard IS published (Omar's call - free-tier Pages needs a public repo).
+      # Everything on it is derived from PUBLIC data (NHS, CQC, Companies House, Google).
+      # What is NOT published, and must never be: the target list in targets.py, which
+      # names individuals and attaches an INFERRED claim that they may want to sell.
+      # That stays gated behind TARGETS_OK=1, which is deliberately never set here.
+      - name: Assemble site
         run: |
           mkdir -p _site
-          printf '%s' '<!DOCTYPE html><meta charset=utf-8><title>Not public</title><p>This site is not published.</p>' > _site/index.html
-          cp _site/index.html _site/digest.html
+          cp dashboard.html _site/index.html
+          cp digest.html _site/digest.html 2>/dev/null || echo '<p>No digest yet.</p>' > _site/digest.html
 
       - uses: actions/upload-pages-artifact@v3
         with:
