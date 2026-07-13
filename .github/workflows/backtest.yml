@@ -1,0 +1,63 @@
+name: backtest
+
+# Run on demand only. This is the credibility check, not a daily job:
+#   T2 = Companies House monthly incorporation history (works from Actions)
+#   T3 = CQC bulk file, active + DEACTIVATED locations (corrects survivorship bias)
+#   T4 = NOT here. OpenPrescribing 403s datacentre IPs, so T4 is measured in a
+#        browser via backtest_client.js and merged in by hand.
+#   T1 = Google Trends, --no-trends by default because SerpApi free tier is ~100
+#        searches/month and the weekly radar already eats ~80 of them.
+
+on:
+  workflow_dispatch:
+    inputs:
+      trends:
+        description: "Also run T1 Google Trends (costs ~16 SerpApi searches, once, cached forever)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Prove the onset estimator works before trusting any result
+        run: python backtest_core.py
+
+      - name: Run the backtest
+        env:
+          CH_API_KEY: ${{ secrets.CH_API_KEY }}
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+        run: |
+          if [ "${{ inputs.trends }}" = "true" ]; then
+            python backtest.py
+          else
+            python backtest.py --no-trends
+          fi
+
+      - name: Show the result in the run log
+        run: cat backtest.md || echo "no backtest.md produced"
+
+      - name: Commit the result
+        run: |
+          git config user.name "radar-bot"
+          git config user.email "radar-bot@users.noreply.github.com"
+          git add -A backtest.md backtest.json _agent/data || true
+          git commit -m "backtest run" || echo "no changes"
+          git push || echo "nothing to push"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: backtest
+          path: |
+            backtest.md
+            backtest.json
+          retention-days: 30

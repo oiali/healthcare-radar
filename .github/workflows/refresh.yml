@@ -4,9 +4,15 @@ on:
   schedule:
     - cron: "0 6 * * *"      # every day at 06:00 UTC
   workflow_dispatch:          # lets you run it manually from the Actions tab
+    inputs:
+      force_digest:
+        description: "Send the digest issue even if today is not a Monday"
+        type: boolean
+        default: false
 
 permissions:
   contents: write             # to commit the accumulating job-ad history
+  issues: write               # to open the weekly digest issue (built-in token)
   pages: write
   id-token: write
 
@@ -33,22 +39,38 @@ jobs:
           CQC_KEY: ${{ secrets.CQC_KEY }}
         run: python pull_and_build.py
 
+      # Rebuilds digest.md + /digest.html every day so the page is never stale.
+      # Sends nothing and does not advance the digest state - that is the digest job.
+      - name: Build digest page
+        run: python digest.py --write
+
       - name: Save job-ad history
         run: |
           git config user.name "radar-bot"
           git config user.email "radar-bot@users.noreply.github.com"
-          git add -A data || true
-          git commit -m "update job-ad history" || echo "no changes to commit"
+          git add -A data digest.md || true
+          git commit -m "update radar data + digest" || echo "no changes to commit"
           git push || echo "nothing to push"
 
       - name: Assemble site
         run: |
           mkdir -p _site
           cp dashboard.html _site/index.html
+          cp digest.html _site/digest.html 2>/dev/null || echo '<p>No digest yet.</p>' > _site/digest.html
 
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
+
+      # data.json is built fresh each run and is NOT committed to the repo, so it has
+      # to be handed to the digest job explicitly.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: radar-data
+          path: |
+            data.json
+            data/history.json
+          retention-days: 2
 
   deploy:
     needs: build
@@ -59,3 +81,39 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # A SEPARATE job on purpose. If the digest fails to send, this job goes red - and a
+  # red run is itself an email under GitHub's default Actions notification setting -
+  # WITHOUT blocking the Pages deploy or the history commit, which both matter more.
+  # digest.py gates itself to Mondays, so this is a no-op the other six days.
+  digest:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main           # not github.sha - we want the commit build just pushed
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: radar-data
+
+      - name: Send the weekly digest (Mondays only)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DIGEST_FORCE: ${{ inputs.force_digest && '1' || '0' }}
+        run: python digest.py --issue
+
+      - name: Save digest state
+        if: always()
+        run: |
+          git config user.name "radar-bot"
+          git config user.email "radar-bot@users.noreply.github.com"
+          git pull --rebase --autostash || true
+          git add -A data || true
+          git commit -m "weekly digest sent" || echo "no changes to commit"
+          git push || echo "nothing to push"
