@@ -1,6 +1,6 @@
 # Radar 13 Jul 2026: no baseline yet
 
-Week to 13 Jul 2026. Data last refreshed 2026-07-13 19:58 UTC. Baseline: none.
+Week to 13 Jul 2026. Data last refreshed 2026-07-13 20:14 UTC. Baseline: none.
 
 ## What crossed a line
 
@@ -14,9 +14,10 @@ Demand and founders present, capacity not yet built. This is the window in which
 - MSK / physio: new company incorporations lit (search n/a, companies +125.9%); no clinic-registration reading at all - CQC returned no rows for it. That is either capacity not yet built or capacity the regulator cannot see, and the radar cannot tell you which.
 - Bladder / continence: new company incorporations lit (search n/a, companies +100.0%); no clinic-registration reading at all - CQC returned no rows for it. That is either capacity not yet built or capacity the regulator cannot see, and the radar cannot tell you which.
 - Sexual health / ED: search interest lit (search +55.8%, companies n/a); no clinic-registration reading at all - CQC returned no rows for it. That is either capacity not yet built or capacity the regulator cannot see, and the radar cannot tell you which.
-- Men's health / TRT: search interest lit (search +44.0%, companies n/a); no clinic-registration reading at all - CQC returned no rows for it. That is either capacity not yet built or capacity the regulator cannot see, and the radar cannot tell you which.
-- Menopause / HRT: search interest lit (search +15.1%, companies n/a); no clinic-registration reading at all - CQC returned no rows for it. That is either capacity not yet built or capacity the regulator cannot see, and the radar cannot tell you which.
-- Aesthetics / skin: new company incorporations lit (search +6.7%, companies +158.9%); clinic registrations at -11.6%, below the line.
+- Men's health / TRT: search interest lit (search +44.6%, companies n/a); no clinic-registration reading at all - CQC returned no rows for it. That is either capacity not yet built or capacity the regulator cannot see, and the radar cannot tell you which.
+- Menopause / HRT: search interest lit (search +24.3%, companies n/a); no clinic-registration reading at all - CQC returned no rows for it. That is either capacity not yet built or capacity the regulator cannot see, and the radar cannot tell you which.
+- Diagnostics / imaging: search interest lit (search +17.6%, companies n/a); clinic registrations at -21.0%, below the line.
+- Aesthetics / skin: new company incorporations lit (search +7.4%, companies +158.9%); clinic registrations at -11.6%, below the line.
 
 ## Ignore these
 

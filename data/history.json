@@ -2,15 +2,15 @@
  {
   "date": "2026-07-13",
   "t1": {
-   "Weight loss / GLP-1": 209.4943114916337,
+   "Weight loss / GLP-1": 209.57642297437394,
    "Sexual health / ED": 55.80110497237569,
-   "Men's health / TRT": 43.99999999999999,
-   "Menopause / HRT": 15.134158848115025,
-   "Aesthetics / skin": 6.676603687440409,
-   "ADHD": 9.889847543867011,
-   "Diagnostics / imaging": 9.302325581395344,
-   "Tongue-tie / lactation": -16.279069767441857,
-   "Hair restoration": -19.72602739726027
+   "Men's health / TRT": 44.57142857142857,
+   "Menopause / HRT": 24.26619544252336,
+   "Aesthetics / skin": 7.365735014444275,
+   "Diagnostics / imaging": 17.560975609756092,
+   "ADHD": 10.541604785890451,
+   "Tongue-tie / lactation": -16.524216524216527,
+   "Hair restoration": -18.356164383561648
   },
   "t2": {
    "Dental / orthodontics": 200.0,
