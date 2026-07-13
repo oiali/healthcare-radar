@@ -1,6 +1,6 @@
 # Radar 13 Jul 2026: no baseline yet
 
-Week to 13 Jul 2026. Data last refreshed 2026-07-13 20:14 UTC. Baseline: none.
+Week to 13 Jul 2026. Data last refreshed 2026-07-13 21:12 UTC. Baseline: none.
 
 ## What crossed a line
 
@@ -13,11 +13,11 @@ Demand and founders present, capacity not yet built. This is the window in which
 - Dental / orthodontics: new company incorporations lit (search n/a, companies +200.0%); no clinic-registration reading at all - CQC returned no rows for it. That is either capacity not yet built or capacity the regulator cannot see, and the radar cannot tell you which.
 - MSK / physio: new company incorporations lit (search n/a, companies +125.9%); no clinic-registration reading at all - CQC returned no rows for it. That is either capacity not yet built or capacity the regulator cannot see, and the radar cannot tell you which.
 - Bladder / continence: new company incorporations lit (search n/a, companies +100.0%); no clinic-registration reading at all - CQC returned no rows for it. That is either capacity not yet built or capacity the regulator cannot see, and the radar cannot tell you which.
-- Sexual health / ED: search interest lit (search +55.8%, companies n/a); no clinic-registration reading at all - CQC returned no rows for it. That is either capacity not yet built or capacity the regulator cannot see, and the radar cannot tell you which.
-- Men's health / TRT: search interest lit (search +44.6%, companies n/a); no clinic-registration reading at all - CQC returned no rows for it. That is either capacity not yet built or capacity the regulator cannot see, and the radar cannot tell you which.
-- Menopause / HRT: search interest lit (search +24.3%, companies n/a); no clinic-registration reading at all - CQC returned no rows for it. That is either capacity not yet built or capacity the regulator cannot see, and the radar cannot tell you which.
+- Sexual health / ED: search interest lit (search +55.2%, companies n/a); no clinic-registration reading at all - CQC returned no rows for it. That is either capacity not yet built or capacity the regulator cannot see, and the radar cannot tell you which.
+- Men's health / TRT: search interest lit (search +53.6%, companies n/a); no clinic-registration reading at all - CQC returned no rows for it. That is either capacity not yet built or capacity the regulator cannot see, and the radar cannot tell you which.
+- Menopause / HRT: search interest lit (search +23.7%, companies n/a); no clinic-registration reading at all - CQC returned no rows for it. That is either capacity not yet built or capacity the regulator cannot see, and the radar cannot tell you which.
 - Diagnostics / imaging: search interest lit (search +17.6%, companies n/a); clinic registrations at -21.0%, below the line.
-- Aesthetics / skin: new company incorporations lit (search +7.4%, companies +158.9%); clinic registrations at -11.6%, below the line.
+- Aesthetics / skin: new company incorporations lit (search +7.4%, companies +192.2%); clinic registrations at -16.1%, below the line.
 
 ## Ignore these
 
@@ -26,8 +26,8 @@ Signals that look like something and are not:
 - "wild" in new company incorporations shows +333.3%, but that is 3 -> 13. On counts this small the noise alone is about +/-58%. Ignore the percentage; the absolute number is the only thing being said.
 - "oral" in new company incorporations shows +300.0%, but that is 7 -> 28. On counts this small the noise alone is about +/-38%. Ignore the percentage; the absolute number is the only thing being said.
 - "primary care" in new company incorporations shows +266.7%, but that is 3 -> 11. On counts this small the noise alone is about +/-58%. Ignore the percentage; the absolute number is the only thing being said.
-- "change" in new company incorporations shows +200.0%, but that is 3 -> 9. On counts this small the noise alone is about +/-58%. Ignore the percentage; the absolute number is the only thing being said.
-- "occupational" in new company incorporations shows +200.0%, but that is 3 -> 9. On counts this small the noise alone is about +/-58%. Ignore the percentage; the absolute number is the only thing being said.
+- "beauty aesthetics" in new company incorporations shows +233.3%, but that is 3 -> 10. On counts this small the noise alone is about +/-58%. Ignore the percentage; the absolute number is the only thing being said.
+- "nails beauty" in new company incorporations shows +200.0%, but that is 6 -> 18. On counts this small the noise alone is about +/-41%. Ignore the percentage; the absolute number is the only thing being said.
 
 ## Confidence
 
