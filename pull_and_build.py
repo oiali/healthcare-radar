@@ -12,11 +12,13 @@ Signals ordered early -> late in the demand chain:
 Writes dashboard.html + data.json; persists data/adzuna_history.json + data/trends.json.
 """
 
-import os, re, json, base64, urllib.request, urllib.parse
+import os, re, json, base64, shutil, zipfile, tempfile, urllib.request, urllib.parse
+import xml.etree.ElementTree as ET
 from collections import Counter
 from datetime import datetime, timezone, date, timedelta
 
 UA = {"User-Agent": "healthcare-radar"}
+BROWSER_UA = {"User-Agent": "Mozilla/5.0 (compatible; healthcare-radar)"}
 
 
 def get_json(url, headers=None, timeout=45):
@@ -26,6 +28,22 @@ def get_json(url, headers=None, timeout=45):
             return json.loads(r.read().decode("utf-8"))
     except Exception:
         return None
+
+
+def get_text(url, timeout=45):
+    try:
+        req = urllib.request.Request(url, headers=BROWSER_UA)
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return r.read().decode("utf-8", "replace")
+    except Exception:
+        return None
+
+
+def download(url, path, timeout=240):
+    req = urllib.request.Request(url, headers=BROWSER_UA)
+    with urllib.request.urlopen(req, timeout=timeout) as r, open(path, "wb") as f:
+        shutil.copyfileobj(r, f)
+    return path
 
 
 def pct(now, then):
@@ -175,100 +193,157 @@ def trends():
 
 
 # ===================================================== CQC new registrations
-CQC_KEY = os.environ.get("CQC_KEY", "").strip()
-CQC_HDR = {"Ocp-Apim-Subscription-Key": CQC_KEY,
-           "User-Agent": "Mozilla/5.0 (compatible; healthcare-radar)"}
+# CQC publishes a monthly "care directory with filters" (.ods) listing EVERY active
+# location with its HSCA registration date. One 24MB download replaces 40k+ API calls.
+# We keep locations registered recently, drop social care, and cluster 2-word phrases
+# in their names -> the niches people are actually opening clinics for.
+CQC_PAGE = "https://www.cqc.org.uk/about-us/transparency/using-cqc-data"
+NS_T = "{urn:oasis:names:tc:opendocument:xmlns:table:1.0}"
+NS_TX = "{urn:oasis:names:tc:opendocument:xmlns:text:1.0}"
+NS_O = "{urn:oasis:names:tc:opendocument:xmlns:office:1.0}"
+MONTHS = {m: i + 1 for i, m in enumerate(
+    ["january", "february", "march", "april", "may", "june",
+     "july", "august", "september", "october", "november", "december"])}
+
+
+def cqc_file_url():
+    html = get_text(CQC_PAGE)
+    if not html:
+        return None
+    m = re.search(r'href="([^"]*HSCA_Active_Locations\.ods)"', html, re.I)
+    if not m:
+        return None
+    u = m.group(1)
+    return u if u.startswith("http") else "https://www.cqc.org.uk" + u
+
+
+def ods_rows(path, max_cols=220):
+    """Stream rows out of an .ods (zip + content.xml), expanding repeated cells."""
+    with zipfile.ZipFile(path) as zf, zf.open("content.xml") as fh:
+        for _, el in ET.iterparse(fh, events=("end",)):
+            if el.tag != NS_T + "table-row":
+                continue
+            row = []
+            for c in el.findall(NS_T + "table-cell"):
+                rep = int(c.get(NS_T + "number-columns-repeated") or 1)
+                v = c.get(NS_O + "date-value") or ""
+                if v:
+                    v = v[:10]
+                else:
+                    v = " ".join("".join(p.itertext()) for p in c.findall(NS_TX + "p")).strip()
+                for _ in range(rep):
+                    row.append(v)
+                    if len(row) >= max_cols:
+                        break
+                if len(row) >= max_cols:
+                    break
+            el.clear()
+            yield row
+
+
+def parse_date(s):
+    s = (s or "").strip()
+    m = re.match(r"(\d{4})-(\d{1,2})-(\d{1,2})", s)
+    if m:
+        return date(int(m.group(1)), int(m.group(2)), int(m.group(3)))
+    m = re.match(r"(\d{1,2})[/\-]([A-Za-z]{3,9})[/\-](\d{4})", s)
+    if m:
+        mon = next((v for k, v in MONTHS.items() if k.startswith(m.group(2).lower()[:3])), None)
+        if mon:
+            return date(int(m.group(3)), mon, int(m.group(1)))
+    m = re.match(r"(\d{1,2})/(\d{1,2})/(\d{4})", s)
+    if m:
+        return date(int(m.group(3)), int(m.group(2)), int(m.group(1)))
+    return None
 
 
 def cqc():
-    if not CQC_KEY:
+    url = cqc_file_url()
+    if not url:
+        print("DEBUG CQC: could not find HSCA_Active_Locations.ods link")
         return None
-    from datetime import timedelta
-    now = datetime.now(timezone.utc)
-    start = (now - timedelta(days=75)).strftime("%Y-%m-%dT00:00:00Z")
-    end = now.strftime("%Y-%m-%dT00:00:00Z")
-    ids = []
-    for page in range(1, 4):
-        u = ("https://api.service.cqc.org.uk/public/v1/changes/location"
-             f"?startTimestamp={start}&endTimestamp={end}&page={page}&perPage=1000")
-        d = get_json(u, headers=CQC_HDR)
-        if page == 1:
-            print("DEBUG CQC changes:", (list(d.keys()) if isinstance(d, dict) else repr(d)[:90]))
-        chg = d.get("changes") if isinstance(d, dict) else None
-        if not chg:
-            break
-        ids += chg
-        if len(chg) < 1000:
-            break
-    cnt = Counter()
-    kept = 0
-    cutoff = (now - timedelta(days=90)).date().isoformat()
-    for lid in ids[:700]:
-        loc = get_json(f"https://api.service.cqc.org.uk/public/v1/locations/{lid}", headers=CQC_HDR)
-        if not isinstance(loc, dict) or (loc.get("registrationDate") or "9999") < cutoff:
-            continue
-        name = (loc.get("name") or "").lower()
-        svc = " ".join((s.get("name") or "") for s in (loc.get("gacServiceTypes") or [])).lower()
-        toks = [t for t in re.findall(r"[a-z]+", name + " " + svc) if len(t) > 3 and t not in STOP]
-        for i in range(len(toks) - 1):
-            cnt[toks[i] + " " + toks[i + 1]] += 1
-        kept += 1
-    print(f"DEBUG CQC ids={len(ids)} kept={kept}")
-    rows = [{"name": t, "code": "", "latest": c, "g1": None, "g3": None, "g12": None, "accel": None}
-            for t, c in cnt.items() if c >= 3]
-    rows.sort(key=lambda r: r["latest"], reverse=True)
-    return rows[:40]
+    print("DEBUG CQC file:", url)
+    # anchor all windows on the file's publication date, not today (file is a monthly snapshot)
+    m = re.search(r"/(\d{2})_([A-Za-z]+)_(\d{4})_HSCA", url)
+    anchor = date(int(m.group(3)), MONTHS.get(m.group(2).lower(), 1), int(m.group(1))) if m else date.today()
 
-
-# ============================================================ NICE pipeline
-def get_text(url):
+    path = os.path.join(tempfile.gettempdir(), "cqc.ods")
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (compatible; healthcare-radar)"})
-        with urllib.request.urlopen(req, timeout=45) as r:
-            return r.read().decode("utf-8", "replace")
-    except Exception:
+        download(url, path)
+    except Exception as e:
+        print("DEBUG CQC download failed:", repr(e)[:120])
         return None
 
+    # windows in months back from the anchor
+    W = {"m1": (1, 0), "m1p": (2, 1), "m3": (3, 0), "m3p": (6, 3), "m12": (12, 0), "m12p": (24, 12)}
+    bounds = {k: (add_months(anchor, -a), add_months(anchor, -b)) for k, (a, b) in W.items()}
+    cnt = {k: Counter() for k in W}
 
-# Large-population / private-pay-relevant conditions. NICE's in-development list is
-# dominated by rare oncology - these keywords keep only the market-CREATING appraisals.
-BIG_COND = [
-    "obesity", "weight", "diabet", "adhd", "attention deficit", "menopaus", "depress", "anxiet",
-    "dementia", "alzheim", "migraine", "eczema", "atopic", "psorias", "osteoporos", "hair loss",
-    "alopecia", "erectile", "acne", "insomnia", "sleep apnoea", "irritable bowel", "arthrit",
-    "chronic pain", "hypertens", "cholesterol", "asthma", "copd", "fertil", "endometrios",
-    "polycystic", "incontinen", "overactive bladder", "prostat", "rosacea", "vitiligo",
-    "smoking", "alcohol", "opioid", "macular", "hearing loss", "fibromyalgia", "long covid",
-    "testosterone", "hypogonad", "crohn", "colitis", "hidradenitis", "urticaria", "rhinitis",
-]
+    i_name = i_date = i_type = None
+    rows_seen = kept = 0
+    sectors = Counter()
 
+    for row in ods_rows(path):
+        if i_name is None:
+            low = [c.strip().lower() for c in row]
+            if any("location id" in c for c in low):
+                def find(*subs):
+                    for j, c in enumerate(low):
+                        if all(s in c for s in subs):
+                            return j
+                    return None
+                i_name = find("location", "name")
+                i_date = find("hsca start date")
+                if i_date is None:
+                    i_date = find("start date")
+                i_type = find("location", "type")
+                if i_type is None:
+                    i_type = find("sector")
+                print("DEBUG CQC header:", [c for c in low if c][:26])
+                print(f"DEBUG CQC cols name={i_name} date={i_date} type={i_type}")
+                if i_name is None or i_date is None:
+                    return None
+            continue
 
-def nice():
-    titles = []
-    for page in range(1, 26):
-        html = get_text("https://www.nice.org.uk/guidance/indevelopment"
-                        f"?ndt=Guidance&ngt=Technology%20appraisal%20guidance&page={page}")
-        if not html:
-            break
-        found = re.findall(r'/indevelopment/gid-[a-z0-9]+"[^>]*>\s*([^<]{6,180}?)\s*<', html, re.I)
-        if not found:
-            break
-        new = 0
-        for t in found:
-            t = re.sub(r"\s+", " ", t).strip()
-            if t and t not in titles:
-                titles.append(t)
-                new += 1
-        if new == 0:
-            break
+        rows_seen += 1
+        if len(row) <= max(i_name, i_date):
+            continue
+        d = parse_date(row[i_date])
+        if not d:
+            continue
+        sector = (row[i_type] if i_type is not None and len(row) > i_type else "")
+        sectors[sector] += 1
+        if "social care" in sector.lower():          # care homes / homecare = churn, not niches
+            continue
+        nm = (row[i_name] or "").lower()
+        toks = [t for t in re.findall(r"[a-z]+", nm) if len(t) > 3 and t not in STOP]
+        grams = {toks[j] + " " + toks[j + 1] for j in range(len(toks) - 1)}
+        if not grams:
+            continue
+        hit = False
+        for k, (lo, hi) in bounds.items():
+            if lo <= d < hi:
+                hit = True
+                for g in grams:
+                    cnt[k][g] += 1
+        kept += hit
+
+    print(f"DEBUG CQC anchor={anchor} rows={rows_seen} in-window={kept} sectors={sectors.most_common(6)}")
+
     rows = []
-    for t in titles:
-        tl = t.lower()
-        hit = next((c for c in BIG_COND if c in tl), None)
-        if hit:
-            rows.append({"name": t, "code": hit, "latest": None,
-                         "g1": None, "g3": None, "g12": None, "accel": None})
-    print(f"DEBUG NICE scanned={len(titles)} big-market={len(rows)}")
+    for g, c12 in cnt["m12"].items():
+        if c12 < 6:                                   # min volume so it's signal not noise
+            continue
+        # min base of 3 on the comparison window: below that a % is noise, not signal
+        p12 = cnt["m12p"][g]
+        g12 = pct(c12, p12) if p12 >= 3 else None
+        g3 = pct(cnt["m3"][g], cnt["m3p"][g]) if cnt["m3p"][g] >= 3 else None
+        g1 = pct(cnt["m1"][g], cnt["m1p"][g]) if cnt["m1p"][g] >= 3 else None
+        rows.append({"name": g, "latest": c12, "g1": g1, "g3": g3, "g12": g12,
+                     "accel": (g3 - g12) if (g3 is not None and g12 is not None) else None,
+                     "isnew": p12 == 0})
+    rows.sort(key=lambda r: (r["isnew"], r["g12"] if r["g12"] is not None else -9e9, r["latest"]),
+              reverse=True)
     return rows[:40]
 
 
@@ -278,15 +353,14 @@ def main():
     jobs = adzuna() or []
     tr = trends() or []
     cq = cqc() or []
-    nc = nice() or []
     updated = datetime.now(timezone.utc).strftime("%d %b %Y, %H:%M UTC")
-    payload = json.dumps({"inc": inc, "jobs": jobs, "trends": tr, "cqc": cq, "nice": nc}).replace("</", "<\\/")
+    payload = json.dumps({"inc": inc, "jobs": jobs, "trends": tr, "cqc": cq}).replace("</", "<\\/")
     os.makedirs("data", exist_ok=True)
     json.dump({"updated": datetime.now(timezone.utc).isoformat(), "inc": inc, "jobs": jobs,
-               "trends": tr, "cqc": cq, "nice": nc}, open("data.json", "w"), indent=2)
+               "trends": tr, "cqc": cq}, open("data.json", "w"), indent=2)
     with open("dashboard.html", "w", encoding="utf-8") as f:
         f.write(TEMPLATE.replace("{{UPDATED}}", updated).replace("{{DATA}}", payload))
-    print(f"incorporations={len(inc)} jobs={len(jobs)} trends={len(tr)} cqc={len(cq)} nice={len(nc)}")
+    print(f"incorporations={len(inc)} jobs={len(jobs)} trends={len(tr)} cqc={len(cq)}")
 
 
 TEMPLATE = r"""<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8">
@@ -325,7 +399,6 @@ h3{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:#6b7280;ma
   <div class="tab" data-p="in">New companies</div>
   <div class="tab" data-p="jb">Job ads</div>
   <div class="tab" data-p="cq">New clinics</div>
-  <div class="tab" data-p="nc">Pipeline (NICE)</div>
 </div>
 <div class="panel on ov" id="ov"><div id="ovbody" class="msg">Loading live signals&hellip;</div></div>
 <div class="panel" id="tr"><div id="trbody" class="msg">Loading Google search demand&hellip;</div></div>
@@ -333,7 +406,6 @@ h3{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:#6b7280;ma
 <div class="panel" id="in"><div id="inbody"></div></div>
 <div class="panel" id="jb"><div id="jbbody"></div></div>
 <div class="panel" id="cq"><div id="cqbody"></div></div>
-<div class="panel" id="nc"><div id="ncbody"></div></div>
 </div>
 <script>
 var RADAR = {{DATA}};
@@ -424,8 +496,7 @@ document.getElementById('jbbody').innerHTML=tableRows(RADAR.jobs,'Live ads',{noG
 document.getElementById('trbody').innerHTML=(RADAR.trends&&RADAR.trends.length?
   tableRows(RADAR.trends,'Index',{firstCol:'Search term'}):'<div class="msg">Search-demand data will appear after the next weekly run.</div>')+
   '<div class="note">Google Trends search interest in the UK (via SerpApi), refreshed weekly. Ranked by 12-month growth; click a column to sort.</div>';
-document.getElementById('cqbody').innerHTML=(RADAR.cqc&&RADAR.cqc.length?tableRows(RADAR.cqc,'New (90d)',{noGrowth:true,firstCol:'Clinic niche'}):'<div class="msg">No CQC data this run — check the run log.</div>')+'<div class="note">Rising 2-word phrases in the names + service types of clinics <b>newly registered with CQC</b> in the last 90 days. Clinics register ~12–24 months before they trade — a supply-side discovery signal. Ranked by count; growth builds as snapshots accumulate.</div>';
-document.getElementById('ncbody').innerHTML=(RADAR.nice&&RADAR.nice.length?('<ul>'+RADAR.nice.map(function(r){return '<li>'+r.name+' <span class="niche">'+r.code+'</span></li>';}).join('')+'</ul>'):'<div class="msg">No large-market NICE items this run.</div>')+'<div class="note">NICE technology appraisals <b>in development</b>, filtered to <b>large-population conditions only</b> (obesity, ADHD, menopause, dementia, derm, pain…) — the rare-oncology long tail that dominates NICE\'s list is stripped out. These are the treatments that could <b>create a private-pay market</b>, surfaced ~12–24 months before they land.</div>';
+document.getElementById('cqbody').innerHTML=(RADAR.cqc&&RADAR.cqc.length?tableRows(RADAR.cqc,'New (12m)',{firstCol:'Clinic niche'}):'<div class="msg">No CQC data this run — check the run log.</div>')+'<div class="note"><b>Every clinic newly registered with CQC</b>, from CQC\'s monthly registration file. The 2-word phrases in their names are clustered into niches, then counted over 1 / 3 / 12 months against the same window a year before. Adult social care (care homes, homecare) is excluded — it\'s churn, not niche formation. A clinic registers <b>before</b> it can legally trade, so this is the supply side committing capital ~6–18 months ahead of revenue. "new" = the phrase did not exist a year ago. Click a column to sort.</div>';
 document.querySelectorAll('.panel').forEach(wireSort);
 
 // ---- Wikipedia public interest (client-side) ----
@@ -476,6 +547,8 @@ function overview(presc){
   presc.slice(0,4).forEach(function(r){h+=bul(r,'in prescription volume');});h+='</ul>';
   h+='<h3>New companies by niche (12-mth)</h3><ul>';
   (RADAR.inc||[]).slice(0,4).forEach(function(r){h+=bul(r,'in new companies');});h+='</ul>';
+  if(RADAR.cqc&&RADAR.cqc.length){h+='<h3>New CQC-registered clinics by niche (12-mth)</h3><ul>';
+    RADAR.cqc.slice(0,4).forEach(function(r){h+=bul(r,'in new clinic registrations');});h+='</ul>';}
   var jb=(RADAR.jobs||[]).slice(0,3);
   h+='<h3>Where hiring is concentrated</h3><ul>';
   jb.forEach(function(r){h+='<li><b>'+r.name+'</b> &mdash; '+num(r.latest)+' live ads</li>';});h+='</ul>';
