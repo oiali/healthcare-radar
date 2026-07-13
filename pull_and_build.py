@@ -216,9 +216,15 @@ def cqc_file_url():
 
 
 def ods_rows(path, max_cols=220):
-    """Stream rows out of an .ods (zip + content.xml), expanding repeated cells."""
+    """Stream (sheet_name, row) out of an .ods. The CQC file's FIRST sheet is a notes
+    page, so callers must key off the sheet/header, not just the first rows."""
+    sheet = ""
     with zipfile.ZipFile(path) as zf, zf.open("content.xml") as fh:
-        for _, el in ET.iterparse(fh, events=("end",)):
+        for ev, el in ET.iterparse(fh, events=("start", "end")):
+            if ev == "start":
+                if el.tag == NS_T + "table":
+                    sheet = el.get(NS_T + "name") or ""
+                continue
             if el.tag != NS_T + "table-row":
                 continue
             row = []
@@ -236,7 +242,7 @@ def ods_rows(path, max_cols=220):
                 if len(row) >= max_cols:
                     break
             el.clear()
-            yield row
+            yield sheet, row
 
 
 def parse_date(s):
@@ -284,32 +290,40 @@ def cqc():
     rows_seen = kept = 0
     sectors = Counter()
 
-    DIAG["first_rows"] = []
     total = 0
-    for row in ods_rows(path):
+    sheets = []
+    for sheet, row in ods_rows(path):
         total += 1
-        if len(DIAG["first_rows"]) < 6:
-            DIAG["first_rows"].append([c for c in row[:6]])
+        if sheet not in sheets:
+            sheets.append(sheet)
         if i_name is None:
+            # header = a row with a SHORT cell exactly "location id" (the notes sheet has
+            # prose paragraphs that would false-match on a substring test)
             low = [c.strip().lower() for c in row]
-            if any("location id" in c for c in low):
-                def find(*subs):
-                    for j, c in enumerate(low):
-                        if all(s in c for s in subs):
-                            return j
-                    return None
-                i_name = find("location", "name")
-                i_date = find("hsca start date")
-                if i_date is None:
-                    i_date = find("start date")
-                i_type = find("location", "type")
-                if i_type is None:
-                    i_type = find("sector")
-                DIAG["header"] = [c for c in low if c][:30]
-                DIAG["cols"] = {"name": i_name, "date": i_date, "type": i_type}
-                if i_name is None or i_date is None:
-                    DIAG["fatal"] = "name/date column not found"
-                    return None
+            short = [c if len(c) < 70 else "" for c in low]
+            if "location id" not in short:
+                continue
+
+            def find(*subs):
+                for j, c in enumerate(short):
+                    if c and all(s in c for s in subs):
+                        return j
+                return None
+            i_name = find("location", "name")
+            i_date = find("hsca start date")
+            if i_date is None:
+                i_date = find("start date")
+            if i_date is None:
+                i_date = find("registration date")
+            i_type = find("location", "type")
+            if i_type is None:
+                i_type = find("sector")
+            DIAG["sheet"] = sheet
+            DIAG["header"] = [c for c in short if c][:40]
+            DIAG["cols"] = {"name": i_name, "date": i_date, "type": i_type}
+            if i_name is None or i_date is None:
+                DIAG["fatal"] = "name/date column not found"
+                return None
             continue
 
         rows_seen += 1
@@ -336,6 +350,7 @@ def cqc():
         kept += hit
 
     DIAG["anchor"] = str(anchor)
+    DIAG["sheets"] = sheets[:8]
     DIAG["rows_total"] = total
     DIAG["rows_data"] = rows_seen
     DIAG["in_window"] = kept
