@@ -137,16 +137,28 @@ STOP_BIGRAM = STOP - SERVICE_TAIL
 
 
 def grams(name):
-    """unigrams (strict stoplist) + bigrams (looser, so 'peptide therapy' survives)"""
-    toks_all = [t for t in re.findall(r"[a-z]+", (name or "").lower()) if len(t) > 3]
-    uni = {t for t in toks_all if t not in STOP and t not in SERVICE_TAIL}
-    bi = set()
-    seq = [t for t in toks_all if t not in STOP_BIGRAM]
-    for i in range(len(seq) - 1):
-        if seq[i] in SERVICE_TAIL:        # don't lead a phrase with a service word
+    """unigrams + bi/trigrams. A phrase never spans a word we dropped - the old version
+    stripped stopwords first and THEN paired, so 'Botox and Filler Clinic' emitted the
+    phrase 'botox filler', which nobody had actually written. Short words like 'and'
+    must therefore BREAK a run, not vanish before we look."""
+    toks = re.findall(r"[a-z]+", (name or "").lower())
+    def drop(t):
+        return len(t) <= 3 or t in STOP_BIGRAM
+    out = {t for t in toks if len(t) > 3 and t not in STOP and t not in SERVICE_TAIL}
+    run = []
+    for t in toks + [None]:
+        if t is not None and not drop(t):
+            run.append(t)
             continue
-        bi.add(seq[i] + " " + seq[i + 1])
-    return uni | bi
+        for i in range(len(run)):                      # phrases live INSIDE a run
+            if run[i] in SERVICE_TAIL:
+                continue
+            if i + 1 < len(run):
+                out.add(run[i] + " " + run[i + 1])
+            if i + 2 < len(run):
+                out.add(run[i] + " " + run[i + 1] + " " + run[i + 2])
+        run = []
+    return out
 
 
 def ch_page(sic, dfrom, dto, start):
@@ -526,7 +538,8 @@ def safe(fn, label, *a, **k):
 
 def main():
     import nhs_rtt, aesthetics as aes_mod, investability2 as inv2
-    import discovery as disc_mod, interpret as interp, targets as tgt_mod
+    import discovery2 as disc_mod, interpret as interp, targets as tgt_mod
+    import nhsbsa_epd
 
     inc = safe(incorporations, "T2 incorporations") or []
     cq = safe(cqc, "T3 cqc") or []
@@ -547,7 +560,15 @@ def main():
     # a genuinely new niche can appear. Distinct-operator count is the discriminator
     # that separates a real service from one company's brand.
     ops = safe(disc_mod.mine_cqc_ods, "cqc operator-level mine", ods) or {}
-    disc = safe(disc_mod.discovery, "discovery (open layer)", inc, ops or cq, aes) or []
+    disc = safe(disc_mod.discovery2, "discovery (open layer)", inc, ops or cq, aes) or []
+
+    # T4 now runs SERVER-SIDE off NHSBSA's own Open Data Portal: 12 years of history
+    # (back to Jan 2014), no API key, and it answers datacentre IPs. OpenPrescribing
+    # served only 60 months and 403s Actions, which is why T4 used to be client-side.
+    # Real lag is ~2.5 months, not the 12+ we assumed.
+    presc = safe(nhsbsa_epd.epd, "T4 prescribing (NHSBSA)") or []
+    tracked = [r for r in presc if r.get("kind") != "discovery"]
+    drugdisc = [r for r in presc if r.get("kind") == "discovery"]
 
     tr = safe(trends, "T1 trends", discovered_terms(inc, cq + aes)) or []
     # Terms fed back from T2/T3 keep found=True and are shown, but get ZERO votes:
@@ -556,7 +577,7 @@ def main():
     tr_indep, tr_found = interp.decontaminate(tr)
     DIAG["t1_independent"] = len(tr_indep)
     DIAG["t1_auto_found"] = len(tr_found)
-    jobs = safe(adzuna, "T3b jobs") or []
+    jobs = []          # Adzuna REMOVED: its ToS forbids aggregation/vacancy counts.
     moved = whats_moved(tr_indep, inc, cq)
 
     # Target list = named individuals + an INFERRED claim they may want to sell.
@@ -570,8 +591,8 @@ def main():
     updated = datetime.now(timezone.utc).strftime("%d %b %Y, %H:%M UTC")
     data = {"waits": waits, "trends": tr, "inc": inc, "aes": aes, "cqc": cq,
             "jobs": jobs, "moved": moved, "invest": invest, "disc": disc,
-            "diag": DIAG, "drugq": NICHE_QUERY, "drugs": DRUGS,
-            "nopresc": NICHES_NO_PRESCRIBING}
+            "presc": tracked, "drugdisc": drugdisc,
+            "diag": DIAG, "drugs": DRUGS, "nopresc": NICHES_NO_PRESCRIBING}
     payload = json.dumps(data).replace("</", "<\\/")
     save("data.json", dict(updated=datetime.now(timezone.utc).isoformat(), **data))
     with open("dashboard.html", "w", encoding="utf-8") as f:
@@ -590,7 +611,8 @@ def main():
             "<!DOCTYPE html><meta charset=utf-8><p>Digest failed to build.</p>")
 
     print(f"waits={len(waits)} trends={len(tr)} inc={len(inc)} aes={len(aes)} cqc={len(cq)} "
-          f"jobs={len(jobs)} invest={len(invest)} discovery={len(disc)} moved={len(moved)}")
+          f"presc={len(tracked)} drugdisc={len(drugdisc)} invest={len(invest)} "
+          f"discovery={len(disc)} moved={len(moved)}")
 
 
 from template import TEMPLATE

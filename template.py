@@ -66,7 +66,6 @@ td.q{max-width:300px}
   <div class="tab" data-p="in"><span class="t">T2</span>New companies</div>
   <div class="tab" data-p="ae"><span class="t">T2</span>Aesthetics</div>
   <div class="tab" data-p="cq"><span class="t">T3</span>New clinics</div>
-  <div class="tab" data-p="jb"><span class="t">T3</span>Job ads</div>
   <div class="tab" data-p="pr"><span class="t">T4</span>Prescribing</div>
   <div class="tab" data-p="iv">Market structure</div>
 </div>
@@ -77,7 +76,6 @@ td.q{max-width:300px}
 <div class="panel" id="in"><div id="inbody"></div></div>
 <div class="panel" id="ae"><div id="aebody"></div></div>
 <div class="panel" id="cq"><div id="cqbody"></div></div>
-<div class="panel" id="jb"><div id="jbbody"></div></div>
 <div class="panel" id="pr"><div id="prbody" class="msg">Fetching live prescribing&hellip;</div></div>
 <div class="panel" id="iv"><div id="ivbody"></div></div>
 </div>
@@ -438,9 +436,6 @@ document.getElementById('cqbody').innerHTML=(RADAR.cqc&&RADAR.cqc.length?tableRo
   'capital arriving to compete with the assets you want to buy. On the Stack, T3 rising '+
   'is what pushes a niche into <i>"Wait or build — new clinics still arriving"</i>.';
 
-document.getElementById('jbbody').innerHTML=tableRows(RADAR.jobs,'Live ads',{firstCol:'Specialty'})+
-  '<div class="note"><b>T3 &middot; supporting, and the weakest tier.</b> Live clinician job ads (Adzuna). Adzuna serves no history, so growth accrues from snapshots this dashboard takes itself and will be blank until it does. Confirmation, not discovery.</div>';
-
 function ivTable(){
   var IV=RADAR.invest||{};var ks=Object.keys(IV);
   if(!ks.length)return '<div class="msg">Investability not computed this run.</div>';
@@ -490,60 +485,42 @@ function discTable(){
     '<b>How a brand is told apart from a niche:</b> a real service is used by many unrelated operators; a brand is used many times by one. So a phrase must appear across <b>&ge;6 distinct operators</b>, in <b>&ge;3 regions</b>, at &le;3 mentions per operator, and be rising. That kills brand names, franchises, surnames and place names structurally &mdash; not with a blocklist.<br>'+
     '<b>Read it as a question, not an answer.</b> These are unvetted strings. Most will be nothing. The point is that the machine is now able to be surprised.</div>';
 }
-document.getElementById('dcbody').innerHTML=discTable();
+document.getElementById('dcbody').innerHTML=discTable()+drugDisc();
+
+// Rising DRUGS nobody put on a list. The same open-layer idea, applied to the whole
+// NHS formulary: we already hold every chemical for every cached month, so ranking all
+// of them by growth costs nothing extra. A new drug climbing fast is how the GLP-1
+// market was created - and it is invisible to name-mining, because no new company or
+// clinic has to exist for a GP to start prescribing something.
+function drugDisc(){
+  var D=RADAR.drugdisc||[];
+  if(!D.length)return '';
+  var h='<h3 style="font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:#6b7280;margin:22px 0 8px">Rising drugs nobody listed</h3>'+
+    '<table><thead><tr><th class="l">#</th><th class="l">Chemical</th>'+
+    '<th data-k="latest">Items / mo</th><th data-k="g3">3-mth</th><th data-k="g12">12-mth</th></tr></thead><tbody>';
+  D.slice(0,20).forEach(function(r,i){
+    h+='<tr data-latest="'+(r.latest||0)+'" data-g3="'+(r.g3==null?-9999:r.g3)+'" data-g12="'+(r.g12==null?-9999:r.g12)+
+       '"><td class="rk">'+(i+1)+'</td><td class="nm">'+r.name+'</td>'+
+       '<td class="num">'+num(r.latest)+'</td><td class="num">'+fmt(r.g3)+'</td>'+
+       '<td class="num g12">'+fmt(r.g12)+'</td></tr>';});
+  return h+'</tbody></table><div class="note">Every BNF chemical in England, ranked by growth, with the ones already mapped to a known niche removed. This is the <b>drug-side open layer</b>: it can surface a treatment that is taking off before anyone has incorporated a company or registered a clinic to sell it. Most rows will be clinical noise (a reformulation, a supply shortage resolving). Read it as a question.</div>';
+}
 
 document.querySelectorAll('.panel').forEach(wireSort);
 
-// ---- T4 prescribing: batched by niche (16 requests, not 76 - OpenPrescribing 429s at ~60) ----
-function loadPresc(){
-  var niches=Object.keys(DRUGQ);
-  return Promise.all(niches.map(function(niche){
-    var codes=DRUGQ[niche];
-    return fetch('https://openprescribing.net/api/1.0/spending/?code='+encodeURIComponent(codes)+'&format=json')
-      .then(function(r){return r.ok?r.json():null;}).then(function(d){
-        if(!d||d.length<15)return null;
-        var v=d.map(function(x){return x.items;});var n=v.length;
-        function mn(a,b){var s=v.slice(a,b);return s.reduce(function(x,y){return x+y;},0)/s.length;}
-        var last3=mn(n-3,n),prev3=mn(n-6,n-3),year3=mn(n-15,n-12);
-        if(v[n-1]<100)return null;
-        var names=codes.split(',').map(function(c){return (DRUGS[c]||[c])[0];});
-        var treats=codes.split(',').map(function(c){return (DRUGS[c]||['','',''])[2];})
-                        .filter(Boolean).slice(0,3).join('; ');
-        return {name:niche,niche:niche,treats:names.join(', ')+' — '+treats,
-                latest:Math.round(v[n-1]),g1:pct(v[n-1],v[n-2]),g3:pct(last3,prev3),
-                g12:pct(last3,year3),date:d[n-1].date};
-      }).catch(function(){return null;});
-  })).then(function(res){return res.filter(Boolean).sort(function(a,b){
-    return (b.g12==null?-9e9:b.g12)-(a.g12==null?-9e9:a.g12);});});
-}
-function finish(p){
-  document.getElementById('prbody').innerHTML=(p.length?
-    tableRows(p,'Items / mo',{drug:true,firstCol:'Niche (batched drugs)'}):'<div class="msg">Could not load prescribing.</div>')+
-        '<div class="note"><b>T4 &middot; AMBIGUOUS. It votes on nothing, and here is why.</b> '+
-    'NHS items dispensed in England (OpenPrescribing), 76 verified BNF codes batched into '+
-    Object.keys(DRUGQ).length+' requests. Fetched live in your browser because '+
-    'OpenPrescribing blocks datacentre IPs'+(p.length?'; latest month '+p[0].date:'')+'. '+
-    '<b>Hover a row</b> for the drugs behind it.<br><br>'+
-    '<b>Rising NHS prescribing has two opposite readings and this data cannot separate '+
-    'them:</b><br>'+
-    '&nbsp;&nbsp;<b>(a) the condition is growing.</b> More people have it, more people '+
-    'want treating, and your private market grows alongside the NHS one. This is the '+
-    'reading the old dashboard assumed, silently, by calling T4 a “maturity” '+
-    'signal.<br>'+
-    '&nbsp;&nbsp;<b>(b) the NHS has started FUNDING it.</b> The prescriptions rise '+
-    '<i>because</i> the treatment became free at the point of use — and that '+
-    '<b>destroys</b> your private clinic, because your entire proposition was that the '+
-    'patient could not get it on the NHS. On this reading a rising T4 is a <b>SELL</b> '+
-    'signal.<br><br>'+
-    'We do not pretend to tell them apart. The <b>one</b> hint the data offers: if T4 is '+
-    'rising while T1 (private search intent) is FALLING, that is the pattern you would '+
-    'expect under (b) — and the Stack flags it. Suggestive, never proof. Go and check '+
-    'whether NICE or NHS England issued guidance in the window.<br>'+
-    '9 niches have no valid drug proxy and are marked <i>n/a</i>, not dashed — read '+
-    'that as "not applicable", never "not yet".</div>';;
-  wireSort(document.getElementById('pr'));
-  document.getElementById('stbody').innerHTML=buildStack(p);
-  wireSort(document.getElementById('st'));
-}
-loadPresc().then(finish).catch(function(){finish([]);});
+// ---- T4 prescribing: NHSBSA English Prescribing Dataset, fetched SERVER-side.
+// 12 years of history (back to Jan 2014), no API key, ~2.5-month lag. We used to use
+// OpenPrescribing, which serves only 60 months and 403s datacentre IPs - that 60-month
+// window is why the ADHD boom (2021-23) was previously un-backtestable.
+var PRESC = RADAR.presc||[];
+document.getElementById('prbody').innerHTML=(PRESC.length?
+  tableRows(PRESC,'Items / mo',{drug:true,firstCol:'Niche'}):'<div class="msg">Prescribing unavailable this run.</div>')+
+  '<div class="note"><b>T4 &middot; the latest tier, and the highest-confidence.</b> NHS items dispensed in England, from <b>NHSBSA\'s own open data</b> &mdash; 76 verified BNF chemical codes, 12 years of history, refreshed monthly (~2.5 months in arrears, not the 12+ we first assumed). '+
+  '<b>Read T4 twice.</b> Prescribing can rise because the condition is genuinely growing &mdash; or because the NHS started FUNDING a treatment, which shrinks the private market for it. The data cannot separate those two, and neither can we. '+
+  '9 niches have no valid NHS drug proxy at all (aesthetics, diagnostics, dental, tongue-tie, longevity, MSK, audiology, eye, private GP) and are marked <i>n/a</i>, never dashed.</div>';
+wireSort(document.getElementById('pr'));
+
+// ---- The Stack (T4 is now server-side, so no waiting on the browser) ----
+document.getElementById('stbody').innerHTML=buildStack(PRESC);
+wireSort(document.getElementById('st'));
 </script></body></html>"""
