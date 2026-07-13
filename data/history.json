@@ -2,23 +2,21 @@
  {
   "date": "2026-07-13",
   "t1": {
-   "Weight loss / GLP-1": 210.94324029942595,
-   "Sexual health / ED": 59.66850828729283,
-   "Longevity / peptides / IV": 56.83453237410072,
-   "Menopause / HRT": 18.149108283954924,
-   "Men's health / TRT": 36.994219653179194,
-   "Diagnostics / imaging": 17.156862745098046,
-   "ADHD": 8.144923249465434,
-   "Aesthetics / skin": -7.398283090895232,
-   "Tongue-tie / lactation": -16.332378223495702,
-   "Hair restoration": -19.505494505494504
+   "Weight loss / GLP-1": 210.1060163826382,
+   "Sexual health / ED": 56.9060773480663,
+   "Aesthetics / skin": 22.046036915102494,
+   "Menopause / HRT": 19.178628389154703,
+   "Men's health / TRT": 38.72832369942196,
+   "Diagnostics / imaging": 19.6078431372549,
+   "ADHD": 8.62026627695043,
+   "Tongue-tie / lactation": -15.568862275449105,
+   "Hair restoration": -18.956043956043956
   },
   "t2": {
+   "Dental / orthodontics": 200.0,
    "Aesthetics / skin": 158.92857142857142,
-   "MSK / physio": 160.0,
-   "Longevity / peptides / IV": 84.84848484848486,
-   "Hair restoration": 66.66666666666667,
-   "Dermatology / acne": 66.66666666666667
+   "MSK / physio": 125.86206896551724,
+   "Bladder / continence": 100.0
   },
   "t3": {
    "Tongue-tie / lactation": 200.0,

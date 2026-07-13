@@ -1,0 +1,502 @@
+{
+ "2025-05": {
+  "data": {
+   "Cardiology Service": {
+    "over18": 154156,
+    "over52": 7655,
+    "total": 400038
+   },
+   "Cardiothoracic Surgery Service": {
+    "over18": 3195,
+    "over52": 192,
+    "total": 9762
+   },
+   "Dermatology Service": {
+    "over18": 155128,
+    "over52": 10565,
+    "total": 413232
+   },
+   "Ear Nose and Throat Service": {
+    "over18": 307826,
+    "over52": 28530,
+    "total": 636238
+   },
+   "Elderly Medicine Service": {
+    "over18": 4001,
+    "over52": 58,
+    "total": 23599
+   },
+   "Gastroenterology Service": {
+    "over18": 136499,
+    "over52": 6543,
+    "total": 376849
+   },
+   "General Internal Medicine Service": {
+    "over18": 10655,
+    "over52": 261,
+    "total": 35865
+   },
+   "General Surgery Service": {
+    "over18": 156915,
+    "over52": 11468,
+    "total": 394228
+   },
+   "Gynaecology Service": {
+    "over18": 252026,
+    "over52": 18403,
+    "total": 578272
+   },
+   "Neurology Service": {
+    "over18": 99165,
+    "over52": 6751,
+    "total": 222406
+   },
+   "Neurosurgical Service": {
+    "over18": 22968,
+    "over52": 1623,
+    "total": 57858
+   },
+   "Ophthalmology Service": {
+    "over18": 175430,
+    "over52": 9549,
+    "total": 589546
+   },
+   "Oral Surgery Service": {
+    "over18": 159164,
+    "over52": 13700,
+    "total": 329587
+   },
+   "Other - Medical Services": {
+    "over18": 218187,
+    "over52": 11153,
+    "total": 638827
+   },
+   "Other - Mental Health Services": {
+    "over18": 554,
+    "over52": 4,
+    "total": 2428
+   },
+   "Other - Other Services": {
+    "over18": 40279,
+    "over52": 2947,
+    "total": 159494
+   },
+   "Other - Paediatric Services": {
+    "over18": 124226,
+    "over52": 9067,
+    "total": 330317
+   },
+   "Other - Surgical Services": {
+    "over18": 181631,
+    "over52": 12686,
+    "total": 480884
+   },
+   "Plastic Surgery Service": {
+    "over18": 45115,
+    "over52": 3924,
+    "total": 101834
+   },
+   "Respiratory Medicine Service": {
+    "over18": 73071,
+    "over52": 3100,
+    "total": 207710
+   },
+   "Rheumatology Service": {
+    "over18": 39487,
+    "over52": 1641,
+    "total": 122989
+   },
+   "Total": {
+    "over18": 2873874,
+    "over52": 196839,
+    "total": 7355950
+   },
+   "Trauma and Orthopaedic Service": {
+    "over18": 353732,
+    "over52": 25161,
+    "total": 843398
+   },
+   "Urology Service": {
+    "over18": 160464,
+    "over52": 11858,
+    "total": 400589
+   }
+  },
+  "url": "https://www.england.nhs.uk/statistics/wp-content/uploads/sites/2/2026/02/Full-CSV-data-file-May25-ZIP-4M-revised.zip"
+ },
+ "2026-02": {
+  "data": {
+   "Cardiology Service": {
+    "over18": 130251,
+    "over52": 4139,
+    "total": 381409
+   },
+   "Cardiothoracic Surgery Service": {
+    "over18": 2568,
+    "over52": 150,
+    "total": 9056
+   },
+   "Dermatology Service": {
+    "over18": 147469,
+    "over52": 5281,
+    "total": 380657
+   },
+   "Ear Nose and Throat Service": {
+    "over18": 263122,
+    "over52": 15444,
+    "total": 586374
+   },
+   "Elderly Medicine Service": {
+    "over18": 5183,
+    "over52": 168,
+    "total": 26508
+   },
+   "Gastroenterology Service": {
+    "over18": 129144,
+    "over52": 3975,
+    "total": 378852
+   },
+   "General Internal Medicine Service": {
+    "over18": 11292,
+    "over52": 332,
+    "total": 35394
+   },
+   "General Surgery Service": {
+    "over18": 152845,
+    "over52": 8192,
+    "total": 384999
+   },
+   "Gynaecology Service": {
+    "over18": 237446,
+    "over52": 13092,
+    "total": 564193
+   },
+   "Neurology Service": {
+    "over18": 90523,
+    "over52": 2844,
+    "total": 213567
+   },
+   "Neurosurgical Service": {
+    "over18": 22133,
+    "over52": 914,
+    "total": 55893
+   },
+   "Ophthalmology Service": {
+    "over18": 176645,
+    "over52": 5142,
+    "total": 600584
+   },
+   "Oral Surgery Service": {
+    "over18": 149551,
+    "over52": 9097,
+    "total": 322205
+   },
+   "Other - Medical Services": {
+    "over18": 202781,
+    "over52": 5920,
+    "total": 622846
+   },
+   "Other - Mental Health Services": {
+    "over18": 596,
+    "over52": 2,
+    "total": 3028
+   },
+   "Other - Other Services": {
+    "over18": 38503,
+    "over52": 1741,
+    "total": 152866
+   },
+   "Other - Paediatric Services": {
+    "over18": 111041,
+    "over52": 4649,
+    "total": 315129
+   },
+   "Other - Surgical Services": {
+    "over18": 173297,
+    "over52": 7889,
+    "total": 474835
+   },
+   "Plastic Surgery Service": {
+    "over18": 46441,
+    "over52": 3015,
+    "total": 102692
+   },
+   "Respiratory Medicine Service": {
+    "over18": 52147,
+    "over52": 1012,
+    "total": 184441
+   },
+   "Rheumatology Service": {
+    "over18": 37246,
+    "over52": 775,
+    "total": 113997
+   },
+   "Total": {
+    "over18": 2668691,
+    "over52": 120871,
+    "total": 7124952
+   },
+   "Trauma and Orthopaedic Service": {
+    "over18": 349042,
+    "over52": 20299,
+    "total": 829478
+   },
+   "Urology Service": {
+    "over18": 139425,
+    "over52": 6799,
+    "total": 385949
+   }
+  },
+  "url": "https://www.england.nhs.uk/statistics/wp-content/uploads/sites/2/2026/04/Full-CSV-data-file-Feb26-ZIP-4M-9j03fJT.zip"
+ },
+ "2026-04": {
+  "data": {
+   "Cardiology Service": {
+    "over18": 119236,
+    "over52": 2898,
+    "total": 377359
+   },
+   "Cardiothoracic Surgery Service": {
+    "over18": 2462,
+    "over52": 136,
+    "total": 8849
+   },
+   "Dermatology Service": {
+    "over18": 130089,
+    "over52": 4208,
+    "total": 379705
+   },
+   "Ear Nose and Throat Service": {
+    "over18": 245419,
+    "over52": 12762,
+    "total": 588278
+   },
+   "Elderly Medicine Service": {
+    "over18": 4670,
+    "over52": 159,
+    "total": 26474
+   },
+   "Gastroenterology Service": {
+    "over18": 115186,
+    "over52": 3168,
+    "total": 371537
+   },
+   "General Internal Medicine Service": {
+    "over18": 10025,
+    "over52": 496,
+    "total": 35221
+   },
+   "General Surgery Service": {
+    "over18": 142510,
+    "over52": 6398,
+    "total": 381808
+   },
+   "Gynaecology Service": {
+    "over18": 224434,
+    "over52": 10651,
+    "total": 563494
+   },
+   "Neurology Service": {
+    "over18": 82345,
+    "over52": 1949,
+    "total": 206659
+   },
+   "Neurosurgical Service": {
+    "over18": 21350,
+    "over52": 824,
+    "total": 56456
+   },
+   "Ophthalmology Service": {
+    "over18": 164104,
+    "over52": 4532,
+    "total": 610708
+   },
+   "Oral Surgery Service": {
+    "over18": 144562,
+    "over52": 7432,
+    "total": 320804
+   },
+   "Other - Medical Services": {
+    "over18": 182988,
+    "over52": 4201,
+    "total": 618974
+   },
+   "Other - Mental Health Services": {
+    "over18": 631,
+    "over52": 3,
+    "total": 3040
+   },
+   "Other - Other Services": {
+    "over18": 37884,
+    "over52": 1391,
+    "total": 158855
+   },
+   "Other - Paediatric Services": {
+    "over18": 103398,
+    "over52": 4107,
+    "total": 319213
+   },
+   "Other - Surgical Services": {
+    "over18": 160071,
+    "over52": 5988,
+    "total": 464243
+   },
+   "Plastic Surgery Service": {
+    "over18": 43956,
+    "over52": 2583,
+    "total": 101458
+   },
+   "Respiratory Medicine Service": {
+    "over18": 47392,
+    "over52": 588,
+    "total": 187683
+   },
+   "Rheumatology Service": {
+    "over18": 35030,
+    "over52": 936,
+    "total": 115224
+   },
+   "Total": {
+    "over18": 2486320,
+    "over52": 97388,
+    "total": 7093502
+   },
+   "Trauma and Orthopaedic Service": {
+    "over18": 335967,
+    "over52": 16840,
+    "total": 819951
+   },
+   "Urology Service": {
+    "over18": 132611,
+    "over52": 5138,
+    "total": 377509
+   }
+  },
+  "url": "https://www.england.nhs.uk/statistics/wp-content/uploads/sites/2/2026/06/Full-CSV-data-file-Apr26-ZIP-3M-X7gGnn.zip"
+ },
+ "2026-05": {
+  "data": {
+   "Cardiology Service": {
+    "over18": 119952,
+    "over52": 2849,
+    "total": 378421
+   },
+   "Cardiothoracic Surgery Service": {
+    "over18": 2499,
+    "over52": 159,
+    "total": 8921
+   },
+   "Dermatology Service": {
+    "over18": 126083,
+    "over52": 4410,
+    "total": 384201
+   },
+   "Ear Nose and Throat Service": {
+    "over18": 244184,
+    "over52": 12682,
+    "total": 594331
+   },
+   "Elderly Medicine Service": {
+    "over18": 4569,
+    "over52": 135,
+    "total": 26528
+   },
+   "Gastroenterology Service": {
+    "over18": 114575,
+    "over52": 3328,
+    "total": 370047
+   },
+   "General Internal Medicine Service": {
+    "over18": 9897,
+    "over52": 462,
+    "total": 35365
+   },
+   "General Surgery Service": {
+    "over18": 142264,
+    "over52": 7090,
+    "total": 381497
+   },
+   "Gynaecology Service": {
+    "over18": 223736,
+    "over52": 11178,
+    "total": 571683
+   },
+   "Neurology Service": {
+    "over18": 80556,
+    "over52": 1902,
+    "total": 207581
+   },
+   "Neurosurgical Service": {
+    "over18": 21558,
+    "over52": 1001,
+    "total": 56612
+   },
+   "Ophthalmology Service": {
+    "over18": 161829,
+    "over52": 4748,
+    "total": 624531
+   },
+   "Oral Surgery Service": {
+    "over18": 143318,
+    "over52": 7414,
+    "total": 321311
+   },
+   "Other - Medical Services": {
+    "over18": 181376,
+    "over52": 4731,
+    "total": 622548
+   },
+   "Other - Mental Health Services": {
+    "over18": 614,
+    "over52": 9,
+    "total": 3411
+   },
+   "Other - Other Services": {
+    "over18": 36792,
+    "over52": 1512,
+    "total": 159338
+   },
+   "Other - Paediatric Services": {
+    "over18": 102245,
+    "over52": 4148,
+    "total": 322761
+   },
+   "Other - Surgical Services": {
+    "over18": 158518,
+    "over52": 6595,
+    "total": 467527
+   },
+   "Plastic Surgery Service": {
+    "over18": 42874,
+    "over52": 2809,
+    "total": 102390
+   },
+   "Respiratory Medicine Service": {
+    "over18": 47826,
+    "over52": 666,
+    "total": 190661
+   },
+   "Rheumatology Service": {
+    "over18": 34822,
+    "over52": 1107,
+    "total": 117953
+   },
+   "Total": {
+    "over18": 2464054,
+    "over52": 102341,
+    "total": 7153655
+   },
+   "Trauma and Orthopaedic Service": {
+    "over18": 330550,
+    "over52": 18289,
+    "total": 827960
+   },
+   "Urology Service": {
+    "over18": 133417,
+    "over52": 5117,
+    "total": 378077
+   }
+  },
+  "url": "https://www.england.nhs.uk/statistics/wp-content/uploads/sites/2/2026/07/Full-CSV-data-file-May26-ZIP-3M-3jBgba.zip"
+ }
+}
