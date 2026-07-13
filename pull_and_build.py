@@ -127,6 +127,28 @@ STOP = set(("the and of for to in a an ltd limited uk gb london clinic clinics h
             "until headquarters central partnership unit units floor").split())
 
 
+# Words that are noise as a UNIGRAM but carry the niche when they are the SECOND word
+# of a phrase. Omar's own example of the granularity he wants is "peptide therapy" -
+# which the original STOP list made structurally impossible to emit.
+SERVICE_TAIL = set(("therapy therapies treatment treatments clinic clinics care "
+                    "medicine surgery assessment assessments screening testing "
+                    "injection injections infusion infusions").split())
+STOP_BIGRAM = STOP - SERVICE_TAIL
+
+
+def grams(name):
+    """unigrams (strict stoplist) + bigrams (looser, so 'peptide therapy' survives)"""
+    toks_all = [t for t in re.findall(r"[a-z]+", (name or "").lower()) if len(t) > 3]
+    uni = {t for t in toks_all if t not in STOP and t not in SERVICE_TAIL}
+    bi = set()
+    seq = [t for t in toks_all if t not in STOP_BIGRAM]
+    for i in range(len(seq) - 1):
+        if seq[i] in SERVICE_TAIL:        # don't lead a phrase with a service word
+            continue
+        bi.add(seq[i] + " " + seq[i + 1])
+    return uni | bi
+
+
 def ch_page(sic, dfrom, dto, start):
     url = ("https://api.company-information.service.gov.uk/advanced-search/companies"
            f"?sic_codes={sic}&incorporated_from={dfrom}&incorporated_to={dto}"
@@ -145,12 +167,8 @@ def name_terms(dfrom, dto):
             if not items:
                 break
             for it in items:
-                nm = (it.get("company_name") or "").lower()
-                toks = [t for t in re.findall(r"[a-z]+", nm) if len(t) > 3 and t not in STOP]
-                for i in range(len(toks)):
-                    cnt[toks[i]] += 1
-                    if i < len(toks) - 1:
-                        cnt[toks[i] + " " + toks[i + 1]] += 1
+                for g in grams(it.get("company_name")):
+                    cnt[g] += 1
             start += 100
             if len(items) < 100:
                 break
@@ -413,16 +431,14 @@ def cqc():
         # naming that swamps everything.
         if "independent healthcare" not in sector.lower():
             continue
-        toks = [t for t in re.findall(r"[a-z]+", (row[i_name] or "").lower())
-                if len(t) > 3 and t not in STOP]
-        grams = set(toks) | {toks[j] + " " + toks[j + 1] for j in range(len(toks) - 1)}
-        if not grams:
+        gs = grams(row[i_name])
+        if not gs:
             continue
         hit = False
         for k, (lo, hi) in bounds.items():
             if lo <= d < hi:
                 hit = True
-                for g in grams:
+                for g in gs:
                     cnt[k][g] += 1
         kept += hit
 
@@ -509,43 +525,72 @@ def safe(fn, label, *a, **k):
 
 
 def main():
-    import nhs_rtt, aesthetics as aes_mod, investability as inv_mod
+    import nhs_rtt, aesthetics as aes_mod, investability2 as inv2
+    import discovery as disc_mod, interpret as interp, targets as tgt_mod
 
     inc = safe(incorporations, "T2 incorporations") or []
     cq = safe(cqc, "T3 cqc") or []
     aes = safe(aes_mod.aesthetics, "T2b aesthetics") or []
     waits = safe(nhs_rtt.rtt, "T0 nhs waits") or []
-    # investability re-uses the CQC .ods already on disk - one extra pass, no bandwidth
-    invest = safe(inv_mod.investability, "investability", niche_of,
-                  path=os.path.join(tempfile.gettempdir(), "cqc.ods")) or {}
+    ods = os.path.join(tempfile.gettempdir(), "cqc.ods")
+
+    # Investability on ECONOMIC OWNERS, not legal entities. A PE group holding 12 Ltds
+    # looked like 12 independents - that flattered every fragmentation number, and it is
+    # the number he would underwrite on. Also splits fragmentation-of-infancy (a gold
+    # rush nobody has consolidated because it just appeared) from fragmentation-of-
+    # maturity (a real, tired, sellable population). Opposite trades; HHI scored them alike.
+    invest = safe(inv2.investability2, "investability (economic owners)", niche_of,
+                  path=ods, ch_budget=250) or {}
+
+    # THE OPEN LAYER. 25 fixed niches structurally cannot surface the next ADHD.
+    # This is the residue: rising phrases that match NO known niche - the only place
+    # a genuinely new niche can appear. Distinct-operator count is the discriminator
+    # that separates a real service from one company's brand.
+    ops = safe(disc_mod.mine_cqc_ods, "cqc operator-level mine", ods) or {}
+    disc = safe(disc_mod.discovery, "discovery (open layer)", inc, ops or cq, aes) or []
+
     tr = safe(trends, "T1 trends", discovered_terms(inc, cq + aes)) or []
+    # Terms fed back from T2/T3 keep found=True and are shown, but get ZERO votes:
+    # if T1 only lights up because T2 told it what to search for, "T1 and T2 agree"
+    # is plumbing, not evidence. The front-end enforces this via aggB(independentOnly).
+    tr_indep, tr_found = interp.decontaminate(tr)
+    DIAG["t1_independent"] = len(tr_indep)
+    DIAG["t1_auto_found"] = len(tr_found)
     jobs = safe(adzuna, "T3b jobs") or []
-    moved = whats_moved(tr, inc, cq)
+    moved = whats_moved(tr_indep, inc, cq)
+
+    # Target list = named individuals + an INFERRED claim they may want to sell.
+    # The repo is PUBLIC. Publishing that would be indefensible. Off unless explicitly
+    # enabled (i.e. once the repo is private). Aggregate counts are safe and still shipped.
+    tgts = {}
+    if os.environ.get("TARGETS_OK") == "1":
+        tgts = safe(tgt_mod.targets, "targets", niche_of, path=ods, ch_budget=300) or {}
+    DIAG["targets_enabled"] = bool(tgts)
 
     updated = datetime.now(timezone.utc).strftime("%d %b %Y, %H:%M UTC")
     data = {"waits": waits, "trends": tr, "inc": inc, "aes": aes, "cqc": cq,
-            "jobs": jobs, "moved": moved, "invest": invest, "diag": DIAG,
-            "drugq": NICHE_QUERY, "drugs": DRUGS, "nopresc": NICHES_NO_PRESCRIBING}
+            "jobs": jobs, "moved": moved, "invest": invest, "disc": disc,
+            "diag": DIAG, "drugq": NICHE_QUERY, "drugs": DRUGS,
+            "nopresc": NICHES_NO_PRESCRIBING}
     payload = json.dumps(data).replace("</", "<\\/")
     save("data.json", dict(updated=datetime.now(timezone.utc).isoformat(), **data))
     with open("dashboard.html", "w", encoding="utf-8") as f:
         f.write(TEMPLATE.replace("{{UPDATED}}", updated).replace("{{DATA}}", payload))
 
-    # Weekly digest (Mondays) - gated inside digest.py
     try:
         import digest as dg
         subject, md, html = dg.digest(data, load(HIST_FILE, []) or [])
         open("digest.md", "w", encoding="utf-8").write(md or "# No digest this run\n")
         open("digest.html", "w", encoding="utf-8").write(
             html or "<!DOCTYPE html><meta charset=utf-8><p>No digest this run.</p>")
-        print("  digest written:", subject)
+        print("  digest:", subject)
     except Exception as e:
         print("  digest FAILED:", repr(e)[:120])
         open("digest.html", "w", encoding="utf-8").write(
             "<!DOCTYPE html><meta charset=utf-8><p>Digest failed to build.</p>")
 
-    print(f"waits={len(waits)} trends={len(tr)} inc={len(inc)} aes={len(aes)} "
-          f"cqc={len(cq)} jobs={len(jobs)} invest={len(invest)} moved={len(moved)}")
+    print(f"waits={len(waits)} trends={len(tr)} inc={len(inc)} aes={len(aes)} cqc={len(cq)} "
+          f"jobs={len(jobs)} invest={len(invest)} discovery={len(disc)} moved={len(moved)}")
 
 
 from template import TEMPLATE
