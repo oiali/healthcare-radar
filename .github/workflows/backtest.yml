@@ -40,11 +40,11 @@ jobs:
           if [ "${{ inputs.trends }}" = "true" ]; then
             python backtest3.py --trends --max-calls 5500
           else
-            python backtest3.py --no-trends --max-calls 5500
+            python backtest3.py --max-calls 5500
           fi
 
       - name: Show the result in the run log
-        run: cat backtest3.md || echo "no backtest2.md produced"
+        run: cat backtest3.md || echo "no backtest3.md produced"
 
       - name: Commit the result
         run: |
