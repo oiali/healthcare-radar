@@ -4,10 +4,16 @@ UK Healthcare Niche Radar - build script (runs daily on GitHub Actions).
 
 Sources are STACKED by how early they fire in the demand chain:
 
-  T1  INTENT      Google search interest (SerpApi)              weeks,   0 lag
-  T2  ENTRY       New company incorporations (Companies House)  months,  days lag
-  T3  CAPACITY    New CQC clinic registrations + job ads        6-18 mth, monthly
-  T4  CONSUMPTION NHS prescribing (OpenPrescribing)             12+ mth, 2-mth lag
+  T0  PRESSURE    NHS RTT waits worsening (NHS England)        the causal driver
+  T1  INTENT      Google search interest (SerpApi)             weeks,   0 lag
+  T2  ENTRY       New company incorporations (Companies House) months,  days lag
+                  + a dedicated aesthetics miner, because botox/filler-only clinics
+                    are NOT CQC-registrable and are invisible to T3
+  T3  CAPACITY    New CQC clinic registrations + job ads       6-18 mth, monthly
+  T4  CONSUMPTION NHS prescribing (OpenPrescribing)            12+ mth, 2-mth lag
+
+Plus an INVESTABILITY layer: target density + fragmentation per niche, because a
+rising niche with no acquirable population of independent operators is not a roll-up.
 
 Every source is mapped onto a SHARED niche taxonomy so the same niche can be
 tracked across all four tiers. The Stack tab shows, per niche, which tiers have
@@ -82,64 +88,22 @@ def save(path, obj):
 
 
 # ==================================================== SHARED NICHE TAXONOMY
-# The whole point: one niche label, tracked across all four tiers.
-# Order matters - first match wins, so specific niches sit above generic ones.
-NICHES = [
-    ("Weight loss / GLP-1", ["weight loss", "weight-loss", "weight management", "semaglutide",
-                             "tirzepatide", "liraglutide", "ozempic", "wegovy", "mounjaro",
-                             "obesity", "slimming", "orlistat", "bariatric", "glp", "weight"]),
-    ("ADHD", ["adhd", "attention deficit", "lisdexamfetamine", "methylphenidate",
-              "atomoxetine", "guanfacine", "elvanse", "neurodivers"]),
-    ("Menopause / HRT", ["menopaus", "perimenopause", "hrt", "hormone replacement",
-                         "tibolone", "estradiol"]),
-    ("Men's health / TRT", ["testosterone", "hypogonad", "mens health", "male health",
-                            "men s health"]),
-    ("Hair restoration", ["hair transplant", "hair restoration", "hair loss", "finasteride",
-                          "minoxidil", "alopecia", "hair"]),
-    ("Tongue-tie / lactation", ["tongue", "lactation", "breastfeed", "frenulotomy"]),
-    ("Aesthetics / skin", ["aesthetic", "botox", "botulinum", "dermal filler", "filler",
-                           "cosmetic", "skin", "laser", "lip", "facial", "beauty", "rejuven",
-                           "eyebrow", "brow", "lash", "peel", "microneedl", "injectable"]),
-    ("Dermatology / acne", ["dermatolog", "acne", "isotretinoin", "eczema", "psoria",
-                            "rosacea", "mole", "hidradenitis"]),
-    ("MSK / physio", ["physio", "chiropract", "osteopath", "musculoskeletal", "sports injury",
-                      "podiatr", "orthopaed", "spine", "joint"]),
-    ("Mental health / psychiatry", ["psychiatr", "psycholog", "mental", "counsel", "ketamine",
-                                    "depress", "anxiet", "autism", "camhs", "psychotherap"]),
-    ("Sexual health / ED", ["erectile", "sildenafil", "sexual health", "libido"]),
-    ("Diagnostics / imaging", ["diagnostic", "imaging", "ultrasound", "radiolog", "endoscop",
-                               "screening", "phlebotom", "blood test", "scan", "mri", "labs"]),
-    ("Fertility / women's health", ["fertil", "gynaecolog", "obstetric", "endometrios",
-                                    "polycystic", "women"]),
-    ("Sleep", ["sleep", "insomnia", "melatonin", "apnoea"]),
-    ("Dental / orthodontics", ["dental", "dentist", "orthodont", "oral surgery", "smile"]),
-    ("Longevity / peptides / IV", ["longevity", "peptide", "drip", "infusion", "vitamin",
-                                   "wellness", "biohack", "cryo"]),
-    ("Migraine", ["migraine", "erenumab", "fremanezumab", "rimegepant", "atogepant"]),
-    ("Bladder / continence", ["bladder", "continen", "mirabegron", "urolog", "prostat"]),
-    ("Osteoporosis / bone", ["osteoporos", "denosumab"]),
-    ("Diabetes", ["diabet", "dapagliflozin", "empagliflozin", "insulin"]),
-    ("Allergy", ["allerg", "immunotherap", "rhinitis"]),
-    ("Neurology", ["neurolog", "epilep", "parkinson", "dementia", "alzheim"]),
-    ("Audiology / hearing", ["audiolog", "hearing", "tinnitus"]),
-    ("Eye / optical", ["optometr", "ophthalm", "cataract", "macular", "vision",
-                       "eye clinic", "eye care", "laser eye", "eyes"]),
-    ("Private GP", ["private gp", "gp service", "general practice", "doctor"]),
-]
-
-
-def niche_of(text):
-    t = (text or "").lower()
-    for name, keys in NICHES:
-        for k in keys:
-            if re.search(r"\b" + re.escape(k), t):
-                return name
-    return None
+# Fixed matcher: keys ending "*" are stem matches (dermatolog*), all others must
+# match as WHOLE WORDS. The old prefix-only matcher mis-classified 30 of 35 test
+# names ("Skinner"->skin->Aesthetics, "Brown"->brow, "Lipscomb"->lip).
+from taxonomy import NICHES, niche_of          # noqa: E402
+from drugs import DRUGS, NICHE_QUERY, NICHES_NO_PRESCRIBING   # noqa: E402
 
 
 # ============================ Companies House: auto-discover niches from names
 CH_KEY = os.environ.get("CH_API_KEY", "").strip()
-HEALTH_SICS = ["86900", "86220", "96020", "96040"]   # narrowed: private-clinic heavy
+# 86210 general medical practice is the highest-value addition: it is where the
+# ADHD / menopause / GLP-1 telehealth operators actually register. 47730 dispensing
+# chemist catches the online-pharmacy weight-loss/hair/ED model. 96090 deliberately
+# EXCLUDED (catch-all: tattooists, dating agencies). 96020 kept but is itself a
+# flood risk - mostly high-street hairdressers - which the STOP list absorbs.
+HEALTH_SICS = ["86900", "86220", "96020", "96040",
+               "86210", "86230", "47730", "47782", "86101"]
 STOP = set(("the and of for to in a an ltd limited uk gb london clinic clinics health "
             "healthcare care medical medicine group holdings company co consulting consultancy "
             "practice practices centre center llp cic community trust nhs solutions services "
@@ -532,20 +496,56 @@ def whats_moved(tr, inc, cq):
 
 
 # ------------------------------------------------------------------- render
+def safe(fn, label, *a, **k):
+    """A dead source must degrade the dashboard, never kill the build."""
+    try:
+        r = fn(*a, **k)
+        print(f"  {label}: {len(r) if hasattr(r,'__len__') else 'ok'}")
+        return r
+    except Exception as e:
+        print(f"  {label}: FAILED {repr(e)[:120]}")
+        DIAG.setdefault("failed_sources", []).append(label)
+        return None
+
+
 def main():
-    inc = incorporations() or []
-    cq = cqc() or []
-    tr = trends(discovered_terms(inc, cq)) or []      # supply-side feeds the search terms
-    jobs = adzuna() or []
+    import nhs_rtt, aesthetics as aes_mod, investability as inv_mod
+
+    inc = safe(incorporations, "T2 incorporations") or []
+    cq = safe(cqc, "T3 cqc") or []
+    aes = safe(aes_mod.aesthetics, "T2b aesthetics") or []
+    waits = safe(nhs_rtt.rtt, "T0 nhs waits") or []
+    # investability re-uses the CQC .ods already on disk - one extra pass, no bandwidth
+    invest = safe(inv_mod.investability, "investability", niche_of,
+                  path=os.path.join(tempfile.gettempdir(), "cqc.ods")) or {}
+    tr = safe(trends, "T1 trends", discovered_terms(inc, cq + aes)) or []
+    jobs = safe(adzuna, "T3b jobs") or []
     moved = whats_moved(tr, inc, cq)
 
     updated = datetime.now(timezone.utc).strftime("%d %b %Y, %H:%M UTC")
-    data = {"trends": tr, "inc": inc, "cqc": cq, "jobs": jobs, "moved": moved, "diag": DIAG}
+    data = {"waits": waits, "trends": tr, "inc": inc, "aes": aes, "cqc": cq,
+            "jobs": jobs, "moved": moved, "invest": invest, "diag": DIAG,
+            "drugq": NICHE_QUERY, "drugs": DRUGS, "nopresc": NICHES_NO_PRESCRIBING}
     payload = json.dumps(data).replace("</", "<\\/")
     save("data.json", dict(updated=datetime.now(timezone.utc).isoformat(), **data))
     with open("dashboard.html", "w", encoding="utf-8") as f:
         f.write(TEMPLATE.replace("{{UPDATED}}", updated).replace("{{DATA}}", payload))
-    print(f"trends={len(tr)} inc={len(inc)} cqc={len(cq)} jobs={len(jobs)} moved={len(moved)}")
+
+    # Weekly digest (Mondays) - gated inside digest.py
+    try:
+        import digest as dg
+        subject, md, html = dg.digest(data, load(HIST_FILE, []) or [])
+        open("digest.md", "w", encoding="utf-8").write(md or "# No digest this run\n")
+        open("digest.html", "w", encoding="utf-8").write(
+            html or "<!DOCTYPE html><meta charset=utf-8><p>No digest this run.</p>")
+        print("  digest written:", subject)
+    except Exception as e:
+        print("  digest FAILED:", repr(e)[:120])
+        open("digest.html", "w", encoding="utf-8").write(
+            "<!DOCTYPE html><meta charset=utf-8><p>Digest failed to build.</p>")
+
+    print(f"waits={len(waits)} trends={len(tr)} inc={len(inc)} aes={len(aes)} "
+          f"cqc={len(cq)} jobs={len(jobs)} invest={len(invest)} moved={len(moved)}")
 
 
 from template import TEMPLATE
