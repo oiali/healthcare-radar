@@ -171,8 +171,6 @@ def trends():
                f"&q={urllib.parse.quote(q)}&geo=GB&data_type=TIMESERIES"
                "&date=today%2012-m&api_key=" + SERP)
         d = get_json(url)
-        if q == TREND_Q[0]:
-            print("DEBUG SERP:", (json.dumps(d)[:250] if d else "None"))
         try:
             tl = d["interest_over_time"]["timeline_data"]
             v = [pt["values"][0]["extracted_value"] for pt in tl]
@@ -257,12 +255,14 @@ def parse_date(s):
     return None
 
 
+DIAG = {}
+
+
 def cqc():
     url = cqc_file_url()
+    DIAG["url"] = url or "PAGE FETCH FAILED or link not found"
     if not url:
-        print("DEBUG CQC: could not find HSCA_Active_Locations.ods link")
         return None
-    print("DEBUG CQC file:", url)
     # anchor all windows on the file's publication date, not today (file is a monthly snapshot)
     m = re.search(r"/(\d{2})_([A-Za-z]+)_(\d{4})_HSCA", url)
     anchor = date(int(m.group(3)), MONTHS.get(m.group(2).lower(), 1), int(m.group(1))) if m else date.today()
@@ -270,8 +270,9 @@ def cqc():
     path = os.path.join(tempfile.gettempdir(), "cqc.ods")
     try:
         download(url, path)
+        DIAG["bytes"] = os.path.getsize(path)
     except Exception as e:
-        print("DEBUG CQC download failed:", repr(e)[:120])
+        DIAG["download_error"] = repr(e)[:160]
         return None
 
     # windows in months back from the anchor
@@ -283,7 +284,12 @@ def cqc():
     rows_seen = kept = 0
     sectors = Counter()
 
+    DIAG["first_rows"] = []
+    total = 0
     for row in ods_rows(path):
+        total += 1
+        if len(DIAG["first_rows"]) < 6:
+            DIAG["first_rows"].append([c for c in row[:6]])
         if i_name is None:
             low = [c.strip().lower() for c in row]
             if any("location id" in c for c in low):
@@ -299,9 +305,10 @@ def cqc():
                 i_type = find("location", "type")
                 if i_type is None:
                     i_type = find("sector")
-                print("DEBUG CQC header:", [c for c in low if c][:26])
-                print(f"DEBUG CQC cols name={i_name} date={i_date} type={i_type}")
+                DIAG["header"] = [c for c in low if c][:30]
+                DIAG["cols"] = {"name": i_name, "date": i_date, "type": i_type}
                 if i_name is None or i_date is None:
+                    DIAG["fatal"] = "name/date column not found"
                     return None
             continue
 
@@ -328,7 +335,13 @@ def cqc():
                     cnt[k][g] += 1
         kept += hit
 
-    print(f"DEBUG CQC anchor={anchor} rows={rows_seen} in-window={kept} sectors={sectors.most_common(6)}")
+    DIAG["anchor"] = str(anchor)
+    DIAG["rows_total"] = total
+    DIAG["rows_data"] = rows_seen
+    DIAG["in_window"] = kept
+    DIAG["sectors"] = sectors.most_common(8)
+    DIAG["grams_m12"] = len(cnt["m12"])
+    DIAG["top_raw"] = cnt["m12"].most_common(8)
 
     rows = []
     for g, c12 in cnt["m12"].items():
@@ -354,10 +367,11 @@ def main():
     tr = trends() or []
     cq = cqc() or []
     updated = datetime.now(timezone.utc).strftime("%d %b %Y, %H:%M UTC")
-    payload = json.dumps({"inc": inc, "jobs": jobs, "trends": tr, "cqc": cq}).replace("</", "<\\/")
+    payload = json.dumps({"inc": inc, "jobs": jobs, "trends": tr, "cqc": cq,
+                          "diag": DIAG}).replace("</", "<\\/")
     os.makedirs("data", exist_ok=True)
     json.dump({"updated": datetime.now(timezone.utc).isoformat(), "inc": inc, "jobs": jobs,
-               "trends": tr, "cqc": cq}, open("data.json", "w"), indent=2)
+               "trends": tr, "cqc": cq, "diag": DIAG}, open("data.json", "w"), indent=2)
     with open("dashboard.html", "w", encoding="utf-8") as f:
         f.write(TEMPLATE.replace("{{UPDATED}}", updated).replace("{{DATA}}", payload))
     print(f"incorporations={len(inc)} jobs={len(jobs)} trends={len(tr)} cqc={len(cq)}")
