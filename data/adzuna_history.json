@@ -94,5 +94,23 @@
    "2026-07-09",
    1502
   ]
- ]
+ ],
+ "2026-07-13": {
+  "aesthetics": 1259,
+  "dermatology": 638,
+  "psychiatry": 484,
+  "ADHD": 4871,
+  "menopause": 4063,
+  "endocrinology": 36,
+  "physiotherapy": 4026,
+  "dentist": 20681,
+  "optometrist": 704,
+  "audiology": 340,
+  "podiatry": 89,
+  "gynaecology": 334,
+  "urology": 240,
+  "cosmetic surgery": 143,
+  "fertility IVF": 16,
+  "private GP": 1506
+ }
 }

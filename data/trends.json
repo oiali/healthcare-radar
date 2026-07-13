@@ -2,123 +2,203 @@
  "rows": [
   {
    "name": "Wegovy",
-   "latest": 71,
-   "g1": 59.21787709497206,
-   "g3": 88.74172185430464,
-   "g12": 562.7906976744187,
-   "accel": null
+   "niche": "Weight loss / GLP-1",
+   "latest": 70,
+   "g1": 56.98324022346368,
+   "g3": 86.09271523178808,
+   "g12": 553.4883720930233,
+   "accel": null,
+   "found": false
   },
   {
    "name": "erectile dysfunction",
-   "latest": 69,
-   "g1": 28.504672897196272,
-   "g3": -20.749279538904897,
-   "g12": 49.456521739130444,
-   "accel": null
+   "niche": "Sexual health / ED",
+   "latest": 70,
+   "g1": 41.836734693877546,
+   "g3": -12.0253164556962,
+   "g12": 65.47619047619047,
+   "accel": null,
+   "found": false
   },
   {
-   "name": "menopause clinic",
-   "latest": 57,
-   "g1": -15.613382899628247,
-   "g3": -33.819241982507286,
-   "g12": 34.319526627218934,
-   "accel": null
+   "name": "wellness studio",
+   "niche": "Longevity / peptides / IV",
+   "latest": 44,
+   "g1": 2.9069767441860517,
+   "g3": -16.509433962264154,
+   "g12": 53.91304347826087,
+   "accel": null,
+   "found": true
   },
   {
    "name": "testosterone replacement",
-   "latest": 60,
-   "g1": 18.137254901960787,
-   "g3": -18.02721088435374,
-   "g12": 33.88888888888888,
-   "accel": null
+   "niche": "Men's health / TRT",
+   "latest": 62,
+   "g1": 14.28571428571428,
+   "g3": -9.48905109489051,
+   "g12": 44.18604651162789,
+   "accel": null,
+   "found": false
   },
   {
    "name": "weight loss injection",
+   "niche": "Weight loss / GLP-1",
    "latest": 85,
-   "g1": 4.307692307692301,
-   "g3": -1.1661807580174877,
-   "g12": 31.906614785992215,
-   "accel": null
+   "g1": 2.7272727272727337,
+   "g3": -2.5862068965517238,
+   "g12": 28.89733840304183,
+   "accel": null,
+   "found": false
+  },
+  {
+   "name": "menopause clinic",
+   "niche": "Menopause / HRT",
+   "latest": 50,
+   "g1": -13.478260869565217,
+   "g3": -32.54237288135593,
+   "g12": 26.751592356687894,
+   "accel": null,
+   "found": false
   },
   {
    "name": "dermal filler",
-   "latest": 69,
-   "g1": -5.802047781569963,
-   "g3": -23.11977715877437,
-   "g12": 24.8868778280543,
-   "accel": null
+   "niche": "Aesthetics / skin",
+   "latest": 71,
+   "g1": -1.7241379310344862,
+   "g3": -14.414414414414411,
+   "g12": 15.853658536585357,
+   "accel": null,
+   "found": false
   },
   {
    "name": "HRT",
-   "latest": 81,
-   "g1": -2.4169184290030232,
-   "g3": 1.2539184952978122,
-   "g12": 9.49152542372882,
-   "accel": null
+   "niche": "Menopause / HRT",
+   "latest": 84,
+   "g1": -4.815864022662886,
+   "g3": 0.9009009009008917,
+   "g12": 11.258278145695355,
+   "accel": null,
+   "found": false
+  },
+  {
+   "name": "private ultrasound",
+   "niche": "Diagnostics / imaging",
+   "latest": 56,
+   "g1": -27.922077922077925,
+   "g3": -21.830985915492963,
+   "g12": 9.90099009900991,
+   "accel": null,
+   "found": false
   },
   {
    "name": "ADHD assessment",
-   "latest": 79,
-   "g1": -5.970149253731338,
-   "g3": -5.12048192771084,
-   "g12": 6.779661016949157,
-   "accel": null
-  },
-  {
-   "name": "IV drip",
-   "latest": 75,
-   "g1": 3.103448275862064,
-   "g3": -2.287581699346408,
-   "g12": 2.397260273972601,
-   "accel": null
+   "niche": "ADHD",
+   "latest": 80,
+   "g1": -3.915662650602414,
+   "g3": -3.039513677811545,
+   "g12": 9.621993127147777,
+   "accel": null,
+   "found": false
   },
   {
    "name": "private ADHD",
-   "latest": 70,
-   "g1": -15.454545454545453,
-   "g3": -14.15384615384615,
-   "g12": -1.0638297872340385,
-   "accel": null
+   "niche": "ADHD",
+   "latest": 69,
+   "g1": -16.060606060606062,
+   "g3": -13.70716510903427,
+   "g12": -1.4234875444839812,
+   "accel": null,
+   "found": false
   },
   {
    "name": "botox",
-   "latest": 68,
-   "g1": -5.902777777777779,
-   "g3": -22.79202279202279,
-   "g12": -8.445945945945944,
-   "accel": null
+   "niche": "Aesthetics / skin",
+   "latest": 73,
+   "g1": -10.397553516819569,
+   "g3": -21.44772117962467,
+   "g12": -7.278481012658233,
+   "accel": null,
+   "found": false
+  },
+  {
+   "name": "nails beauty",
+   "niche": "Aesthetics / skin",
+   "latest": 82,
+   "g1": 4.430379746835444,
+   "g3": 15.384615384615374,
+   "g12": -12.698412698412698,
+   "accel": null,
+   "found": true
+  },
+  {
+   "name": "beauty lounge",
+   "niche": "Aesthetics / skin",
+   "latest": 71,
+   "g1": -3.0716723549488067,
+   "g3": 1.4285714285714235,
+   "g12": -13.414634146341465,
+   "accel": null,
+   "found": true
+  },
+  {
+   "name": "tongue tie",
+   "niche": "Tongue-tie / lactation",
+   "latest": 73,
+   "g1": -2.020202020202022,
+   "g3": -8.490566037735848,
+   "g12": -14.15929203539823,
+   "accel": null,
+   "found": false
+  },
+  {
+   "name": "thai massage",
+   "niche": null,
+   "latest": 77,
+   "g1": -4.037267080745344,
+   "g3": -9.649122807017541,
+   "g12": -15.573770491803273,
+   "accel": null,
+   "found": true
   },
   {
    "name": "hair transplant",
-   "latest": 74,
-   "g1": -5.1446945337620615,
-   "g3": -16.193181818181824,
-   "g12": -18.508287292817684,
-   "accel": null
+   "niche": "Hair restoration",
+   "latest": 75,
+   "g1": -3.2362459546925515,
+   "g3": -15.056818181818176,
+   "g12": -17.403314917127076,
+   "accel": null,
+   "found": false
   },
   {
-   "name": "Ozempic",
-   "latest": 43,
-   "g1": -7.027027027027022,
-   "g3": -23.893805309734518,
-   "g12": -31.746031746031743,
-   "accel": null
+   "name": "optical express",
+   "niche": null,
+   "latest": 58,
+   "g1": -12.030075187969924,
+   "g3": -30.56379821958457,
+   "g12": -20.13651877133106,
+   "accel": null,
+   "found": true
   },
   {
    "name": "Mounjaro",
-   "latest": 34,
-   "g1": -2.877697841726623,
-   "g3": -5.594405594405593,
-   "g12": -38.35616438356164,
-   "accel": null
+   "niche": "Weight loss / GLP-1",
+   "latest": 33,
+   "g1": -4.347826086956519,
+   "g3": -6.382978723404253,
+   "g12": -39.726027397260275,
+   "accel": null,
+   "found": false
   },
   {
    "name": "peptide therapy",
-   "latest": 35,
-   "g1": -3.424657534246578,
-   "g3": -50.526315789473685,
+   "niche": "Longevity / peptides / IV",
+   "latest": 36,
+   "g1": 25.217391304347835,
+   "g3": -44.827586206896555,
    "g12": null,
-   "accel": null
+   "accel": null,
+   "found": false
   }
  ],
  "date": "2026-07-13"
