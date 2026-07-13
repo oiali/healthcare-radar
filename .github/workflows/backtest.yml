@@ -38,19 +38,19 @@ jobs:
           SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
         run: |
           if [ "${{ inputs.trends }}" = "true" ]; then
-            python backtest2.py --trends --max-calls 5500
+            python backtest3.py --trends --max-calls 5500
           else
-            python backtest2.py --no-trends --max-calls 5500
+            python backtest3.py --no-trends --max-calls 5500
           fi
 
       - name: Show the result in the run log
-        run: cat backtest2.md || echo "no backtest2.md produced"
+        run: cat backtest3.md || echo "no backtest2.md produced"
 
       - name: Commit the result
         run: |
           git config user.name "radar-bot"
           git config user.email "radar-bot@users.noreply.github.com"
-          git add -A backtest2.md backtest2.json data || true
+          git add -A backtest3.md backtest3.json data || true
           git commit -m "backtest run" || echo "no changes"
           git push || echo "nothing to push"
 
@@ -58,6 +58,6 @@ jobs:
         with:
           name: backtest
           path: |
-            backtest2.md
-            backtest2.json
+            backtest3.md
+            backtest3.json
           retention-days: 30
