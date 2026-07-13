@@ -73,7 +73,8 @@ STOP = set(("the and of for to in a an ltd limited uk gb london clinic clinics h
             "devon cornwall essex kent surrey sussex yorkshire lancashire cheshire midlands "
             "forest first best new prime elite smart digital online mobile home family city "
             "north south east west greater park house lodge road street hall court view green "
-            "hill professional quality complete total pure life live your local premier").split())
+            "hill professional quality complete total pure life live your local premier "
+            "head office site main branch room rooms suite lodge villa manor").split())
 
 
 def ch_page(sic, dfrom, dto, start):
@@ -334,11 +335,16 @@ def cqc():
             continue
         sector = (row[i_type] if i_type is not None and len(row) > i_type else "")
         sectors[sector] += 1
-        if "social care" in sector.lower():          # care homes / homecare = churn, not niches
+        # Keep ONLY independent healthcare = the private-pay clinic universe.
+        # Excluded: adult social care (churn), NHS trusts, NHS GP practices, ambulances,
+        # and primary dental care (formulaic "X Dental Surgery" names swamp everything).
+        if "independent healthcare" not in sector.lower():
             continue
         nm = (row[i_name] or "").lower()
         toks = [t for t in re.findall(r"[a-z]+", nm) if len(t) > 3 and t not in STOP]
-        grams = {toks[j] + " " + toks[j + 1] for j in range(len(toks) - 1)}
+        # unigrams AND bigrams: STOP strips generic words, so short niche names like
+        # "Medical Aesthetics Clinic" collapse to a single meaningful token
+        grams = set(toks) | {toks[j] + " " + toks[j + 1] for j in range(len(toks) - 1)}
         if not grams:
             continue
         hit = False
@@ -356,11 +362,11 @@ def cqc():
     DIAG["in_window"] = kept
     DIAG["sectors"] = sectors.most_common(8)
     DIAG["grams_m12"] = len(cnt["m12"])
-    DIAG["top_raw"] = cnt["m12"].most_common(8)
+    DIAG["top_raw"] = cnt["m12"].most_common(30)
 
     rows = []
     for g, c12 in cnt["m12"].items():
-        if c12 < 6:                                   # min volume so it's signal not noise
+        if c12 < 3:                                   # min volume so it's signal not noise
             continue
         # min base of 3 on the comparison window: below that a % is noise, not signal
         p12 = cnt["m12p"][g]
@@ -525,7 +531,7 @@ document.getElementById('jbbody').innerHTML=tableRows(RADAR.jobs,'Live ads',{noG
 document.getElementById('trbody').innerHTML=(RADAR.trends&&RADAR.trends.length?
   tableRows(RADAR.trends,'Index',{firstCol:'Search term'}):'<div class="msg">Search-demand data will appear after the next weekly run.</div>')+
   '<div class="note">Google Trends search interest in the UK (via SerpApi), refreshed weekly. Ranked by 12-month growth; click a column to sort.</div>';
-document.getElementById('cqbody').innerHTML=(RADAR.cqc&&RADAR.cqc.length?tableRows(RADAR.cqc,'New (12m)',{firstCol:'Clinic niche'}):'<div class="msg">No CQC data this run — check the run log.</div>')+'<div class="note"><b>Every clinic newly registered with CQC</b>, from CQC\'s monthly registration file. The 2-word phrases in their names are clustered into niches, then counted over 1 / 3 / 12 months against the same window a year before. Adult social care (care homes, homecare) is excluded — it\'s churn, not niche formation. A clinic registers <b>before</b> it can legally trade, so this is the supply side committing capital ~6–18 months ahead of revenue. "new" = the phrase did not exist a year ago. Click a column to sort.</div>';
+document.getElementById('cqbody').innerHTML=(RADAR.cqc&&RADAR.cqc.length?tableRows(RADAR.cqc,'New (12m)',{firstCol:'Clinic niche'}):'<div class="msg">No CQC data this run — check the run log.</div>')+'<div class="note"><b>Newly CQC-registered independent healthcare locations</b>, from CQC\'s monthly registration file (every active location + its registration date). Words and 2-word phrases in their names are clustered into niches, then counted over 1 / 3 / 12 months against the same window a year earlier. <b>Scope:</b> "Independent Healthcare Org" only — the private-pay clinic universe. Adult social care, NHS trusts, NHS GP practices and dental practices are excluded (they are churn or formulaic naming, and swamp the signal). A clinic must register <b>before</b> it can legally trade, so this is the supply side committing capital ahead of revenue. Growth is blank where the year-ago base was under 3 registrations — too thin to be a real percentage. "new" = the phrase did not exist a year ago.</div>';
 document.querySelectorAll('.panel').forEach(wireSort);
 
 // ---- Wikipedia public interest (client-side) ----
