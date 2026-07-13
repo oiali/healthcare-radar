@@ -57,8 +57,7 @@ td.q{max-width:300px}
 .warn{font-size:12.5px;color:#8a6d3b;background:#fff8ec;border-left:3px solid #e8c886;padding:9px 12px;margin-bottom:14px}
 </style></head><body><div class="wrap">
 <div class="head"><h1>UK Healthcare Niche Radar</h1><span class="upd">Server data {{UPDATED}}
-&middot; read as a BUYER: proven demand + fragmented, tired supply &middot; click any column
-to sort</span></div>
+&middot; what is rising, and how early &middot; click any column to sort</span></div>
 <div class="tabs">
   <div class="tab on" data-p="st">The Stack</div>
   <div class="tab" data-p="dc">Discovery</div>
@@ -69,7 +68,7 @@ to sort</span></div>
   <div class="tab" data-p="cq"><span class="t">T3</span>New clinics</div>
   <div class="tab" data-p="jb"><span class="t">T3</span>Job ads</div>
   <div class="tab" data-p="pr"><span class="t">T4</span>Prescribing</div>
-  <div class="tab" data-p="iv">Investability</div>
+  <div class="tab" data-p="iv">Market structure</div>
 </div>
 <div class="panel on" id="st"><div id="stbody" class="msg">Building the stack&hellip;</div></div>
 <div class="panel" id="dc"><div id="dcbody"></div></div>
@@ -235,165 +234,96 @@ function aggB(rows,opts){
   }
   return {g:g,b:b};
 }
-// ================================================================ THE TWO-AXIS READ
-// Port of _agent2/interpret.py. Keep the constants in sync with that file.
+// ============================================================ THE TRACKER READ
+// This is a TREND TRACKER. The question it answers is:
+//     what is rising, and HOW EARLY am I seeing it?
+// Not "should I buy it". Market structure is shown as CONTEXT, in its own column,
+// and it never decides the verdict.
 //
-// DEMAND  <- T0 NHS waits, T1 search.       Is there a market, and is it growing?
-// SUPPLY  <- CQC standing population, T2, T3. Is there anything to BUY, and has
-//                                             anyone already bought it?
+// The demand chain, earliest -> latest:
+//   T1 search        people start looking            weeks, no lag
+//   T2 new companies founders bet on it              months
+//   T3 new clinics   capacity gets built             6-18 months
+//   T4 prescribing   the NHS is dispensing it        12+ months
+//   (T0 NHS waits is the upstream PRESSURE that drives people private at all.)
 //
-// The old design read T1/T2/T3 as three independent confirmations of demand. They
-// never were. T2 (new companies) and T3 (new clinics) are the SUPPLY RESPONSE. For a
-// buyer they are not good news - they are competitors arriving and asking prices
-// going up. Splitting the axes is the whole patch.
-//
-// T4 (NHS prescribing) votes on NOTHING. See the caveat text below.
+// The earliest tier that is firing tells you where you are in that chain. If only
+// T1 is lit you are very early and it might be nothing. If T4 is lit it already
+// happened. That is the whole read.
 var BOOM=40.0, FALLING=-10.0;
-var MIN_TARGETS=30, THIN_TARGETS=100, TOP5_CONC=40.0, HHI_CONC=0.20;
-// ENTRY RATE = new registrations in 12m / total standing stock. THE number for a
-// buyer, and investability.py already computes both halves and throws the ratio away.
-// These two cuts are the weakest-evidenced numbers in the whole dashboard - reasoned,
-// not measured. Backtest these first.
-var ENTRY_HOT=0.15, ENTRY_WARM=0.08;
-// Niches where CQC structurally CANNOT see the supply. A botox/filler-only clinic is
-// not carrying out a CQC-regulated activity, so it never registers. Reporting "no
-// operators to buy" for aesthetics would be a lie told with a straight face.
-// (Ideally this moves server-side into pull_and_build; it is here so this patch is
-// self-contained.)
-var CQC_BLIND={'Aesthetics / skin':1};
-
-var QLABEL={
-  buy_window:  'Buy — proven demand, owners still independent',
-  wait_or_build:'Wait or build — new clinics still arriving',
-  too_late:    'Too late — someone has already consolidated it',
-  build_only:  'Build, not buy — there are no clinics to acquire',
-  declining:   'Buy for cash only — demand is falling',
-  nothing_here:'Nothing here yet',
-  no_data:     'Not enough data to say'
-};
-var QELIG={buy_window:'buy',wait_or_build:'build',too_late:'neither',
-           build_only:'build',declining:'buy',nothing_here:'neither',no_data:'neither'};
-var QRANK={buy_window:0,wait_or_build:1,declining:2,build_only:3,too_late:4,
-           nothing_here:5,no_data:6};
-var QCLS={buy_window:'s3',wait_or_build:'s4',too_late:'s0',build_only:'s2',
-          declining:'s4',nothing_here:'s1',no_data:'s1'};
 
 function entryRate(iv){
   if(!iv)return null;
-  var L=iv.locations,N=iv.new_12m;
-  if(!L||N==null)return null;
-  return N/L;
+  var stock=iv.locations, nu=iv.new_12m;
+  if(stock==null||nu==null||stock<=0)return null;
+  return 100*nu/stock;
 }
+// demand trajectory from the two demand tiers only (T0 pressure + T1 intent)
 function readDemand(t0,t1,B){
-  var b1=B.t1||{};
-  var ind=b1.independent_items;
-  // Every T1 term auto-discovered from T2/T3 => T1 is disqualified from voting.
-  // Otherwise "T1 agrees with T2" is plumbing, not evidence.
-  var u=(ind==null||ind>0)?t1:null;
-  if(u==null&&t0==null)return 'unknown';
-  if(u!=null&&u<=FALLING)return 'falling';
-  if(u!=null&&u>=BOOM)return 'booming';
-  if(fires(t0,B.t0)||fires(u,B.t1))return 'growing';
-  return 'flat';
+  var lit=[];
+  if(fires(t1,B.t1))lit.push(t1);
+  if(fires(t0,B.t0))lit.push(t0);
+  if(!lit.length){
+    if(t1==null&&t0==null)return 'unknown';
+    var v=(t1!=null)?t1:t0;
+    return (v<=FALLING)?'falling':'flat';
+  }
+  return (Math.max.apply(null,lit)>=BOOM)?'booming':'growing';
 }
-function readSupply(n,t2,t3,iv,B){
+// market STRUCTURE - context only. Never gates the verdict.
+function readStructure(iv){
   if(!iv)return ['unknown',null];
-  if(CQC_BLIND[n])return ['unobservable',entryRate(iv)];
-  var indie=iv.indie_providers;
-  if(indie==null)return ['unknown',entryRate(iv)];
   var er=entryRate(iv);
-  if(indie<MIN_TARGETS)return ['none',er];
-  var t5=iv.top5_share,hh=iv.hhi;
-  if((t5!=null&&t5>=TOP5_CONC)||(hh!=null&&hh>=HHI_CONC))return ['consolidated',er];
-  if(er!=null){if(er>=ENTRY_HOT)return ['filling',er];}
-  else if(fires(t2,B.t2)&&fires(t3,B.t3))return ['filling',null];
-  return ['fragmented',er];
+  var v=(iv.verdict||'').toLowerCase();
+  if(/too small/.test(v))return ['tiny',er];
+  if(/consolidat/.test(v))return ['consolidated',er];
+  if(/infant|gold rush/.test(v))return ['rushing',er];
+  if(/fragmented/.test(v))return ['fragmented',er];
+  return ['unknown',er];
 }
-function qscore(q,d,iv,er){
-  if(q=='build_only')return d=='booming'?60:(d=='growing'?40:0);
-  if(q!='buy_window'&&q!='declining')return 0;
-  var indie=(iv||{}).indie_providers;
-  if(indie==null)return 0;
-  var density=100*Math.min(1,indie/(THIN_TARGETS*3));
-  var h5=1-Math.min(1,((iv.top5_share||0)/TOP5_CONC));
-  var hh=1-Math.min(1,((iv.hhi||0)/HHI_CONC));
-  var headroom=100*Math.min(h5,hh);
-  var cool=100*(1-Math.min(1,(er==null?ENTRY_WARM:er)/ENTRY_HOT));
-  var s=0.40*density+0.35*headroom+0.25*cool;
-  if(d=='falling')s*=0.5;          // buyable, but must not out-rank a live market
-  else if(d=='booming')s*=0.9;     // you will pay for that growth
-  return Math.round(s);
-}
-function qcaveats(q,sup,t1,t4,iv,B){
-  var c=[];
-  // ---- T4 is ambiguous. Always. State BOTH readings, assert neither.
-  if(fires(t4,B.t4)){
-    c.push('<b>NHS prescribing is up '+Math.round(t4)+'%, and this data cannot tell you '+
-      'which of two opposite things that means.</b> Either the condition is growing '+
-      '(your private market grows too), or the NHS has started FUNDING the treatment '+
-      '(your private market is destroyed, because the patient can now get it free). '+
-      'Check for NICE / NHS England guidance in the window before you read it either way.');
-    if(t1!=null&&t1<=FALLING){
-      c.push('<b>Warning:</b> NHS prescribing is rising while private search interest is '+
-        'FALLING. That is exactly the pattern you would see if the NHS had taken the '+
-        'patients. Suggestive, not proof — go and check.');
-    }
-  }
-  // ---- T1 contamination
-  var b1=B.t1||{},ind=b1.independent_items,it=b1.items;
-  if(ind!=null&&it){
-    if(ind===0)c.push('Every search term for this niche was <b>auto-discovered from the '+
-      'supply tiers</b>, so T1 agreeing with T2/T3 proves nothing — it is the same '+
-      'data twice. T1 has been excluded from the demand read.');
-    else if(ind<it)c.push((it-ind)+' of '+it+' search terms here were auto-discovered '+
-      'from T2/T3 and do not count toward conviction. '+ind+' independent term(s) remain.');
-  }
-  // ---- entry warming
-  if(q=='buy_window'){
-    var er=entryRate(iv);
-    if(er!=null&&er>=ENTRY_WARM)c.push('Entry is warming ('+Math.round(er*100)+
-      '% of the standing stock is new). Not a gold rush yet, but the window is '+
-      'closing, not opening.');
-    var ip=(iv||{}).indie_providers;
-    if(ip!=null&&ip<THIN_TARGETS)c.push(ip+' independents is enough for a <b>regional '+
-      'platform</b>, not a national consolidation. Size the ambition to the population.');
-  }
-  if(q=='build_only')c.push('<b>Building is a different business.</b> You carry the '+
-    'demand risk yourself, there is no day-one cash flow, no seller to diligence, and '+
-    'no multiple arbitrage — the whole return has to come from operating a startup.');
-  if(q=='declining')c.push('A roll-up in a shrinking market earns its return from cost '+
-    'synergies alone. Cash extraction, not buy-and-build: you would buy at 4x and sell '+
-    'at 4x, and there is probably no trade buyer at the end.');
-  if(sup=='unobservable')c.push('<b>CQC cannot see this niche.</b> Non-surgical '+
-    'aesthetics is not a CQC-regulated activity, so those clinics never register. The '+
-    'supply population is real but invisible — use the T2 Aesthetics tab as the '+
-    'proxy and ignore the CQC columns here.');
-  if(q=='buy_window'||q=='declining')c.push('A CQC Provider ID is a legal entity, not '+
-    'an economic owner. A PE group holding twelve Ltds looks like twelve independents, '+
-    'so fragmentation is systematically <b>over</b>stated.');
-  return c;
-}
-function readNiche(n,t0,t1,t2,t3,t4,iv,B){
-  var d=readDemand(t0,t1,B),s=readSupply(n,t2,t3,iv,B),sup=s[0],er=s[1];
+var STLABEL={
+  early:      '1 · Search only — very early, may be nothing',
+  emerging:   '2 · Emerging — founders are moving in',
+  building:   '3 · Building out — capacity arriving',
+  mainstream: '4 · Mainstream — it has already happened',
+  cooling:    'Cooling — past peak',
+  quiet:      '— nothing firing',
+  nodata:     'Not enough data'
+};
+var STCLS={early:'s1',emerging:'s2',building:'s3',mainstream:'s4',
+           cooling:'s0',quiet:'s1',nodata:'s1'};
+// rank: how EARLY, i.e. how much of the chain is still ahead of you. Highest = earliest.
+var STRANK={emerging:5,early:4,building:3,mainstream:2,cooling:1,quiet:0,nodata:0};
+
+function readStage(n,t0,t1,t2,t3,t4,B){
+  var f1=fires(t1,B.t1), f2=fires(t2,B.t2), f3=fires(t3,B.t3), f4=fires(t4,B.t4);
+  var na4=NOPRESC.indexOf(n)>=0;
+  var lit=[f1,f2,f3,f4].filter(Boolean).length;
+  var d=readDemand(t0,t1,B);
   var q;
-  if(sup=='unknown'||sup=='unobservable')q='no_data';
-  else if(sup=='consolidated')q='too_late';       // beats everything: even booming
-                                                  // demand is worthless if you are
-                                                  // bidding against the consolidator
-  else if(sup=='none')q=(d=='growing'||d=='booming')?'build_only':'nothing_here';
-  else if(sup=='filling')q='wait_or_build';
-  else if(d=='falling')q='declining';
-  else q='buy_window';
-  return {q:q,demand:d,supply:sup,er:er,label:QLABEL[q],elig:QELIG[q],
-          rank:QRANK[q],cls:QCLS[q],score:qscore(q,d,iv,er),
-          caveats:qcaveats(q,sup,t1,t4,iv,B)};
+  if(lit===0)                       q = (t1!=null||t2!=null||t3!=null)?'quiet':'nodata';
+  else if(f4 && !f1 && !f2)         q='cooling';        // only the laggard is lit
+  else if(f4 && lit>=3)             q='mainstream';
+  else if(f3)                       q='building';
+  else if(f1&&f2)                   q='emerging';
+  else if(f1)                       q='early';
+  else if(f2)                       q='emerging';
+  else                              q='building';
+  // demand actually falling while late supply is still arriving = past peak
+  if(d==='falling'&&(f3||f4)&&!f1)  q='cooling';
+  var cav=[];
+  if(f4&&!na4)cav.push('T4 is ambiguous: NHS prescribing can rise because the condition is growing, OR because the NHS started funding it — which shrinks the private market. It votes, but read it twice.');
+  if(B.t1&&B.t1.independent_items===0&&B.t1.items>0)cav.push('Every T1 term here was auto-discovered from T2/T3, so T1 is confirming what the supply tiers told it to search for. Treated as no vote.');
+  if(q==='early')cav.push('Search interest with nothing behind it is the cheapest possible signal. Most of these go nowhere.');
+  return {q:q,demand:d,lit:lit,label:STLABEL[q],cls:STCLS[q],rank:STRANK[q],caveats:cav,na4:na4};
 }
 var DMCLS={booming:'dm-boom',growing:'dm-grow',flat:'dm-flat',falling:'dm-fall',
            unknown:'dm-unk'};
-var SPCLS={fragmented:'sp-frag',filling:'sp-fill',consolidated:'sp-cons',
-           none:'sp-none',unknown:'sp-unk',unobservable:'sp-unk'};
-var SPTXT={fragmented:'fragmented',filling:'filling up',consolidated:'consolidated',
-           none:'nothing to buy',unknown:'unknown',unobservable:'invisible to CQC'};
+var STRUCTTXT={fragmented:'many small operators',rushing:'gold rush — lots of new entrants',
+               consolidated:'already consolidated',tiny:'very few operators',
+               unknown:'unknown'};
+var STRUCTCLS={fragmented:'sp-frag',rushing:'sp-fill',consolidated:'sp-cons',
+               tiny:'sp-none',unknown:'sp-unk'};
 function ivBadge(v){
   if(!v)return '<span class="iv iv-na">no data</span>';
   var s=v.verdict||'';var c='iv-mid';
@@ -404,112 +334,71 @@ function ivBadge(v){
   return '<span class="iv '+c+'" title="'+tip.replace(/"/g,'&quot;')+'">'+s+'</span>';
 }
 function buildStack(presc){
-  var A0=aggB(RADAR.waits),
-      A1=aggB(RADAR.trends,{index:true,independentOnly:true}),
-      A2=aggB((RADAR.inc||[]).concat(RADAR.aes||[])),
-      A3=aggB(RADAR.cqc),
-      A4=aggB(presc);
+  var A0=aggB(RADAR.waits), A1=aggB(RADAR.trends,{index:true,independentOnly:true}),
+      A2=aggB((RADAR.inc||[]).concat(RADAR.aes||[])), A3=aggB(RADAR.cqc), A4=aggB(presc);
   var IV=RADAR.invest||{};
-  var names={};
-  [A0.g,A1.g,A2.g,A3.g,A4.g].forEach(function(o){for(var k in o)names[k]=1;});
+  var names={};[A0.g,A1.g,A2.g,A3.g,A4.g].forEach(function(o){for(var k in o)names[k]=1;});
   for(var k in IV)names[k]=1;
 
   var rows=Object.keys(names).map(function(n){
     var B={t0:A0.b[n],t1:A1.b[n],t2:A2.b[n],t3:A3.b[n],t4:A4.b[n]};
-    var r=readNiche(n,A0.g[n],A1.g[n],A2.g[n],A3.g[n],A4.g[n],IV[n],B);
-    r.n=n;r.B=B;r.iv=IV[n];r.na4=NOPRESC.indexOf(n)>=0;
-    r.t0=A0.g[n];r.t1=A1.g[n];r.t2=A2.g[n];r.t3=A3.g[n];r.t4=A4.g[n];
-    return r;});
+    var s=readStage(n,A0.g[n],A1.g[n],A2.g[n],A3.g[n],A4.g[n],B);
+    var st=readStructure(IV[n]);
+    return {n:n,t0:A0.g[n],t1:A1.g[n],t2:A2.g[n],t3:A3.g[n],t4:A4.g[n],B:B,
+            s:s,struct:st[0],er:st[1],iv:IV[n]};});
 
-  // Buy targets first, then build ideas, then the dead ones. Within a group, by score.
+  // sort by HOW EARLY you are seeing it, then by how hard the earliest tier is moving
   rows.sort(function(x,y){
-    if(x.rank!==y.rank)return x.rank-y.rank;
-    return y.score-x.score;});
+    if(y.s.rank!==x.s.rank)return y.s.rank-x.s.rank;
+    var xa=(x.t1==null?-9e9:x.t1), ya=(y.t1==null?-9e9:y.t1);
+    if(ya!==xa)return ya-xa;
+    return (y.t2==null?-9e9:y.t2)-(x.t2==null?-9e9:x.t2);});
 
-  var h='<div class="chain"><b>Two questions, not one stage.</b> '+
-    '<b>DEMAND</b> — is there a market, and is it growing, flat or rolling over? '+
-    '(from T0 NHS waits and T1 search.) '+
-    '<b>SUPPLY</b> — is there a population of clinics to BUY, and has anyone already '+
-    'bought them? (from the CQC standing population, plus T2/T3 as the entry flow.)<br>'+
-    'The valuable niche is <b>not the earliest</b>. It is <b>proven demand + a deep, '+
-    'fragmented, tired owner population that new entrants have stopped joining</b>. '+
-    'T2 (new companies) and T3 (new clinics) rising is <b>not good news for a buyer</b> '+
-    '— it means competitors are multiplying and asking prices are going up.<br>'+
-    '<b>Every niche is routed to one of your two businesses:</b> '+
-    '<span class="el el-buy">buy</span> acquire clinics &middot; '+
-    '<span class="el el-build">build</span> open one yourself — a different business '+
-    'with a different risk profile &middot; '+
-    '<span class="el el-neither">neither</span>.</div>';
+  var h='<div class="chain"><b>What is rising, and how early are you seeing it?</b> '+
+    'Read left to right: <b>T1 search</b> (weeks) &rarr; <b>T2 new companies</b> (months) &rarr; '+
+    '<b>T3 new clinics</b> (6&ndash;18 mth) &rarr; <b>T4 NHS prescribing</b> (12+ mth). '+
+    '<b>T0 NHS waits</b> sits upstream of all of it &mdash; it is the pressure that pushes people private in the first place.<br>'+
+    'The <b>earliest tier that is firing</b> tells you where in that chain you are. Only T1 lit = very early, and probably nothing. '+
+    'T4 lit = it already happened. Sorted so the <b>earliest</b> things are at the top. '+
+    '<b>Market structure</b> is context, not a verdict.</div>';
 
-  h+='<div class="warn"><b>Before you trust a cell.</b> Every percentage now carries the '+
-    'two counts it was computed from. Where the base is under '+MIN_BASE+', <b>no '+
-    'percentage is shown at all</b> — "+200%" on a base of 2 is two extra clinics, '+
-    'and one extra clinic would have moved it 50 points. A number is only treated as '+
-    '<b>firing</b> if it clears +'+RISING+'% <i>and</i> one standard deviation of counting '+
-    'noise on its own base (±'+Math.round(noisePct(40))+'% at a base of 40, '+
-    '±'+Math.round(noisePct(400))+'% at a base of 400). Percentages that clear +'+
-    RISING+'% but sit inside their noise band are shown in <span class="na">grey</span>. '+
-    'None of the thresholds is backtested — they are reasoning, not evidence, and the '+
-    'two entry-rate cuts (' +Math.round(ENTRY_HOT*100)+'% / '+Math.round(ENTRY_WARM*100)+
-    '%) are the weakest numbers here.</div>';
+  h+='<div class="warn"><b>Before you trust a cell.</b> The tier ordering is <b>not proven</b> &mdash; and worse, it is partly an artefact of the measurement: on synthetic data where the true lead is <b>zero</b>, the estimator still &ldquo;finds&rdquo; T1 leading T2 by ~2 months, simply because thin, noisy series take longer to cross a threshold. '+
+    'Every % is printed with its base (<span class="den">was &rarr; now</span>); anything under a base of 10 shows <span class="thin">too thin for a %</span> instead of a number, and a % inside its own counting-noise band is greyed out rather than treated as real. '+
+    'A dash = no reading. <i>n/a</i> = that source structurally cannot see this niche (e.g. aesthetics has no NHS drug).</div>';
 
   if(RADAR.moved&&RADAR.moved.length){
-    h+='<div class="mv"><b>What moved in the last 7 days</b> — note this panel is '+
-       'still computed server-side on the OLD "early tiers agree" logic, which counts '+
-       'T2/T3 (supply) as confirmation of demand. Read it as <i>"activity picked up"</i>, '+
-       'not as <i>"this got more attractive to buy"</i>.<ul>';
+    h+='<div class="mv"><b>What moved in the last 7 days</b><ul>';
     RADAR.moved.forEach(function(m){
-      h+='<li>'+m.niche+' — activity now on <b>'+m.to+'</b> of 3 tiers (was '+
-         m.from+' on '+m.since+')</li>';});
+      h+='<li>'+m.niche+' — now firing on <b>'+m.to+'</b> of the 3 early tiers (was '+m.from+' on '+m.since+')</li>';});
     h+='</ul></div>';
   }
 
   h+='<table><thead><tr><th class="l">#</th><th class="l">Niche</th>'+
-     '<th data-k="t0">T0 NHS wait</th><th data-k="t1">T1 Search</th>'+
-     '<th data-k="t2">T2 Companies</th><th data-k="t3">T3 Clinics</th>'+
-     '<th data-k="t4">T4 Prescribing</th>'+
-     '<th data-k="er">New sites</th><th class="l">Demand</th><th class="l">Supply</th>'+
-     '<th data-k="score">Verdict</th><th class="l">For</th></tr></thead><tbody>';
-
+     '<th data-k="t0">T0 NHS wait</th><th data-k="t1">T1 Search</th><th data-k="t2">T2 Companies</th>'+
+     '<th data-k="t3">T3 Clinics</th><th data-k="t4">T4 Prescribing</th>'+
+     '<th data-k="lit">Tiers</th><th class="l">Demand</th><th class="l q">How early</th>'+
+     '<th class="l">Market structure</th></tr></thead><tbody>';
   rows.forEach(function(r,i){
-    var iv=r.iv||{};
-    var erTxt=(r.er==null)?'<span class="na">&ndash;</span>'
-      :('<span class="'+(r.er>=ENTRY_HOT?'dn':'')+'">'+Math.round(r.er*100)+'%</span>'+
-        '<div class="den">'+num(iv.new_12m)+' of '+num(iv.locations)+'</div>');
+    var cav=r.s.caveats.length?'<div class="cav">'+r.s.caveats.join(' ')+'</div>':'';
+    var stx=STRUCTTXT[r.struct]||'unknown';
+    if(r.er!=null)stx+=' · '+Math.round(r.er)+'% opened in the last yr';
     h+='<tr data-t0="'+(r.t0==null?-9999:r.t0)+'" data-t1="'+(r.t1==null?-9999:r.t1)+
        '" data-t2="'+(r.t2==null?-9999:r.t2)+'" data-t3="'+(r.t3==null?-9999:r.t3)+
-       '" data-t4="'+(r.t4==null?-9999:r.t4)+
-       '" data-er="'+(r.er==null?-9999:r.er)+'" data-score="'+r.score+'">'+
-       '<td class="rk">'+(i+1)+'</td><td class="nm">'+r.n+'</td>'+
-       '<td class="num">'+cellD(r.t0,r.B.t0)+'</td>'+
-       '<td class="num">'+cellD(r.t1,r.B.t1)+'</td>'+
-       '<td class="num">'+cellD(r.t2,r.B.t2)+'</td>'+
-       '<td class="num">'+cellD(r.t3,r.B.t3)+'</td>'+
-       '<td class="num">'+cellD(r.t4,r.B.t4,r.na4)+'</td>'+
-       '<td class="num">'+erTxt+'</td>'+
-       '<td class="l"><span class="dm '+DMCLS[r.demand]+'">'+r.demand+'</span></td>'+
-       '<td class="l"><span class="sp '+SPCLS[r.supply]+'">'+SPTXT[r.supply]+'</span>'+
-         (iv.indie_providers!=null?'<div class="den">'+num(iv.indie_providers)+
-          ' indies</div>':'')+'</td>'+
-       '<td class="l q"><span class="st '+r.cls+'">'+r.label+'</span></td>'+
-       '<td class="l"><span class="el el-'+r.elig+'">'+r.elig+'</span></td></tr>';
-    if(r.caveats.length){
-      h+='<tr><td></td><td colspan="11">';
-      r.caveats.forEach(function(c){h+='<div class="cav">'+c+'</div>';});
-      h+='</td></tr>';
-    }
-  });
-
-  h+='</tbody></table><div class="note"><b>New sites</b> is the number that matters most '+
-     'and it is new: what share of the entire standing clinic population registered in '+
-     'the last 12 months. High = a gold rush, every owner knows it, and you are bidding '+
-     'against fresh entrants. Low = the rush is over, price competition has arrived, and '+
-     'the owner who was turning patients away two years ago will take your call. '+
-     '<b>The roll-up window opens when the boom ends but the demand does not.</b><br>'+
-     'All growth figures are 12-month, pooled across every item mapped to that niche '+
-     '(sum of the current counts over the sum of the year-ago counts). A dash = the '+
-     'source has no reading (absent, not zero). T4 shows <i>n/a</i> where no NHS drug '+
-     'proxy exists.</div>';
+       '" data-t4="'+(r.t4==null?-9999:r.t4)+'" data-lit="'+r.s.lit+
+       '"><td class="rk">'+(i+1)+'</td><td class="nm">'+r.n+'</td>'+
+       '<td class="num">'+cellD(r.t0,r.B.t0)+'</td><td class="num">'+cellD(r.t1,r.B.t1)+'</td>'+
+       '<td class="num">'+cellD(r.t2,r.B.t2)+'</td><td class="num">'+cellD(r.t3,r.B.t3)+'</td>'+
+       '<td class="num">'+cellD(r.t4,r.B.t4,r.s.na4)+'</td>'+
+       '<td class="num">'+r.s.lit+'/4</td>'+
+       '<td class="l"><span class="dm '+(DMCLS[r.s.demand]||'dm-unk')+'">'+r.s.demand+'</span></td>'+
+       '<td class="l q"><span class="st '+r.s.cls+'">'+r.s.label+'</span>'+cav+'</td>'+
+       '<td class="l"><span class="sp '+(STRUCTCLS[r.struct]||'sp-unk')+'" title="'+
+         (r.iv?((r.iv.owners_economic||r.iv.providers||'?')+' operators, '+(r.iv.locations||'?')+' sites'):'')+
+         '">'+stx+'</span></td></tr>';});
+  h+='</tbody></table><div class="note">All figures are <b>12-month growth</b>, pooled across every item mapped to that niche (counts summed, then divided &mdash; not an average of percentages). '+
+     '<b>T1 terms that were auto-discovered from T2/T3 are shown but get no vote</b>, otherwise T1 would be confirming what the supply tiers told it to look for. '+
+     '<b>T0 covers consultant-led elective NHS care only</b>, so it is structurally blind to weight-loss and ADHD &mdash; two of the biggest private-pay niches. '+
+     '<b>Market structure</b> comes from the entire active CQC population (a stock, not a flow) and is grouped by <i>economic owner</i>, not legal entity. It tells you whether a niche is crowded, not whether it is good.</div>';
   return h;
 }
 
@@ -571,8 +460,7 @@ function ivTable(){
        '<td class="num">'+(v.single_site_pct!=null?Math.round(v.single_site_pct)+'%':'&ndash;')+'</td>'+
        '<td class="num">'+(v.top5_share!=null?Math.round(v.top5_share)+'%':'&ndash;')+'</td>'+
        '<td class="l">'+ivBadge(v)+'</td></tr>';});
-  return h+'</tbody></table><div class="note"><b>Is it actually a roll-up?</b> Rising &ne; acquirable. This is the <b>entire active CQC population</b> (a stock), not new registrations (a flow). Many small single-site providers = fragmented = runway. A high top-5 share = someone already consolidated it. Under ~30 independent providers = there is no acquirable population, and the niche is marked "too small to roll up" however fast it is growing. '+
-   '<b>Two biases, both flattering:</b> (1) a Provider ID is a legal entity, not an economic owner &mdash; a PE-backed group holding twelve Ltds looks like twelve independents; (2) aesthetics is under-counted because non-surgical clinics are not CQC-registrable at all.</div>'+
+  return h+'</tbody></table><div class="note"><b>Who is actually in this niche?</b> Context for the Stack, not a verdict. This is the <b>entire active CQC population</b> (a stock, not a flow), grouped by <b>economic owner</b> &mdash; providers sharing a director or registered address are merged, so a group holding twelve Ltds counts once. Many small operators = a fragmented, competitive niche. A high top-5 share = someone big already owns it. The <b>entry rate</b> (share of the standing stock that registered in the last year) separates a genuine gold rush from a settled market: ~22% of weight-loss clinics opened last year; ~5% of dental practices did. <b>Two blind spots:</b> non-surgical aesthetics clinics are not CQC-registrable at all, so aesthetics is under-counted here; and owner-merging can only merge, never split, so the operator count is an upper bound.</div>'+
   ' <b>What this tab still does not tell you:</b> whether the owners are TIRED. A '+
   'fragmented population of 500 clinics that all opened last year is not a roll-up — '+
   'it is a gold rush you would be bidding into. The <b>New sites</b> column on the Stack '+
