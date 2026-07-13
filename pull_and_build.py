@@ -74,7 +74,19 @@ STOP = set(("the and of for to in a an ltd limited uk gb london clinic clinics h
             "forest first best new prime elite smart digital online mobile home family city "
             "north south east west greater park house lodge road street hall court view green "
             "hill professional quality complete total pure life live your local premier "
-            "head office site main branch room rooms suite lodge villa manor").split())
+            "head office site main branch room rooms suite lodge villa manor "
+            # generic descriptors that carry no niche meaning
+            "hospital hospitals private clinical doctor doctors surgeon surgeons nurse "
+            "clear trading integrated little address remote connect harmony retreat "
+            "grove square royal gate cross mount chapel abbey priory spring meadow "
+            "leigh vale bank field brook stone white black gold silver star crown "
+            # UK place names (locations name themselves after where they are)
+            "manchester birmingham bristol oxford cotswold dartford worcester epsom "
+            "leeds liverpool sheffield nottingham glasgow cardiff edinburgh brighton "
+            "reading coventry leicester newcastle norwich cambridge york derby stoke "
+            "wolverhampton swansea belfast aberdeen dundee harley wimpole chelsea "
+            "kensington marylebone mayfair richmond croydon bromley watford slough "
+            "wales scotland ireland england britain british midlands anglia").split())
 
 
 def ch_page(sic, dfrom, dto, start):
@@ -366,7 +378,7 @@ def cqc():
 
     rows = []
     for g, c12 in cnt["m12"].items():
-        if c12 < 3:                                   # min volume so it's signal not noise
+        if c12 < 4:                                   # min volume so it's signal not noise
             continue
         # min base of 3 on the comparison window: below that a % is noise, not signal
         p12 = cnt["m12p"][g]
@@ -376,8 +388,10 @@ def cqc():
         rows.append({"name": g, "latest": c12, "g1": g1, "g3": g3, "g12": g12,
                      "accel": (g3 - g12) if (g3 is not None and g12 is not None) else None,
                      "isnew": p12 == 0})
-    rows.sort(key=lambda r: (r["isnew"], r["g12"] if r["g12"] is not None else -9e9, r["latest"]),
-              reverse=True)
+    # niches with a real year-ago base rank first, by growth; the rest fall back to volume.
+    # (sorting "brand new" first just floats the thinnest, noisiest rows to the top)
+    rows.sort(key=lambda r: (r["g12"] is not None, r["g12"] if r["g12"] is not None else 0,
+                             r["latest"]), reverse=True)
     return rows[:40]
 
 
