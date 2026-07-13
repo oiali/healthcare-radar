@@ -301,16 +301,14 @@ function readStage(n,t0,t1,t2,t3,t4,B){
   var lit=[f1,f2,f3,f4].filter(Boolean).length;
   var d=readDemand(t0,t1,B);
   var q;
+  // The LATEST tier that is firing tells you how far this has already travelled.
+  // (The earliest one tells you nothing about lateness - that was the bug.)
   if(lit===0)                       q = (t1!=null||t2!=null||t3!=null)?'quiet':'nodata';
-  else if(f4 && !f1 && !f2)         q='cooling';        // only the laggard is lit
-  else if(f4 && lit>=3)             q='mainstream';
-  else if(f3)                       q='building';
-  else if(f1&&f2)                   q='emerging';
-  else if(f1)                       q='early';
-  else if(f2)                       q='emerging';
-  else                              q='building';
-  // demand actually falling while late supply is still arriving = past peak
-  if(d==='falling'&&(f3||f4)&&!f1)  q='cooling';
+  else if(f4)                       q = (f1||f2) ? 'mainstream' : 'cooling';
+  else if(f3)                       q = (f1||f2) ? 'building'   : 'cooling';
+  else if(f2)                       q = 'emerging';
+  else                              q = 'early';
+  if(d==='falling'&&!f1&&!f2)       q = 'cooling';
   var cav=[];
   if(f4&&!na4)cav.push('T4 is ambiguous: NHS prescribing can rise because the condition is growing, OR because the NHS started funding it — which shrinks the private market. It votes, but read it twice.');
   if(B.t1&&B.t1.independent_items===0&&B.t1.items>0)cav.push('Every T1 term here was auto-discovered from T2/T3, so T1 is confirming what the supply tiers told it to search for. Treated as no vote.');
