@@ -86,7 +86,8 @@ STOP = set(("the and of for to in a an ltd limited uk gb london clinic clinics h
             "reading coventry leicester newcastle norwich cambridge york derby stoke "
             "wolverhampton swansea belfast aberdeen dundee harley wimpole chelsea "
             "kensington marylebone mayfair richmond croydon bromley watford slough "
-            "wales scotland ireland england britain british midlands anglia").split())
+            "wales scotland ireland england britain british midlands anglia "
+            "until headquarters central partnership limited unit units floor").split())
 
 
 def ch_page(sic, dfrom, dto, start):
