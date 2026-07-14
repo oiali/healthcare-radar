@@ -69,5 +69,20 @@
    "DR DRIP IV LTD"
   ],
   "hits_total": 10
+ },
+ "cryotherapy": {
+  "sampled": 40,
+  "precision": 1.0,
+  "examples_rejected": [],
+  "hits_total": 40
+ },
+ "ice bath": {
+  "sampled": 11,
+  "precision": 0.818,
+  "examples_rejected": [
+   "BATH ICE CREAM LIMITED",
+   "ICE BREAKERS OF BATH LTD"
+  ],
+  "hits_total": 11
  }
 }

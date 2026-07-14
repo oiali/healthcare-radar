@@ -5,7 +5,7 @@ Generated 2026-07-14. **T4 is in this study**, back to Jan-2014, via NHSBSA's ow
 
 > **PARTIAL RUN - THE DATA BELOW IS INCOMPLETE. Numbers in this report can change when the remaining cells arrive.**
 >
-> - T2 Companies House: **16.0% of cells fetched** (951/5940). Keywords with >=90% coverage, and therefore usable this run: 1/30. Withheld (<90% fetched, shown as 'no data', never zero-filled): adhd, autistic, cannabidiol, cbd, cold plunge, cryotherapy, fertility, hair restoration, hair transplant, hyperbaric, ice bath, iv drip, ivf, menopause, mens health, nad+, neurodiversity, nicotinamide, perimenopause, photobiomodulation, private doctor, private gp, psilocybin, psychedelic, red light therapy, semaglutide, testosterone, vitamin drip, weight loss.
+> - T2 Companies House: **17.0% of cells fetched** (1010/5940). Keywords with >=90% coverage, and therefore usable this run: 1/30. Withheld (<90% fetched, shown as 'no data', never zero-filled): adhd, autistic, cannabidiol, cbd, cold plunge, cryotherapy, fertility, hair restoration, hair transplant, hyperbaric, ice bath, iv drip, ivf, menopause, mens health, nad+, neurodiversity, nicotinamide, perimenopause, photobiomodulation, private doctor, private gp, psilocybin, psychedelic, red light therapy, semaglutide, testosterone, vitamin drip, weight loss.
 >
 > - T4 NHSBSA EPD: 100.0% of months (148/148).
 >
@@ -175,7 +175,7 @@ Hit/miss is binary and throws away the amplitude. The live radar *ranks* niches 
 Source: NHSBSA Open Data Portal, English Prescribing Dataset, 2014-01 to 2026-04. No API key. One request per month, cached forever (a published month is immutable).
 
 
-**The schema trap.** NHSBSA renamed `bnf_chemical_substance` from a CODE to a NAME in July 2025. Querying the new table with the old column returns `null`, not an error - and a careless module turns that null into a zero and reports that ADHD prescribing collapsed. Every month here is validated against a canary chemical (sertraline). A month that fails is **dropped, never zeroed**. Months rejected this run: 0.
+**The schema trap.** NHSBSA renamed `bnf_chemical_substance` from a CODE to a NAME in July 2025. Querying the new table with the old column returns `null`, not an error - and a careless module turns that null into a zero and reports that ADHD prescribing collapsed. Every month here is validated against a canary chemical (sertraline). A month that fails is **dropped, never zeroed**. Months rejected this run: ?.
 
 
 **What EPD structurally cannot see:** private prescriptions (so private TRT, private weight-loss jabs and private ADHD scripts are invisible), Scotland, Wales and Northern Ireland, secondary/hospital-issued drugs (so IVF), dental prescribing, and anything supplied under a Patient Group Direction.
@@ -322,25 +322,21 @@ NAD+ is in the graveyard although it has **not resolved**. If it becomes a real 
 ```
 {
  "t4_months_total": 148,
- "t4_months_cached": 0,
+ "t4_months_cached": 148,
  "t4_latest_published": "2026-04",
  "t4_codes": 23,
- "t4_calls_spent": 148,
- "t4_months_unread": [],
- "t4_months_unread_n": 0,
- "t4_coverage": 1.0,
- "t4": "ok - 148/148 months",
+ "t4": "cache hit - 148/148 months, 0 calls",
  "t2_cells_total": 5940,
- "t2_cells_cached": 0,
+ "t2_cells_cached": 951,
  "t2_deadline_hit": true,
- "t2_calls_spent": 1990,
+ "t2_calls_spent": 1427,
  "t2_errors": {
-  "HTTP 404": 946,
-  "exhausted": 83
+  "HTTP 404": 1285,
+  "exhausted": 81
  },
- "t2_cells_new_this_run": 951,
- "t2_coverage": 0.16,
- "t2": "PARTIAL - 951/5940 cells (4989 left; re-run to resume, the cache persists)",
+ "t2_cells_new_this_run": 59,
+ "t2_coverage": 0.17,
+ "t2": "PARTIAL - 1010/5940 cells (4930 left; re-run to resume, the cache persists)",
  "cqc_active_url": "https://www.cqc.org.uk/sites/default/files/2026-07/01_July_2026_HSCA_Active_Locations.ods",
  "cqc_deactivated_url": "https://www.cqc.org.uk/sites/default/files/2026-07/01_July_2026_Deactivated_Locations.ods",
  "cqc_active_cols": {
@@ -358,6 +354,7 @@ NAD+ is in the graveyard although it has **not resolved**. If it becomes a real 
  "cqc_deact_rows": 64880,
  "cqc_deact_has_postcode": true,
  "cqc_survivorship_corrected": true,
+ "t3": "cache hit",
  "t1_inherited_from_backtest1": [],
  "t1": "SKIPPED. 0/16 terms cached; ['adhd', 'autism', 'cbd', 'coldwater', 'cryo', 'glp1', 'hair', 'hbot', 'ivdrip', 'ivf', 'menopause', 'nad', 'privategp', 'psychedelics', 'redlight', 'trt'] missing. Re-run with --trends to spend 16 SerpApi calls (once, ever). T1 is WITHHELD for the missing terms, not zeroed."
 }
