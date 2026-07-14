@@ -1,0 +1,45 @@
+name: adhd-test
+
+# THE KILL TEST for the adoption panel.
+#
+# The panel watches a fixed cohort of real UK clinic websites through the Internet
+# Archive and counts DISTINCT CLINICS that start advertising a service. The claim is
+# that this is the one sensor here that would have seen the ADHD boom — because ADHD
+# spread through EXISTING psychiatry/GP practices adding an assessment service, which
+# files no company and registers no clinic, and is therefore invisible to every other
+# tier on the dashboard.
+#
+# That claim is falsifiable, so falsify it:
+#   if 2022 is not at least DOUBLE 2020 in the count of clinics advertising ADHD
+#   assessment, the panel did not see ADHD and the module should be CUT.
+#
+# Run on demand. ~4 minutes.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  adhd-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Does the panel see the ADHD boom?
+        run: python panel.py --adhd-test
+
+      - name: Commit the cohort + snapshot cache
+        if: always()
+        run: |
+          git config user.name "radar-bot"
+          git config user.email "radar-bot@users.noreply.github.com"
+          git add -A data || true
+          git commit -m "panel: adhd test + cache" || echo "no changes"
+          git pull --rebase --autostash || true
+          git push || echo "push failed"
