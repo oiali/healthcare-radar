@@ -61,6 +61,7 @@ td.q{max-width:300px}
 <div class="tabs">
   <div class="tab on" data-p="st">The Stack</div>
   <div class="tab" data-p="dc">Discovery</div>
+  <div class="tab" data-p="ct">Catalysts</div>
   <div class="tab" data-p="wt"><span class="t">T0</span>NHS waits</div>
   <div class="tab" data-p="tr"><span class="t">T1</span>Search</div>
   <div class="tab" data-p="in"><span class="t">T2</span>New companies</div>
@@ -71,6 +72,7 @@ td.q{max-width:300px}
 </div>
 <div class="panel on" id="st"><div id="stbody" class="msg">Building the stack&hellip;</div></div>
 <div class="panel" id="dc"><div id="dcbody"></div></div>
+<div class="panel" id="ct"><div id="ctbody"></div></div>
 <div class="panel" id="wt"><div id="wtbody"></div></div>
 <div class="panel" id="tr"><div id="trbody"></div></div>
 <div class="panel" id="in"><div id="inbody"></div></div>
@@ -485,7 +487,44 @@ function discTable(){
     '<b>How a brand is told apart from a niche:</b> a real service is used by many unrelated operators; a brand is used many times by one. So a phrase must appear across <b>&ge;6 distinct operators</b>, in <b>&ge;3 regions</b>, at &le;3 mentions per operator, and be rising. That kills brand names, franchises, surnames and place names structurally &mdash; not with a blocklist.<br>'+
     '<b>Read it as a question, not an answer.</b> These are unvetted strings. Most will be nothing. The point is that the machine is now able to be surprised.</div>';
 }
-document.getElementById('dcbody').innerHTML=discTable()+drugDisc();
+document.getElementById('dcbody').innerHTML=discTable()+risingQ()+drugDisc();
+document.getElementById('ctbody').innerHTML=catTable();
+
+// Google's own RISING queries, harvested from broad seeds. This is the SEARCH-side open
+// layer - the earliest place a niche nobody listed can appear, because it needs no
+// company, no clinic and no prescription to exist. "Breakout" = >5000% growth.
+function risingQ(){
+  var Q=RADAR.topen||[];
+  if(!Q.length)return '';
+  var newOnes=Q.filter(function(r){return !r.niche;});
+  var h='<h3 style="font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:#6b7280;margin:22px 0 8px">Rising Google searches nobody listed</h3>';
+  if(!newOnes.length)return h+'<div class="msg">Every rising query maps to a niche we already track. That is a real result.</div>';
+  h+='<table><thead><tr><th class="l">#</th><th class="l">Search term</th><th class="l">From seed</th>'+
+     '<th class="l">Rise</th><th class="l">First seen</th></tr></thead><tbody>';
+  newOnes.slice(0,25).forEach(function(r,i){
+    var rise=(r.rise==='breakout')?'<span class="up">breakout</span>':
+      '<span class="'+((r.rise_value||0)>=100?'up':'')+'">+'+num(r.rise)+'%</span>';
+    h+='<tr><td class="rk">'+(i+1)+'</td><td class="nm">'+r.query+
+       (r.is_new?' <span class="newtag">new</span>':'')+'</td><td class="l">'+(r.seed||'')+'</td>'+
+       '<td class="l">'+rise+'</td><td class="l">'+(r.first_seen||'')+'</td></tr>';});
+  return h+'</tbody></table><div class="note">Google\'s <b>rising related queries</b> for a rotating set of broad UK health seeds, filtered to the ones that map to <b>no niche we already track</b>. "Breakout" is Google\'s label for &gt;5000% growth. This is the earliest discovery surface on the dashboard: a search term needs no company, no clinic and no prescription in order to exist. It is also the noisiest &mdash; read it as a question.</div>';
+}
+
+// New UK medicine licences for large-population conditions.
+function catTable(){
+  var C=RADAR.cats||[];
+  if(!C.length)return '<div class="msg">No new large-population medicine licences found this run.</div>';
+  var h='<table><thead><tr><th class="l">#</th><th class="l">Drug</th><th class="l">Condition</th>'+
+    '<th class="l">Licensed</th><th class="l">Why it matters</th></tr></thead><tbody>';
+  C.forEach(function(r,i){
+    h+='<tr><td class="rk">'+(i+1)+'</td><td class="nm">'+r.name+
+       (r.niche?'<span class="niche">'+r.niche+'</span>':'')+'</td>'+
+       '<td class="l">'+(r.condition||'')+'</td><td class="l">'+(r.date||'')+'</td>'+
+       '<td class="l q">'+(r.why||'')+'</td></tr>';});
+  return h+'</tbody></table><div class="note"><b>The earliest and hardest signal on the dashboard.</b> New UK medicine licences (MHRA, via GOV.UK), filtered to <b>large-population conditions</b> &mdash; the rare-oncology long tail that dominates the register can never create a private-pay market and is stripped out.<br>'+
+    'A licence lands <b>years</b> before the market. <b>Wegovy was licensed in Great Britain on 24 September 2021</b> &mdash; roughly 23 months before the UK weight-loss boom. Nothing else here could have seen that: no company had incorporated, no clinic had registered, nobody was searching for it, and it was not being prescribed.<br>'+
+    '<b>What it CANNOT see:</b> ADHD. No new molecule created that boom &mdash; it was a diagnosis and awareness boom on old drugs. So this is a side panel, not a tier, and it never scores a niche.</div>';
+}
 
 // Rising DRUGS nobody put on a list. The same open-layer idea, applied to the whole
 // NHS formulary: we already hold every chemical for every cached month, so ranking all

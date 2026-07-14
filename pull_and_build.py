@@ -291,9 +291,16 @@ def trends(extra):
         return None
     terms = CORE_Q + [t for t in extra if t not in CORE_Q]
     save(TERMS_FILE, {"core": CORE_Q, "discovered": extra, "date": date.today().isoformat()})
-    cached = load(TR_FILE)
-    if cached and cached.get("rows") and date.today().weekday() != 0:
-        return cached.get("rows")
+    cached = load(TR_FILE) or {}
+    last = cached.get("date")
+    fresh = False
+    if last:
+        try:
+            fresh = (date.today() - date.fromisoformat(last)).days < 7
+        except Exception:
+            fresh = False
+    if fresh:                      # refreshed within the last 7 days - do NOT spend quota
+        return cached.get("rows") or []
     rows = []
     for q in terms:
         url = ("https://serpapi.com/search.json?engine=google_trends"
@@ -316,7 +323,7 @@ def trends(extra):
                      "accel": None,
                      "found": q not in CORE_Q})
     rows.sort(key=lambda x: (x["g12"] if x["g12"] is not None else -9e9), reverse=True)
-    save(TR_FILE, {"rows": rows, "date": date.today().isoformat()})
+    save(TR_FILE, {"rows": rows, "date": date.today().isoformat()})   # stamped even if empty
     return rows
 
 
@@ -539,7 +546,7 @@ def safe(fn, label, *a, **k):
 def main():
     import nhs_rtt, aesthetics as aes_mod, investability2 as inv2
     import discovery2 as disc_mod, interpret as interp, targets as tgt_mod
-    import nhsbsa_epd
+    import nhsbsa_epd, trends_open as t_open, catalysts as cat_mod
 
     inc = safe(incorporations, "T2 incorporations") or []
     cq = safe(cqc, "T3 cqc") or []
@@ -567,6 +574,17 @@ def main():
     # served only 60 months and 403s Actions, which is why T4 used to be client-side.
     # Real lag is ~2.5 months, not the 12+ we assumed.
     presc = safe(nhsbsa_epd.epd, "T4 prescribing (NHSBSA)") or []
+
+    # SEARCH-SIDE OPEN LAYER: Google's own RISING queries, harvested from broad seeds on
+    # a rotating budget. A fixed watchlist can never surface a term nobody thought of;
+    # this can. Rows whose niche is None are the discovery rows.
+    topen = safe(t_open.trends_open, "T1b rising queries") or []
+
+    # CATALYSTS: new UK medicine licences for LARGE-population conditions. The earliest,
+    # hardest signal there is - a licence lands years before the market. Wegovy was
+    # licensed 24 Sep 2021, ~23 months before the UK weight-loss boom. Blind to ADHD
+    # (no new molecule created it), so it is a side panel, never a scoring tier.
+    cats = safe(cat_mod.catalysts, "Catalysts (MHRA licences)") or []
     tracked = [r for r in presc if r.get("kind") != "discovery"]
     drugdisc = [r for r in presc if r.get("kind") == "discovery"]
 
@@ -591,7 +609,7 @@ def main():
     updated = datetime.now(timezone.utc).strftime("%d %b %Y, %H:%M UTC")
     data = {"waits": waits, "trends": tr, "inc": inc, "aes": aes, "cqc": cq,
             "jobs": jobs, "moved": moved, "invest": invest, "disc": disc,
-            "presc": tracked, "drugdisc": drugdisc,
+            "presc": tracked, "drugdisc": drugdisc, "topen": topen, "cats": cats,
             "diag": DIAG, "drugs": DRUGS, "nopresc": NICHES_NO_PRESCRIBING}
     payload = json.dumps(data).replace("</", "<\\/")
     save("data.json", dict(updated=datetime.now(timezone.utc).isoformat(), **data))
@@ -612,7 +630,7 @@ def main():
 
     print(f"waits={len(waits)} trends={len(tr)} inc={len(inc)} aes={len(aes)} cqc={len(cq)} "
           f"presc={len(tracked)} drugdisc={len(drugdisc)} invest={len(invest)} "
-          f"discovery={len(disc)} moved={len(moved)}")
+          f"discovery={len(disc)} topen={len(topen)} catalysts={len(cats)} moved={len(moved)}")
 
 
 from template import TEMPLATE
