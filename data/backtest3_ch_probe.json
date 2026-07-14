@@ -1,0 +1,73 @@
+{
+ "adhd": {
+  "sampled": 100,
+  "precision": 1.0,
+  "examples_rejected": [],
+  "hits_total": 375
+ },
+ "weight loss": {
+  "sampled": 100,
+  "precision": 0.99,
+  "examples_rejected": [
+   "HAMPSHIRE WEIGHT-LOSS COUNSELLING CENTRE LIMITED"
+  ],
+  "hits_total": 188
+ },
+ "menopause": {
+  "sampled": 100,
+  "precision": 1.0,
+  "examples_rejected": [],
+  "hits_total": 212
+ },
+ "testosterone": {
+  "sampled": 4,
+  "precision": 1.0,
+  "examples_rejected": [],
+  "hits_total": 4
+ },
+ "hair transplant": {
+  "sampled": 44,
+  "precision": 1.0,
+  "examples_rejected": [],
+  "hits_total": 44
+ },
+ "autism": {
+  "sampled": 100,
+  "precision": 1.0,
+  "examples_rejected": [],
+  "hits_total": 636
+ },
+ "private gp": {
+  "sampled": 100,
+  "precision": 0.5,
+  "examples_rejected": [
+   "BEECHBROOK PRIVATE DEBT III GP LP",
+   "CORNERSTONE PRIVATE EQUITY GP 4 LLP",
+   "SCHRODERS CAPITAL PRIVATE EQUITY FOUNDER PARTNER (GP) LIMITED",
+   "EXPONENT PRIVATE EQUITY PARTNERS GP OF GP II LLP",
+   "CORNERSTONE PRIVATE EQUITY GP II LIMITED",
+   "LIONHEART GP UK PRIVATE LIMITED"
+  ],
+  "hits_total": 115
+ },
+ "fertility": {
+  "sampled": 100,
+  "precision": 1.0,
+  "examples_rejected": [],
+  "hits_total": 483
+ },
+ "cbd": {
+  "sampled": 100,
+  "precision": 1.0,
+  "examples_rejected": [],
+  "hits_total": 1698
+ },
+ "iv drip": {
+  "sampled": 10,
+  "precision": 0.9,
+  "examples_rejected": [
+   "DR DRIP IV LTD"
+  ],
+  "hits_total": 10
+ }
+}

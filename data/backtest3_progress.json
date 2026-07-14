@@ -1,0 +1,11 @@
+{
+ "complete": false,
+ "made_progress": true,
+ "t2_cells_fetched": 951,
+ "t2_cells_total": 5940,
+ "t2_cells_new_this_run": 951,
+ "t4_months_fetched": 148,
+ "t4_months_total": 148,
+ "wall_minutes": 42.9,
+ "generated": "2026-07-14T19:02:06.251251+00:00"
+}

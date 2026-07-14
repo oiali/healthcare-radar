@@ -1,0 +1,3161 @@
+{
+ "generated": "2026-07-14T19:02:06.247503+00:00",
+ "cutoff": "2022-03",
+ "windows": {
+  "T1": [
+   "2012-01",
+   "2026-06"
+  ],
+  "T2": [
+   "2010-01",
+   "2026-06"
+  ],
+  "T3": [
+   "2014-01",
+   "2026-06"
+  ],
+  "T4": [
+   "2014-01",
+   "2026-04"
+  ]
+ },
+ "n": {
+  "positives": 8,
+  "graveyard": 8,
+  "t4_informative_positives": 4,
+  "t4_informative_negatives": 0
+ },
+ "estimator": "backtest_core.onset_robust (21 synthetic fixtures, unchanged)",
+ "pub_lag_months": {
+  "T1": 0,
+  "T2": 0,
+  "T3": 1,
+  "T4": 3
+ },
+ "persistence_months": 3,
+ "hsca_waves_excluded": {
+  "2010-04": "NHS trusts",
+  "2010-10": "adult social care + independent health",
+  "2011-04": "primary dental + independent ambulance",
+  "2012-04": "misc. late cohorts",
+  "2013-04": "primary medical services (GPs)"
+ },
+ "t2_summing_note": "T2 sums the monthly hit-counts of a niche's keywords. A company called 'Menopause & Perimenopause Clinic Ltd' is therefore counted twice. This inflates the LEVEL. It does NOT move the onset DATE, because the estimator works on the log-ratio of the series to its own past: a constant multiplicative inflation c cancels in ln((cR+K)/(cB+K)) for any K small relative to R. It only bites if the overlap FRACTION changes over time. Guarded anyway: every onset is recomputed on the PRIMARY KEYWORD ALONE, which cannot double-count, and any disagreement is reported.",
+ "t2_precision": {
+  "adhd": {
+   "sampled": 100,
+   "precision": 1.0,
+   "examples_rejected": [],
+   "hits_total": 375
+  },
+  "weight loss": {
+   "sampled": 100,
+   "precision": 0.99,
+   "examples_rejected": [
+    "HAMPSHIRE WEIGHT-LOSS COUNSELLING CENTRE LIMITED"
+   ],
+   "hits_total": 188
+  },
+  "menopause": {
+   "sampled": 100,
+   "precision": 1.0,
+   "examples_rejected": [],
+   "hits_total": 212
+  },
+  "testosterone": {
+   "sampled": 4,
+   "precision": 1.0,
+   "examples_rejected": [],
+   "hits_total": 4
+  },
+  "hair transplant": {
+   "sampled": 44,
+   "precision": 1.0,
+   "examples_rejected": [],
+   "hits_total": 44
+  },
+  "autism": {
+   "sampled": 100,
+   "precision": 1.0,
+   "examples_rejected": [],
+   "hits_total": 636
+  },
+  "private gp": {
+   "sampled": 100,
+   "precision": 0.5,
+   "examples_rejected": [
+    "BEECHBROOK PRIVATE DEBT III GP LP",
+    "CORNERSTONE PRIVATE EQUITY GP 4 LLP",
+    "SCHRODERS CAPITAL PRIVATE EQUITY FOUNDER PARTNER (GP) LIMITED",
+    "EXPONENT PRIVATE EQUITY PARTNERS GP OF GP II LLP",
+    "CORNERSTONE PRIVATE EQUITY GP II LIMITED",
+    "LIONHEART GP UK PRIVATE LIMITED"
+   ],
+   "hits_total": 115
+  },
+  "fertility": {
+   "sampled": 100,
+   "precision": 1.0,
+   "examples_rejected": [],
+   "hits_total": 483
+  },
+  "cbd": {
+   "sampled": 100,
+   "precision": 1.0,
+   "examples_rejected": [],
+   "hits_total": 1698
+  },
+  "iv drip": {
+   "sampled": 10,
+   "precision": 0.9,
+   "examples_rejected": [
+    "DR DRIP IV LTD"
+   ],
+   "hits_total": 10
+  }
+ },
+ "t2_primary_only_disagreements": [],
+ "t4_scope": {
+  "adhd": {
+   "in_scope": true,
+   "why": "ADHD stimulants and non-stimulants: 0404000L0, 0404000M0, 0404000S0, 0404000U0, 0404000V0. The cleanest T4 signal in the set."
+  },
+  "glp1": {
+   "in_scope": true,
+   "why": "semaglutide / tirzepatide / liraglutide / orlistat: 0405010P0, 0601023AB, 0601023AW, 0601023AZ. CAVEAT: NHS GLP-1 prescribing is mostly for TYPE-2 DIABETES, and the private weight-loss market is invisible to EPD by definition. T4 here measures the molecule, not the market."
+  },
+  "menopause": {
+   "in_scope": true,
+   "why": "HRT: 0604011G0, 0604011K0, 0604011L0, 0604011P0, 0604011Y0, 0604012S0, 0702010G0. NHS-dispensed HRT is a good proxy for menopause demand - the 2022 supply crisis is in this series."
+  },
+  "trt": {
+   "in_scope": true,
+   "why": "testosterone: 0604020K0, 0604020M0, 0604020T0, 0604020U0. Weaker than it looks: much private TRT is prescribed privately and dispensed privately, so it never enters EPD."
+  },
+  "hair": {
+   "in_scope": false,
+   "why": "ABSTAINS. drugs.py: 'only topical minoxidil (~600 items/mth). The finasteride-1mg code 1309000W0 is effectively unused on the NHS (1 item/mth), so the private/OTC hair-loss market is invisible here.' A hair TRANSPLANT is a surgical procedure and is not prescribed at all. Firing or not firing on NHS minoxidil would tell you nothing about the niche, so T4 does not get to vote."
+  },
+  "autism": {
+   "in_scope": false,
+   "why": "ABSTAINS. There is no autism-specific chemical. Autistic patients are prescribed ADHD and antipsychotic medicines, so any proxy would be measuring a different niche."
+  },
+  "privategp": {
+   "in_scope": false,
+   "why": "ABSTAINS. drugs.py lists 'Private GP' in NICHES_NO_PRESCRIBING: 'no drug is specific to seeing a GP privately.' Worse, EPD counts NHS primary-care dispensing, so a shift of patients OUT of the NHS would move this series DOWN. Wrong sign, not just no signal."
+  },
+  "ivf": {
+   "in_scope": false,
+   "why": "ABSTAINS. drugs.py: 'Clomifene (~76 items/mth) and chorionic gonadotrophin (~4 items/mth) are specialist-issued, so IVF / fertility demand is NOT visible.' EPD is primary care only."
+  },
+  "cbd": {
+   "in_scope": false,
+   "why": "ABSTAINS. The only licensed CBD medicine in the UK is Epidyolex, for Dravet and Lennox-Gastaut syndrome - childhood epilepsies. Its prescribing measures paediatric neurology, not the CBD wellness boom. There is no code in drugs.py and one will not be invented here. NOTE THE CONSEQUENCE: on the single most dangerous false positive in the study, T4 HAS NO OPINION. It could not have saved you from CBD."
+  },
+  "ivdrip": {
+   "in_scope": false,
+   "why": "ABSTAINS. IV vitamin drips are private and are not dispensed in NHS primary care."
+  },
+  "cryo": {
+   "in_scope": false,
+   "why": "ABSTAINS. Not a medicine."
+  },
+  "coldwater": {
+   "in_scope": false,
+   "why": "ABSTAINS. Not a medicine."
+  },
+  "psychedelics": {
+   "in_scope": false,
+   "why": "ABSTAINS. Psilocybin is Schedule 1. It cannot appear in NHS primary-care dispensing, so T4's silence is the Misuse of Drugs Act talking, not the radar."
+  },
+  "nad": {
+   "in_scope": false,
+   "why": "ABSTAINS. NAD+ infusions are private. Nicotinamide IS in the BNF (a vitamin, and a topical acne treatment) but its prescribing has nothing to do with longevity clinics; using it would be a category error, and drugs.py has no code for it."
+  },
+  "hbot": {
+   "in_scope": false,
+   "why": "ABSTAINS. Oxygen under pressure is a procedure, not a prescription."
+  },
+  "redlight": {
+   "in_scope": false,
+   "why": "ABSTAINS. A device, not a medicine."
+  }
+ },
+ "t4_unscored_diagnostic": {
+  "hair": {
+   "codes": [
+    "1309000H0"
+   ],
+   "state": "NO_ONSET",
+   "onset": null,
+   "peak_z": 3.75,
+   "coverage": 1.0,
+   "why_not_scored": "ABSTAINS. drugs.py: 'only topical minoxidil (~600 items/mth). The finasteride-1mg code 1309000W0 is effectively unused on the NHS (1 item/mth), so the private/OTC hair-loss market is invisible here.' A hair TRANSPLANT is a surgical procedure and is not prescribed at all. Firing or not firing on NHS minoxidil would tell you nothing about the niche, so T4 does not get to vote."
+  },
+  "ivf": {
+   "codes": [
+    "0211000P0",
+    "0604012P0"
+   ],
+   "state": "NO_ONSET",
+   "onset": null,
+   "peak_z": 4.73,
+   "coverage": 1.0,
+   "why_not_scored": "ABSTAINS. drugs.py: 'Clomifene (~76 items/mth) and chorionic gonadotrophin (~4 items/mth) are specialist-issued, so IVF / fertility demand is NOT visible.' EPD is primary care only."
+  }
+ },
+ "null_calibration": {
+  "reps": 200,
+  "true_lead_months": 0,
+  "pairs": {
+   "T1->T2": {
+    "n": 29,
+    "median_gap_months": 11,
+    "mean_gap_months": 4.48,
+    "p90": 19,
+    "p10": -37,
+    "pct_in_predicted_order": 79.3
+   },
+   "T1->T3": null,
+   "T1->T4": {
+    "n": 200,
+    "median_gap_months": 3.0,
+    "mean_gap_months": 3.48,
+    "p90": 4,
+    "p10": 3,
+    "pct_in_predicted_order": 100.0
+   },
+   "T2->T3": null,
+   "T2->T4": {
+    "n": 29,
+    "median_gap_months": -8,
+    "mean_gap_months": -1.28,
+    "p90": 45,
+    "p10": -16,
+    "pct_in_predicted_order": 20.7
+   },
+   "T3->T4": null
+  },
+  "tier_fire_rate": {
+   "T1": 1.0,
+   "T2": 0.145,
+   "T3": 0.0,
+   "T4": 1.0
+  },
+  "tier_left_censored_rate": {
+   "T1": 0.0,
+   "T2": 0.0,
+   "T3": null,
+   "T4": 0.135
+  },
+  "shapes": {
+   "T2": {
+    "base": 1.92,
+    "mult": 2.0,
+    "index": false
+   },
+   "T3": {
+    "base": 0.04,
+    "mult": 2.2,
+    "index": false
+   },
+   "T4": {
+    "base": 80151.77,
+    "mult": 4.07,
+    "index": false
+   },
+   "T1": {
+    "base": 5.0,
+    "mult": 18.0,
+    "index": true
+   }
+  },
+  "boom_window": [
+   "2017-01",
+   "2023-01"
+  ],
+  "note": "Every one of these niches booms in ALL FOUR TIERS IN THE SAME MONTH. The true lead is exactly zero. Any gap below is manufactured by the measurement: different history start dates (T3/T4 begin in 2014 and cannot fire before ~2018-07), different level floors, and different noise. A measured gap that does not clear the p90 column is not evidence of a lead."
+ },
+ "null_shapes_source": "the levels and growth multiples OBSERVED in this run",
+ "standing": {
+  "niche": "adhd",
+  "label": "ADHD (private assessment)",
+  "cutoff": "2022-03",
+  "tiers": [
+   {
+    "tier": "T1",
+    "name": "INTENT (search)",
+    "state": "NO_DATA",
+    "onset": null,
+    "knowable_by": null,
+    "pub_lag_months": 0,
+    "persistence_months": 3,
+    "flagged_by_cutoff": false,
+    "left_censored": null,
+    "already_booming": null,
+    "growth_at_first_testable": null,
+    "low_count_unreliable": null,
+    "yoy_visible_at_cutoff_pct": null,
+    "freshest_month_published_at_cutoff": "2022-03",
+    "onset_recomputed_on_data_available_at_cutoff": null,
+    "causal_check_agrees": null,
+    "first_testable": null,
+    "note": null
+   },
+   {
+    "tier": "T2",
+    "name": "ENTRY (new companies)",
+    "state": "NO_DATA",
+    "onset": null,
+    "knowable_by": null,
+    "pub_lag_months": 0,
+    "persistence_months": 3,
+    "flagged_by_cutoff": false,
+    "left_censored": null,
+    "already_booming": null,
+    "growth_at_first_testable": null,
+    "low_count_unreliable": null,
+    "yoy_visible_at_cutoff_pct": null,
+    "freshest_month_published_at_cutoff": "2022-03",
+    "onset_recomputed_on_data_available_at_cutoff": null,
+    "causal_check_agrees": null,
+    "first_testable": null,
+    "note": null
+   },
+   {
+    "tier": "T3",
+    "name": "CAPACITY (new CQC clinics)",
+    "state": "NO_ONSET",
+    "onset": null,
+    "knowable_by": null,
+    "pub_lag_months": 1,
+    "persistence_months": 3,
+    "flagged_by_cutoff": false,
+    "left_censored": false,
+    "already_booming": false,
+    "growth_at_first_testable": 1.0,
+    "low_count_unreliable": null,
+    "yoy_visible_at_cutoff_pct": null,
+    "freshest_month_published_at_cutoff": "2022-02",
+    "onset_recomputed_on_data_available_at_cutoff": null,
+    "causal_check_agrees": null,
+    "first_testable": "2018-06",
+    "note": null
+   },
+   {
+    "tier": "T4",
+    "name": "CONSUMPTION (NHS prescribing)",
+    "state": "NO_ONSET",
+    "onset": null,
+    "knowable_by": null,
+    "pub_lag_months": 3,
+    "persistence_months": 3,
+    "flagged_by_cutoff": false,
+    "left_censored": false,
+    "already_booming": false,
+    "growth_at_first_testable": 1.1,
+    "low_count_unreliable": null,
+    "yoy_visible_at_cutoff_pct": 12.5,
+    "freshest_month_published_at_cutoff": "2021-12",
+    "onset_recomputed_on_data_available_at_cutoff": null,
+    "causal_check_agrees": null,
+    "first_testable": "2018-06",
+    "note": null
+   }
+  ],
+  "tiers_flagged_by_cutoff": [],
+  "tiers_already_booming": [],
+  "n_flagged": 0,
+  "verdict": "NO - not one tier had fired and become knowable by 2022-03",
+  "hindsight_leaks": []
+ },
+ "standing_all": {
+  "adhd": {
+   "niche": "adhd",
+   "label": "ADHD (private assessment)",
+   "cutoff": "2022-03",
+   "tiers": [
+    {
+     "tier": "T1",
+     "name": "INTENT (search)",
+     "state": "NO_DATA",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 0,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2022-03",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": null
+    },
+    {
+     "tier": "T2",
+     "name": "ENTRY (new companies)",
+     "state": "NO_DATA",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 0,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2022-03",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": null
+    },
+    {
+     "tier": "T3",
+     "name": "CAPACITY (new CQC clinics)",
+     "state": "NO_ONSET",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 1,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": false,
+     "already_booming": false,
+     "growth_at_first_testable": 1.0,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2022-02",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": "2018-06",
+     "note": null
+    },
+    {
+     "tier": "T4",
+     "name": "CONSUMPTION (NHS prescribing)",
+     "state": "NO_ONSET",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 3,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": false,
+     "already_booming": false,
+     "growth_at_first_testable": 1.1,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": 12.5,
+     "freshest_month_published_at_cutoff": "2021-12",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": "2018-06",
+     "note": null
+    }
+   ],
+   "tiers_flagged_by_cutoff": [],
+   "tiers_already_booming": [],
+   "n_flagged": 0,
+   "verdict": "NO - not one tier had fired and become knowable by 2022-03",
+   "hindsight_leaks": []
+  },
+  "glp1": {
+   "niche": "glp1",
+   "label": "Weight loss / GLP-1",
+   "cutoff": "2022-03",
+   "tiers": [
+    {
+     "tier": "T1",
+     "name": "INTENT (search)",
+     "state": "NO_DATA",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 0,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2022-03",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": null
+    },
+    {
+     "tier": "T2",
+     "name": "ENTRY (new companies)",
+     "state": "NO_DATA",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 0,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2022-03",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": null
+    },
+    {
+     "tier": "T3",
+     "name": "CAPACITY (new CQC clinics)",
+     "state": "NO_ONSET",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 1,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": false,
+     "already_booming": false,
+     "growth_at_first_testable": 1.33,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": 0.0,
+     "freshest_month_published_at_cutoff": "2022-02",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": "2018-06",
+     "note": null
+    },
+    {
+     "tier": "T4",
+     "name": "CONSUMPTION (NHS prescribing)",
+     "state": "FIRED",
+     "onset": "2025-04",
+     "knowable_by": "2025-10",
+     "pub_lag_months": 3,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": false,
+     "already_booming": false,
+     "growth_at_first_testable": 0.94,
+     "low_count_unreliable": false,
+     "yoy_visible_at_cutoff_pct": 24.5,
+     "freshest_month_published_at_cutoff": "2021-12",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": "2018-06",
+     "note": null
+    }
+   ],
+   "tiers_flagged_by_cutoff": [],
+   "tiers_already_booming": [],
+   "n_flagged": 0,
+   "verdict": "NO - not one tier had fired and become knowable by 2022-03",
+   "hindsight_leaks": []
+  },
+  "menopause": {
+   "niche": "menopause",
+   "label": "Menopause / HRT",
+   "cutoff": "2022-03",
+   "tiers": [
+    {
+     "tier": "T1",
+     "name": "INTENT (search)",
+     "state": "NO_DATA",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 0,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2022-03",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": null
+    },
+    {
+     "tier": "T2",
+     "name": "ENTRY (new companies)",
+     "state": "NO_DATA",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 0,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2022-03",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": null
+    },
+    {
+     "tier": "T3",
+     "name": "CAPACITY (new CQC clinics)",
+     "state": "NO_ONSET",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 1,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": false,
+     "already_booming": false,
+     "growth_at_first_testable": 1.0,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": -66.7,
+     "freshest_month_published_at_cutoff": "2022-02",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": "2018-06",
+     "note": null
+    },
+    {
+     "tier": "T4",
+     "name": "CONSUMPTION (NHS prescribing)",
+     "state": "FIRED",
+     "onset": "2022-05",
+     "knowable_by": "2022-11",
+     "pub_lag_months": 3,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": false,
+     "already_booming": false,
+     "growth_at_first_testable": 1.2,
+     "low_count_unreliable": false,
+     "yoy_visible_at_cutoff_pct": 25.2,
+     "freshest_month_published_at_cutoff": "2021-12",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": "2018-06",
+     "note": null
+    }
+   ],
+   "tiers_flagged_by_cutoff": [],
+   "tiers_already_booming": [],
+   "n_flagged": 0,
+   "verdict": "NO - not one tier had fired and become knowable by 2022-03",
+   "hindsight_leaks": []
+  },
+  "trt": {
+   "niche": "trt",
+   "label": "Men's health / TRT",
+   "cutoff": "2022-03",
+   "tiers": [
+    {
+     "tier": "T1",
+     "name": "INTENT (search)",
+     "state": "NO_DATA",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 0,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2022-03",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": null
+    },
+    {
+     "tier": "T2",
+     "name": "ENTRY (new companies)",
+     "state": "NO_DATA",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 0,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2022-03",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": null
+    },
+    {
+     "tier": "T3",
+     "name": "CAPACITY (new CQC clinics)",
+     "state": "BELOW_FLOOR",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 1,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2022-02",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": "the series NEVER reaches this tier's minimum level (6 per 12 months), so the estimator is structurally forbidden to fire. An ABSTENTION, not a rejection: the tier is blind here - which is exactly the state a radar is in while a niche is still small enough to be cheap to buy."
+    },
+    {
+     "tier": "T4",
+     "name": "CONSUMPTION (NHS prescribing)",
+     "state": "NO_ONSET",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 3,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": false,
+     "already_booming": false,
+     "growth_at_first_testable": 1.09,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": 2.6,
+     "freshest_month_published_at_cutoff": "2021-12",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": "2018-06",
+     "note": null
+    }
+   ],
+   "tiers_flagged_by_cutoff": [],
+   "tiers_already_booming": [],
+   "n_flagged": 0,
+   "verdict": "NO - not one tier had fired and become knowable by 2022-03",
+   "hindsight_leaks": []
+  },
+  "hair": {
+   "niche": "hair",
+   "label": "Hair transplant / restoration",
+   "cutoff": "2022-03",
+   "tiers": [
+    {
+     "tier": "T1",
+     "name": "INTENT (search)",
+     "state": "NO_DATA",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 0,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2022-03",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": null
+    },
+    {
+     "tier": "T2",
+     "name": "ENTRY (new companies)",
+     "state": "NO_DATA",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 0,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2022-03",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": null
+    },
+    {
+     "tier": "T3",
+     "name": "CAPACITY (new CQC clinics)",
+     "state": "NO_ONSET",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 1,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": false,
+     "already_booming": false,
+     "growth_at_first_testable": 1.2,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": -40.0,
+     "freshest_month_published_at_cutoff": "2022-02",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": "2018-06",
+     "note": null
+    },
+    {
+     "tier": "T4",
+     "name": "CONSUMPTION (NHS prescribing)",
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 3,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2021-12",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": "ABSTAINS. drugs.py: 'only topical minoxidil (~600 items/mth). The finasteride-1mg code 1309000W0 is effectively unused on the NHS (1 item/mth), so the private/OTC hair-loss market is invisible here.' A hair TRANSPLANT is a surgical procedure and is not prescribed at all. Firing or not firing on NHS minoxidil would tell you nothing about the niche, so T4 does not get to vote."
+    }
+   ],
+   "tiers_flagged_by_cutoff": [],
+   "tiers_already_booming": [],
+   "n_flagged": 0,
+   "verdict": "NO - not one tier had fired and become knowable by 2022-03",
+   "hindsight_leaks": []
+  },
+  "autism": {
+   "niche": "autism",
+   "label": "Autism assessment",
+   "cutoff": "2022-03",
+   "tiers": [
+    {
+     "tier": "T1",
+     "name": "INTENT (search)",
+     "state": "NO_DATA",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 0,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2022-03",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": null
+    },
+    {
+     "tier": "T2",
+     "name": "ENTRY (new companies)",
+     "state": "NO_ONSET",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 0,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": false,
+     "already_booming": false,
+     "growth_at_first_testable": 1.18,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": 6.1,
+     "freshest_month_published_at_cutoff": "2022-03",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": "2014-06",
+     "note": null
+    },
+    {
+     "tier": "T3",
+     "name": "CAPACITY (new CQC clinics)",
+     "state": "NO_ONSET",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 1,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": false,
+     "already_booming": false,
+     "growth_at_first_testable": 0.71,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": 50.0,
+     "freshest_month_published_at_cutoff": "2022-02",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": "2018-06",
+     "note": null
+    },
+    {
+     "tier": "T4",
+     "name": "CONSUMPTION (NHS prescribing)",
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 3,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2021-12",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": "ABSTAINS. There is no autism-specific chemical. Autistic patients are prescribed ADHD and antipsychotic medicines, so any proxy would be measuring a different niche."
+    }
+   ],
+   "tiers_flagged_by_cutoff": [],
+   "tiers_already_booming": [],
+   "n_flagged": 0,
+   "verdict": "NO - not one tier had fired and become knowable by 2022-03",
+   "hindsight_leaks": []
+  },
+  "privategp": {
+   "niche": "privategp",
+   "label": "Private GP",
+   "cutoff": "2022-03",
+   "tiers": [
+    {
+     "tier": "T1",
+     "name": "INTENT (search)",
+     "state": "NO_DATA",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 0,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2022-03",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": null
+    },
+    {
+     "tier": "T2",
+     "name": "ENTRY (new companies)",
+     "state": "NO_DATA",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 0,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2022-03",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": null
+    },
+    {
+     "tier": "T3",
+     "name": "CAPACITY (new CQC clinics)",
+     "state": "NO_ONSET",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 1,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": false,
+     "already_booming": false,
+     "growth_at_first_testable": 1.25,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": -60.0,
+     "freshest_month_published_at_cutoff": "2022-02",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": "2018-06",
+     "note": null
+    },
+    {
+     "tier": "T4",
+     "name": "CONSUMPTION (NHS prescribing)",
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 3,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2021-12",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": "ABSTAINS. drugs.py lists 'Private GP' in NICHES_NO_PRESCRIBING: 'no drug is specific to seeing a GP privately.' Worse, EPD counts NHS primary-care dispensing, so a shift of patients OUT of the NHS would move this series DOWN. Wrong sign, not just no signal."
+    }
+   ],
+   "tiers_flagged_by_cutoff": [],
+   "tiers_already_booming": [],
+   "n_flagged": 0,
+   "verdict": "NO - not one tier had fired and become knowable by 2022-03",
+   "hindsight_leaks": []
+  },
+  "ivf": {
+   "niche": "ivf",
+   "label": "IVF / fertility",
+   "cutoff": "2022-03",
+   "tiers": [
+    {
+     "tier": "T1",
+     "name": "INTENT (search)",
+     "state": "NO_DATA",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 0,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2022-03",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": null
+    },
+    {
+     "tier": "T2",
+     "name": "ENTRY (new companies)",
+     "state": "NO_DATA",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 0,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2022-03",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": null
+    },
+    {
+     "tier": "T3",
+     "name": "CAPACITY (new CQC clinics)",
+     "state": "NO_ONSET",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 1,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": false,
+     "already_booming": false,
+     "growth_at_first_testable": 0.67,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": -40.0,
+     "freshest_month_published_at_cutoff": "2022-02",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": "2018-06",
+     "note": null
+    },
+    {
+     "tier": "T4",
+     "name": "CONSUMPTION (NHS prescribing)",
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "knowable_by": null,
+     "pub_lag_months": 3,
+     "persistence_months": 3,
+     "flagged_by_cutoff": false,
+     "left_censored": null,
+     "already_booming": null,
+     "growth_at_first_testable": null,
+     "low_count_unreliable": null,
+     "yoy_visible_at_cutoff_pct": null,
+     "freshest_month_published_at_cutoff": "2021-12",
+     "onset_recomputed_on_data_available_at_cutoff": null,
+     "causal_check_agrees": null,
+     "first_testable": null,
+     "note": "ABSTAINS. drugs.py: 'Clomifene (~76 items/mth) and chorionic gonadotrophin (~4 items/mth) are specialist-issued, so IVF / fertility demand is NOT visible.' EPD is primary care only."
+    }
+   ],
+   "tiers_flagged_by_cutoff": [],
+   "tiers_already_booming": [],
+   "n_flagged": 0,
+   "verdict": "NO - not one tier had fired and become knowable by 2022-03",
+   "hindsight_leaks": []
+  }
+ },
+ "completeness": {
+  "t2_cells_fetched": 951,
+  "t2_cells_total": 5940,
+  "t2_pct": 16.0,
+  "t2_keywords_usable": [
+   "autism"
+  ],
+  "t2_keywords_partial_or_missing": [
+   "adhd",
+   "autistic",
+   "cannabidiol",
+   "cbd",
+   "cold plunge",
+   "cryotherapy",
+   "fertility",
+   "hair restoration",
+   "hair transplant",
+   "hyperbaric",
+   "ice bath",
+   "iv drip",
+   "ivf",
+   "menopause",
+   "mens health",
+   "nad+",
+   "neurodiversity",
+   "nicotinamide",
+   "perimenopause",
+   "photobiomodulation",
+   "private doctor",
+   "private gp",
+   "psilocybin",
+   "psychedelic",
+   "red light therapy",
+   "semaglutide",
+   "testosterone",
+   "vitamin drip",
+   "weight loss"
+  ],
+  "t4_months_fetched": 148,
+  "t4_months_total": 148,
+  "t4_pct": 100.0,
+  "t3_survivorship_corrected": true,
+  "t2_complete": false,
+  "t4_complete": true,
+  "complete": false
+ },
+ "diag": {
+  "t4_months_total": 148,
+  "t4_months_cached": 0,
+  "t4_latest_published": "2026-04",
+  "t4_codes": 23,
+  "t4_calls_spent": 148,
+  "t4_months_unread": [],
+  "t4_months_unread_n": 0,
+  "t4_coverage": 1.0,
+  "t4": "ok - 148/148 months",
+  "t2_cells_total": 5940,
+  "t2_cells_cached": 0,
+  "t2_deadline_hit": true,
+  "t2_calls_spent": 1990,
+  "t2_errors": {
+   "HTTP 404": 946,
+   "exhausted": 83
+  },
+  "t2_cells_new_this_run": 951,
+  "t2_coverage": 0.16,
+  "t2": "PARTIAL - 951/5940 cells (4989 left; re-run to resume, the cache persists)",
+  "cqc_active_url": "https://www.cqc.org.uk/sites/default/files/2026-07/01_July_2026_HSCA_Active_Locations.ods",
+  "cqc_deactivated_url": "https://www.cqc.org.uk/sites/default/files/2026-07/01_July_2026_Deactivated_Locations.ods",
+  "cqc_active_cols": {
+   "name": 4,
+   "pc": 27,
+   "start": 1
+  },
+  "cqc_active_rows": 56870,
+  "cqc_active_has_postcode": true,
+  "cqc_deact_cols": {
+   "name": 2,
+   "pc": 25,
+   "start": 4
+  },
+  "cqc_deact_rows": 64880,
+  "cqc_deact_has_postcode": true,
+  "cqc_survivorship_corrected": true,
+  "t1_inherited_from_backtest1": [],
+  "t1": "SKIPPED. 0/16 terms cached; ['adhd', 'autism', 'cbd', 'coldwater', 'cryo', 'glp1', 'hair', 'hbot', 'ivdrip', 'ivf', 'menopause', 'nad', 'privategp', 'psychedelics', 'redlight', 'trt'] missing. Re-run with --trends to spend 16 SerpApi calls (once, ever). T1 is WITHHELD for the missing terms, not zeroed."
+ },
+ "niches": {
+  "adhd": {
+   "key": "adhd",
+   "label": "ADHD (private assessment)",
+   "class": "positive",
+   "why": "The benchmark case. NHS waits + Right to Choose drove a real private assessment boom c.2021-24; the 2023 Elvanse shortage is downstream proof.",
+   "caveats": [],
+   "t4_why": "ADHD stimulants and non-stimulants: 0404000L0, 0404000M0, 0404000S0, 0404000U0, 0404000V0. The cleanest T4 signal in the set.",
+   "tiers": {
+    "T1": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T2": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T3": {
+     "state": "NO_ONSET",
+     "onset": null,
+     "onset_idx": null,
+     "knowable_by": null,
+     "z_at_onset": null,
+     "peak_z": 1.17,
+     "growth_at_onset": null,
+     "level_at_onset": null,
+     "baseline_at_onset": null,
+     "low_count_unreliable": null,
+     "first_testable": "2018-06",
+     "growth_at_first_testable": 1.0,
+     "left_censored": false,
+     "already_booming": false,
+     "peak_12m": 19.0,
+     "total": 42.0,
+     "spec_onset": null,
+     "spec_undefined_months": 118,
+     "agrees_with_spec": true,
+     "note": null
+    },
+    "T4": {
+     "state": "NO_ONSET",
+     "onset": null,
+     "onset_idx": null,
+     "knowable_by": null,
+     "z_at_onset": null,
+     "peak_z": 8.93,
+     "growth_at_onset": null,
+     "level_at_onset": null,
+     "baseline_at_onset": null,
+     "low_count_unreliable": null,
+     "first_testable": "2018-06",
+     "growth_at_first_testable": 1.1,
+     "left_censored": false,
+     "already_booming": false,
+     "peak_12m": 3863259.0,
+     "total": 22590764.0,
+     "spec_onset": "2019-08",
+     "spec_undefined_months": 0,
+     "agrees_with_spec": false,
+     "note": null
+    }
+   },
+   "t3_survivorship": {
+    "n_active": 40,
+    "n_recovered": 2,
+    "understatement_pct": 4.8,
+    "dedup_collapsed": 1,
+    "onset_active_only": null,
+    "onset_corrected": null
+   }
+  },
+  "glp1": {
+   "key": "glp1",
+   "label": "Weight loss / GLP-1",
+   "class": "positive",
+   "why": "Unambiguous. Wegovy UK launch Sep-2023, Mounjaro 2024. The largest private-pay healthcare event of the decade.",
+   "caveats": [],
+   "t4_why": "semaglutide / tirzepatide / liraglutide / orlistat: 0405010P0, 0601023AB, 0601023AW, 0601023AZ. CAVEAT: NHS GLP-1 prescribing is mostly for TYPE-2 DIABETES, and the private weight-loss market is invisible to EPD by definition. T4 here measures the molecule, not the market.",
+   "tiers": {
+    "T1": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T2": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T3": {
+     "state": "NO_ONSET",
+     "onset": null,
+     "onset_idx": null,
+     "knowable_by": null,
+     "z_at_onset": null,
+     "peak_z": 1.35,
+     "growth_at_onset": null,
+     "level_at_onset": null,
+     "baseline_at_onset": null,
+     "low_count_unreliable": null,
+     "first_testable": "2018-06",
+     "growth_at_first_testable": 1.33,
+     "left_censored": false,
+     "already_booming": false,
+     "peak_12m": 6.0,
+     "total": 14.0,
+     "spec_onset": null,
+     "spec_undefined_months": 127,
+     "agrees_with_spec": true,
+     "note": null
+    },
+    "T4": {
+     "state": "FIRED",
+     "onset": "2025-04",
+     "onset_idx": 135,
+     "knowable_by": "2025-10",
+     "z_at_onset": 3.06,
+     "peak_z": 4.41,
+     "growth_at_onset": 0.762,
+     "level_at_onset": 3430958.0,
+     "baseline_at_onset": 1947706.0,
+     "low_count_unreliable": false,
+     "first_testable": "2018-06",
+     "growth_at_first_testable": 0.94,
+     "left_censored": false,
+     "already_booming": false,
+     "peak_12m": 5319533.0,
+     "total": 21038043.0,
+     "spec_onset": "2018-10",
+     "spec_undefined_months": 0,
+     "agrees_with_spec": false,
+     "note": null
+    }
+   },
+   "t3_survivorship": {
+    "n_active": 9,
+    "n_recovered": 5,
+    "understatement_pct": 35.7,
+    "dedup_collapsed": 0,
+    "onset_active_only": null,
+    "onset_corrected": null
+   }
+  },
+  "menopause": {
+   "key": "menopause",
+   "label": "Menopause / HRT",
+   "class": "positive",
+   "why": "Davina McCall, Channel 4, May-2021 is a clean dateable exogenous shock, followed by the 2022 HRT supply crisis. The closest thing here to a natural experiment: if the tiers ever fire in order, they should do it here.",
+   "caveats": [
+    "'hrt' is excluded from the Companies House keywords: as a 3-letter token it drags in unrelated names, and unlike backtest.py we get no company names back to re-filter (see PRECISION PROBE)."
+   ],
+   "t4_why": "HRT: 0604011G0, 0604011K0, 0604011L0, 0604011P0, 0604011Y0, 0604012S0, 0702010G0. NHS-dispensed HRT is a good proxy for menopause demand - the 2022 supply crisis is in this series.",
+   "tiers": {
+    "T1": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T2": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T3": {
+     "state": "NO_ONSET",
+     "onset": null,
+     "onset_idx": null,
+     "knowable_by": null,
+     "z_at_onset": null,
+     "peak_z": 1.65,
+     "growth_at_onset": null,
+     "level_at_onset": null,
+     "baseline_at_onset": null,
+     "low_count_unreliable": null,
+     "first_testable": "2018-06",
+     "growth_at_first_testable": 1.0,
+     "left_censored": false,
+     "already_booming": false,
+     "peak_12m": 9.0,
+     "total": 35.0,
+     "spec_onset": null,
+     "spec_undefined_months": 109,
+     "agrees_with_spec": true,
+     "note": null
+    },
+    "T4": {
+     "state": "FIRED",
+     "onset": "2022-05",
+     "onset_idx": 100,
+     "knowable_by": "2022-11",
+     "z_at_onset": 7.59,
+     "peak_z": 7.59,
+     "growth_at_onset": 0.536,
+     "level_at_onset": 7056242.0,
+     "baseline_at_onset": 4594762.0,
+     "low_count_unreliable": false,
+     "first_testable": "2018-06",
+     "growth_at_first_testable": 1.2,
+     "left_censored": false,
+     "already_booming": false,
+     "peak_12m": 14679759.0,
+     "total": 82023799.0,
+     "spec_onset": "2021-08",
+     "spec_undefined_months": 0,
+     "agrees_with_spec": false,
+     "note": null
+    }
+   },
+   "t3_survivorship": {
+    "n_active": 22,
+    "n_recovered": 13,
+    "understatement_pct": 37.1,
+    "dedup_collapsed": 1,
+    "onset_active_only": null,
+    "onset_corrected": null
+   }
+  },
+  "trt": {
+   "key": "trt",
+   "label": "Men's health / TRT",
+   "class": "positive",
+   "why": "Sustained private TRT clinic growth (Optimale, Balance My Hormones). Real, but a slower boom than the others - a useful hard case.",
+   "caveats": [],
+   "t4_why": "testosterone: 0604020K0, 0604020M0, 0604020T0, 0604020U0. Weaker than it looks: much private TRT is prescribed privately and dispensed privately, so it never enters EPD.",
+   "tiers": {
+    "T1": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T2": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T3": {
+     "state": "BELOW_FLOOR",
+     "onset": null,
+     "peak_12m": 2.0,
+     "floor": 6.0,
+     "total": 4.0,
+     "note": "the series NEVER reaches this tier's minimum level (6 per 12 months), so the estimator is structurally forbidden to fire. An ABSTENTION, not a rejection: the tier is blind here - which is exactly the state a radar is in while a niche is still small enough to be cheap to buy."
+    },
+    "T4": {
+     "state": "NO_ONSET",
+     "onset": null,
+     "onset_idx": null,
+     "knowable_by": null,
+     "z_at_onset": null,
+     "peak_z": 5.52,
+     "growth_at_onset": null,
+     "level_at_onset": null,
+     "baseline_at_onset": null,
+     "low_count_unreliable": null,
+     "first_testable": "2018-06",
+     "growth_at_first_testable": 1.09,
+     "left_censored": false,
+     "already_booming": false,
+     "peak_12m": 756857.0,
+     "total": 6118325.0,
+     "spec_onset": "2023-10",
+     "spec_undefined_months": 0,
+     "agrees_with_spec": false,
+     "note": null
+    }
+   },
+   "t3_survivorship": {
+    "n_active": 3,
+    "n_recovered": 1,
+    "understatement_pct": 25.0,
+    "dedup_collapsed": 0,
+    "onset_active_only": null,
+    "onset_corrected": null
+   }
+  },
+  "hair": {
+   "key": "hair",
+   "label": "Hair transplant / restoration",
+   "class": "positive",
+   "why": "A real UK private-pay boom alongside a large Turkey-outbound market.",
+   "caveats": [],
+   "t4_why": "ABSTAINS. drugs.py: 'only topical minoxidil (~600 items/mth). The finasteride-1mg code 1309000W0 is effectively unused on the NHS (1 item/mth), so the private/OTC hair-loss market is invisible here.' A hair TRANSPLANT is a surgical procedure and is not prescribed at all. Firing or not firing on NHS minoxidil would tell you nothing about the niche, so T4 does not get to vote.",
+   "tiers": {
+    "T1": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T2": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T3": {
+     "state": "NO_ONSET",
+     "onset": null,
+     "onset_idx": null,
+     "knowable_by": null,
+     "z_at_onset": null,
+     "peak_z": 2.15,
+     "growth_at_onset": null,
+     "level_at_onset": null,
+     "baseline_at_onset": null,
+     "low_count_unreliable": null,
+     "first_testable": "2018-06",
+     "growth_at_first_testable": 1.2,
+     "left_censored": false,
+     "already_booming": false,
+     "peak_12m": 9.0,
+     "total": 29.0,
+     "spec_onset": null,
+     "spec_undefined_months": 118,
+     "agrees_with_spec": true,
+     "note": null
+    },
+    "T4": {
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "note": "ABSTAINS. drugs.py: 'only topical minoxidil (~600 items/mth). The finasteride-1mg code 1309000W0 is effectively unused on the NHS (1 item/mth), so the private/OTC hair-loss market is invisible here.' A hair TRANSPLANT is a surgical procedure and is not prescribed at all. Firing or not firing on NHS minoxidil would tell you nothing about the niche, so T4 does not get to vote."
+    }
+   },
+   "t3_survivorship": {
+    "n_active": 19,
+    "n_recovered": 12,
+    "understatement_pct": 34.5,
+    "dedup_collapsed": 1,
+    "onset_active_only": null,
+    "onset_corrected": null
+   }
+  },
+  "autism": {
+   "key": "autism",
+   "label": "Autism assessment",
+   "class": "positive",
+   "why": "Same driver as ADHD (NHS waits, Right to Choose) with a ~1-2 year lag. Included as a semi-independent REPLICATION of the ADHD case rather than a wholly new one - and it is only semi-independent, because many providers assess both. Correlated evidence, not fresh evidence.",
+   "caveats": [
+    "Not independent of ADHD: many operators sell both assessments, so these two niches share companies and clinics. Treating them as two observations OVERSTATES n. Reported, and the sign test is shown with and without it."
+   ],
+   "t4_why": "ABSTAINS. There is no autism-specific chemical. Autistic patients are prescribed ADHD and antipsychotic medicines, so any proxy would be measuring a different niche.",
+   "tiers": {
+    "T1": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T2": {
+     "state": "NO_ONSET",
+     "onset": null,
+     "onset_idx": null,
+     "knowable_by": null,
+     "z_at_onset": null,
+     "peak_z": 2.85,
+     "growth_at_onset": null,
+     "level_at_onset": null,
+     "baseline_at_onset": null,
+     "low_count_unreliable": null,
+     "first_testable": "2014-06",
+     "growth_at_first_testable": 1.18,
+     "left_censored": false,
+     "already_booming": false,
+     "peak_12m": 62.0,
+     "total": 636.0,
+     "spec_onset": null,
+     "spec_undefined_months": 3,
+     "agrees_with_spec": true,
+     "note": null
+    },
+    "T3": {
+     "state": "NO_ONSET",
+     "onset": null,
+     "onset_idx": null,
+     "knowable_by": null,
+     "z_at_onset": null,
+     "peak_z": 1.35,
+     "growth_at_onset": null,
+     "level_at_onset": null,
+     "baseline_at_onset": null,
+     "low_count_unreliable": null,
+     "first_testable": "2018-06",
+     "growth_at_first_testable": 0.71,
+     "left_censored": false,
+     "already_booming": false,
+     "peak_12m": 14.0,
+     "total": 48.0,
+     "spec_onset": null,
+     "spec_undefined_months": 105,
+     "agrees_with_spec": true,
+     "note": null
+    },
+    "T4": {
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "note": "ABSTAINS. There is no autism-specific chemical. Autistic patients are prescribed ADHD and antipsychotic medicines, so any proxy would be measuring a different niche."
+    }
+   },
+   "t3_survivorship": {
+    "n_active": 49,
+    "n_recovered": 76,
+    "understatement_pct": 45.8,
+    "dedup_collapsed": 11,
+    "onset_active_only": null,
+    "onset_corrected": null
+   }
+  },
+  "privategp": {
+   "key": "privategp",
+   "label": "Private GP",
+   "class": "positive",
+   "why": "A steady, well-documented private-pay shift after 2020 as NHS access deteriorated.",
+   "caveats": [
+    "T3 IS NEARLY USELESS HERE and the number should not be trusted. CQC's GP population is overwhelmingly NHS, and April-2013 is when every NHS practice in England was stamped into the register at once. Name-matching on 'private gp' finds only the minority that self-label. Kept in, flagged loudly, and the T3 stats are reported with and without it."
+   ],
+   "t4_why": "ABSTAINS. drugs.py lists 'Private GP' in NICHES_NO_PRESCRIBING: 'no drug is specific to seeing a GP privately.' Worse, EPD counts NHS primary-care dispensing, so a shift of patients OUT of the NHS would move this series DOWN. Wrong sign, not just no signal.",
+   "tiers": {
+    "T1": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T2": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T3": {
+     "state": "NO_ONSET",
+     "onset": null,
+     "onset_idx": null,
+     "knowable_by": null,
+     "z_at_onset": null,
+     "peak_z": 1.31,
+     "growth_at_onset": null,
+     "level_at_onset": null,
+     "baseline_at_onset": null,
+     "low_count_unreliable": null,
+     "first_testable": "2018-06",
+     "growth_at_first_testable": 1.25,
+     "left_censored": false,
+     "already_booming": false,
+     "peak_12m": 8.0,
+     "total": 41.0,
+     "spec_onset": null,
+     "spec_undefined_months": 109,
+     "agrees_with_spec": true,
+     "note": null
+    },
+    "T4": {
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "note": "ABSTAINS. drugs.py lists 'Private GP' in NICHES_NO_PRESCRIBING: 'no drug is specific to seeing a GP privately.' Worse, EPD counts NHS primary-care dispensing, so a shift of patients OUT of the NHS would move this series DOWN. Wrong sign, not just no signal."
+    }
+   },
+   "t3_survivorship": {
+    "n_active": 27,
+    "n_recovered": 15,
+    "understatement_pct": 34.1,
+    "dedup_collapsed": 0,
+    "onset_active_only": null,
+    "onset_corrected": null
+   }
+  },
+  "ivf": {
+   "key": "ivf",
+   "label": "IVF / fertility",
+   "class": "positive",
+   "why": "A long, real, private-pay growth market. Deliberately included as the SLOW case: if the tiers only line up for explosive booms, a signal that needs an explosion to work is not much of an early-warning system.",
+   "caveats": [],
+   "t4_why": "ABSTAINS. drugs.py: 'Clomifene (~76 items/mth) and chorionic gonadotrophin (~4 items/mth) are specialist-issued, so IVF / fertility demand is NOT visible.' EPD is primary care only.",
+   "tiers": {
+    "T1": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T2": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T3": {
+     "state": "NO_ONSET",
+     "onset": null,
+     "onset_idx": null,
+     "knowable_by": null,
+     "z_at_onset": null,
+     "peak_z": 1.43,
+     "growth_at_onset": null,
+     "level_at_onset": null,
+     "baseline_at_onset": null,
+     "low_count_unreliable": null,
+     "first_testable": "2018-06",
+     "growth_at_first_testable": 0.67,
+     "left_censored": false,
+     "already_booming": false,
+     "peak_12m": 7.0,
+     "total": 30.0,
+     "spec_onset": null,
+     "spec_undefined_months": 113,
+     "agrees_with_spec": true,
+     "note": null
+    },
+    "T4": {
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "note": "ABSTAINS. drugs.py: 'Clomifene (~76 items/mth) and chorionic gonadotrophin (~4 items/mth) are specialist-issued, so IVF / fertility demand is NOT visible.' EPD is primary care only."
+    }
+   },
+   "t3_survivorship": {
+    "n_active": 15,
+    "n_recovered": 37,
+    "understatement_pct": 66.7,
+    "dedup_collapsed": 1,
+    "onset_active_only": null,
+    "onset_corrected": null
+   }
+  },
+  "cbd": {
+   "key": "cbd",
+   "label": "CBD / cannabidiol",
+   "class": "graveyard",
+   "why": "THE KEY NEGATIVE, and the single case most likely to sink T1+T2 on its own. T1 spiked violently in 2018-19 AND T2 fired hard - roughly 500 UK companies sat behind the ~12,000 products on the FSA novel-foods list. The FSA backlog then froze the market and a large share of those companies have since dissolved. If the early tiers fired this loudly for a wipeout, the early tiers cannot discriminate. THIS IS THE RESULT TO LOOK FOR FIRST.",
+   "caveats": [],
+   "t4_why": "ABSTAINS. The only licensed CBD medicine in the UK is Epidyolex, for Dravet and Lennox-Gastaut syndrome - childhood epilepsies. Its prescribing measures paediatric neurology, not the CBD wellness boom. There is no code in drugs.py and one will not be invented here. NOTE THE CONSEQUENCE: on the single most dangerous false positive in the study, T4 HAS NO OPINION. It could not have saved you from CBD.",
+   "tiers": {
+    "T1": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T2": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T3": {
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "note": "not a CQC-registrable activity - T3 ABSTAINS, it does not reject"
+    },
+    "T4": {
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "note": "ABSTAINS. The only licensed CBD medicine in the UK is Epidyolex, for Dravet and Lennox-Gastaut syndrome - childhood epilepsies. Its prescribing measures paediatric neurology, not the CBD wellness boom. There is no code in drugs.py and one will not be invented here. NOTE THE CONSEQUENCE: on the single most dangerous false positive in the study, T4 HAS NO OPINION. It could not have saved you from CBD."
+    }
+   }
+  },
+  "ivdrip": {
+   "key": "ivdrip",
+   "label": "IV vitamin drips",
+   "class": "graveyard",
+   "why": "THE HARDEST AND MOST INFORMATIVE NEGATIVE. IV administration of a prescription-only product (0.9% saline included) for wellbeing IS a CQC regulated activity - so unlike the rest of the graveyard, ALL THREE tiers can fire here. It is also the ONLY graveyard niche that gives T3 an informative negative at all. Commercially it produced no scaled UK operator in ~8 years.",
+   "caveats": [
+    "CONTESTABLE. Get A Drip and REVIV do exist. This is 'commercially marginal', not 'zero'. It is the negative most open to argument, and T3's entire specificity claim rests on it."
+   ],
+   "t4_why": "ABSTAINS. IV vitamin drips are private and are not dispensed in NHS primary care.",
+   "tiers": {
+    "T1": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T2": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T3": {
+     "state": "BELOW_FLOOR",
+     "onset": null,
+     "peak_12m": 2.0,
+     "floor": 6.0,
+     "total": 6.0,
+     "note": "the series NEVER reaches this tier's minimum level (6 per 12 months), so the estimator is structurally forbidden to fire. An ABSTENTION, not a rejection: the tier is blind here - which is exactly the state a radar is in while a niche is still small enough to be cheap to buy."
+    },
+    "T4": {
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "note": "ABSTAINS. IV vitamin drips are private and are not dispensed in NHS primary care."
+    }
+   },
+   "t3_survivorship": {
+    "n_active": 5,
+    "n_recovered": 1,
+    "understatement_pct": 16.7,
+    "dedup_collapsed": 0,
+    "onset_active_only": null,
+    "onset_corrected": null
+   }
+  },
+  "cryo": {
+   "key": "cryo",
+   "label": "Cryotherapy (whole-body)",
+   "class": "graveyard",
+   "why": "Spiked c.2016-18 on athlete endorsement. Not a CQC regulated activity. No scaled UK operator emerged.",
+   "caveats": [],
+   "t4_why": "ABSTAINS. Not a medicine.",
+   "tiers": {
+    "T1": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T2": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T3": {
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "note": "not a CQC-registrable activity - T3 ABSTAINS, it does not reject"
+    },
+    "T4": {
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "note": "ABSTAINS. Not a medicine."
+    }
+   }
+  },
+  "coldwater": {
+   "key": "coldwater",
+   "label": "Cold-water therapy / ice baths",
+   "class": "graveyard",
+   "why": "An enormous T1 spike 2021-24 (Wim Hof, Huberman) with zero clinical infrastructure behind it. The purest test of 'T1 blares and nothing follows'.",
+   "caveats": [],
+   "t4_why": "ABSTAINS. Not a medicine.",
+   "tiers": {
+    "T1": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T2": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T3": {
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "note": "not a CQC-registrable activity - T3 ABSTAINS, it does not reject"
+    },
+    "T4": {
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "note": "ABSTAINS. Not a medicine."
+    }
+   }
+  },
+  "psychedelics": {
+   "key": "psychedelics",
+   "label": "Psychedelics / psilocybin",
+   "class": "graveyard",
+   "why": "T1 and T2 both fired - Compass Pathways' 2020 IPO, Small Pharma, Beckley Psytech, plus a long tail of shells. Psilocybin is Schedule 1, so no lawful UK treatment clinic can exist and T3 cannot fire BY CONSTRUCTION.",
+   "caveats": [
+    "T3's 'correct rejection' here is worth NOTHING. The drug is illegal. That is the Misuse of Drugs Act doing the work, not the radar. Counted as an abstention."
+   ],
+   "t4_why": "ABSTAINS. Psilocybin is Schedule 1. It cannot appear in NHS primary-care dispensing, so T4's silence is the Misuse of Drugs Act talking, not the radar.",
+   "tiers": {
+    "T1": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T2": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T3": {
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "note": "not a CQC-registrable activity - T3 ABSTAINS, it does not reject"
+    },
+    "T4": {
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "note": "ABSTAINS. Psilocybin is Schedule 1. It cannot appear in NHS primary-care dispensing, so T4's silence is the Misuse of Drugs Act talking, not the radar."
+    }
+   }
+  },
+  "nad": {
+   "key": "nad",
+   "label": "NAD+ infusions",
+   "class": "graveyard",
+   "why": "Placed in the graveyard AS INSTRUCTED, but under protest - see the caveat. Longevity-clinic staple, no scaled UK operator to date.",
+   "caveats": [
+    "THIS LABEL MAY BE WRONG AND THE STUDY KNOWS IT. NAD+ is still RISING. Calling a live, unresolved niche a 'dud' assumes the answer to the question the radar exists to ask, and if NAD+ turns out to be a real boom then every false positive it generates here is actually a true positive. The headline false-positive rates are therefore reported BOTH WITH AND WITHOUT NAD+, and the difference is the size of the assumption. Do not quote one number."
+   ],
+   "t4_why": "ABSTAINS. NAD+ infusions are private. Nicotinamide IS in the BNF (a vitamin, and a topical acne treatment) but its prescribing has nothing to do with longevity clinics; using it would be a category error, and drugs.py has no code for it.",
+   "tiers": {
+    "T1": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T2": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T3": {
+     "state": "BELOW_FLOOR",
+     "onset": null,
+     "peak_12m": 1.0,
+     "floor": 6.0,
+     "total": 1.0,
+     "note": "the series NEVER reaches this tier's minimum level (6 per 12 months), so the estimator is structurally forbidden to fire. An ABSTENTION, not a rejection: the tier is blind here - which is exactly the state a radar is in while a niche is still small enough to be cheap to buy."
+    },
+    "T4": {
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "note": "ABSTAINS. NAD+ infusions are private. Nicotinamide IS in the BNF (a vitamin, and a topical acne treatment) but its prescribing has nothing to do with longevity clinics; using it would be a category error, and drugs.py has no code for it."
+    }
+   },
+   "t3_survivorship": {
+    "n_active": 1,
+    "n_recovered": 0,
+    "understatement_pct": 0.0,
+    "dedup_collapsed": 0,
+    "onset_active_only": null,
+    "onset_corrected": null
+   }
+  },
+  "hbot": {
+   "key": "hbot",
+   "label": "Hyperbaric oxygen therapy",
+   "class": "graveyard",
+   "why": "Recurrent biohacking spikes. UK supply is dominated by decades-old charity-run MS therapy centres, not new commercial entrants.",
+   "caveats": [
+    "t3_scope=False is CONTESTABLE: HBOT for a licensed indication would be a regulated activity. The charity centres largely sit outside CQC. Marked out of scope, i.e. T3 gets NO credit either way."
+   ],
+   "t4_why": "ABSTAINS. Oxygen under pressure is a procedure, not a prescription.",
+   "tiers": {
+    "T1": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T2": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T3": {
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "note": "not a CQC-registrable activity - T3 ABSTAINS, it does not reject"
+    },
+    "T4": {
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "note": "ABSTAINS. Oxygen under pressure is a procedure, not a prescription."
+    }
+   }
+  },
+  "redlight": {
+   "key": "redlight",
+   "label": "Red-light therapy",
+   "class": "graveyard",
+   "why": "Resolved into a consumer-DEVICE market (masks, panels), not a clinic market. Tests the case where demand is real but the delivery model is retail - which a clinic roll-up cannot buy.",
+   "caveats": [],
+   "t4_why": "ABSTAINS. A device, not a medicine.",
+   "tiers": {
+    "T1": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T2": {
+     "state": "NO_DATA",
+     "onset": null
+    },
+    "T3": {
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "note": "not a CQC-registrable activity - T3 ABSTAINS, it does not reject"
+    },
+    "T4": {
+     "state": "OUT_OF_SCOPE",
+     "onset": null,
+     "note": "ABSTAINS. A device, not a medicine."
+    }
+   }
+  }
+ },
+ "analysis": {
+  "excluded": [],
+  "lead_times": {
+   "T1->T2": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": true,
+    "null_median_gap_months": 11,
+    "null_p90": 19,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T1->T3": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": false,
+    "null_median_gap_months": null,
+    "null_p90": null,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T1->T4": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": false,
+    "null_median_gap_months": 3.0,
+    "null_p90": 4,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T2->T3": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": true,
+    "null_median_gap_months": null,
+    "null_p90": null,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T2->T4": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": false,
+    "null_median_gap_months": -8,
+    "null_p90": 45,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T3->T4": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": true,
+    "null_median_gap_months": null,
+    "null_p90": null,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   }
+  },
+  "tiers": {
+   "T1": {
+    "name": "INTENT (search)",
+    "hits": [],
+    "misses": [],
+    "false_positives": [],
+    "true_negatives": [],
+    "positives_abstained": [
+     "adhd",
+     "glp1",
+     "menopause",
+     "trt",
+     "hair",
+     "autism",
+     "privategp",
+     "ivf"
+    ],
+    "graveyard_abstained": [
+     "cbd",
+     "ivdrip",
+     "cryo",
+     "coldwater",
+     "psychedelics",
+     "nad",
+     "hbot",
+     "redlight"
+    ],
+    "hit_rate": null,
+    "informative_positives": 0,
+    "informative_negatives": 0,
+    "fp_rate_honest": null,
+    "fp_rate_credulous": 0.0,
+    "discrimination_fisher_p": null,
+    "amplitude_test_peak_z": null,
+    "left_censored": [],
+    "already_booming": [],
+    "specificity_measurable": false,
+    "abstention_warning": "This tier's specificity rests on 0 of 8 graveyard niches; 8 ABSTAINED. WITH ZERO INFORMATIVE NEGATIVES ITS FALSE-POSITIVE RATE DOES NOT EXIST. It has not been shown to discriminate; it has not been TESTED."
+   },
+   "T2": {
+    "name": "ENTRY (new companies)",
+    "hits": [],
+    "misses": [
+     "autism"
+    ],
+    "false_positives": [],
+    "true_negatives": [],
+    "positives_abstained": [
+     "adhd",
+     "glp1",
+     "menopause",
+     "trt",
+     "hair",
+     "privategp",
+     "ivf"
+    ],
+    "graveyard_abstained": [
+     "cbd",
+     "ivdrip",
+     "cryo",
+     "coldwater",
+     "psychedelics",
+     "nad",
+     "hbot",
+     "redlight"
+    ],
+    "hit_rate": 0.0,
+    "informative_positives": 1,
+    "informative_negatives": 0,
+    "fp_rate_honest": null,
+    "fp_rate_credulous": 0.0,
+    "discrimination_fisher_p": null,
+    "amplitude_test_peak_z": null,
+    "left_censored": [],
+    "already_booming": [],
+    "specificity_measurable": false,
+    "abstention_warning": "This tier's specificity rests on 0 of 8 graveyard niches; 8 ABSTAINED. WITH ZERO INFORMATIVE NEGATIVES ITS FALSE-POSITIVE RATE DOES NOT EXIST. It has not been shown to discriminate; it has not been TESTED."
+   },
+   "T3": {
+    "name": "CAPACITY (new CQC clinics)",
+    "hits": [],
+    "misses": [
+     "adhd",
+     "glp1",
+     "menopause",
+     "hair",
+     "autism",
+     "privategp",
+     "ivf"
+    ],
+    "false_positives": [],
+    "true_negatives": [],
+    "positives_abstained": [
+     "trt"
+    ],
+    "graveyard_abstained": [
+     "cbd",
+     "ivdrip",
+     "cryo",
+     "coldwater",
+     "psychedelics",
+     "nad",
+     "hbot",
+     "redlight"
+    ],
+    "hit_rate": 0.0,
+    "informative_positives": 7,
+    "informative_negatives": 0,
+    "fp_rate_honest": null,
+    "fp_rate_credulous": 0.0,
+    "discrimination_fisher_p": null,
+    "amplitude_test_peak_z": null,
+    "left_censored": [],
+    "already_booming": [],
+    "specificity_measurable": false,
+    "abstention_warning": "This tier's specificity rests on 0 of 8 graveyard niches; 8 ABSTAINED. WITH ZERO INFORMATIVE NEGATIVES ITS FALSE-POSITIVE RATE DOES NOT EXIST. It has not been shown to discriminate; it has not been TESTED."
+   },
+   "T4": {
+    "name": "CONSUMPTION (NHS prescribing)",
+    "hits": [
+     "glp1",
+     "menopause"
+    ],
+    "misses": [
+     "adhd",
+     "trt"
+    ],
+    "false_positives": [],
+    "true_negatives": [],
+    "positives_abstained": [
+     "hair",
+     "autism",
+     "privategp",
+     "ivf"
+    ],
+    "graveyard_abstained": [
+     "cbd",
+     "ivdrip",
+     "cryo",
+     "coldwater",
+     "psychedelics",
+     "nad",
+     "hbot",
+     "redlight"
+    ],
+    "hit_rate": 0.5,
+    "informative_positives": 4,
+    "informative_negatives": 0,
+    "fp_rate_honest": null,
+    "fp_rate_credulous": 0.0,
+    "discrimination_fisher_p": null,
+    "amplitude_test_peak_z": null,
+    "left_censored": [],
+    "already_booming": [],
+    "specificity_measurable": false,
+    "abstention_warning": "This tier's specificity rests on 0 of 8 graveyard niches; 8 ABSTAINED. WITH ZERO INFORMATIVE NEGATIVES ITS FALSE-POSITIVE RATE DOES NOT EXIST. It has not been shown to discriminate; it has not been TESTED."
+   }
+  },
+  "disconfirming": [],
+  "low_count_onsets": [],
+  "left_censored_onsets": [],
+  "already_booming": [],
+  "estimator_disagreements": [
+   {
+    "niche": "adhd",
+    "tier": "T4",
+    "robust": null,
+    "spec": "2019-08",
+    "spec_blind_months": 0
+   },
+   {
+    "niche": "glp1",
+    "tier": "T4",
+    "robust": "2025-04",
+    "spec": "2018-10",
+    "spec_blind_months": 0
+   },
+   {
+    "niche": "menopause",
+    "tier": "T4",
+    "robust": "2022-05",
+    "spec": "2021-08",
+    "spec_blind_months": 0
+   },
+   {
+    "niche": "trt",
+    "tier": "T4",
+    "robust": null,
+    "spec": "2023-10",
+    "spec_blind_months": 0
+   }
+  ]
+ },
+ "analysis_no_nad": {
+  "excluded": [
+   "nad"
+  ],
+  "lead_times": {
+   "T1->T2": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": true,
+    "null_median_gap_months": 11,
+    "null_p90": 19,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T1->T3": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": false,
+    "null_median_gap_months": null,
+    "null_p90": null,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T1->T4": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": false,
+    "null_median_gap_months": 3.0,
+    "null_p90": 4,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T2->T3": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": true,
+    "null_median_gap_months": null,
+    "null_p90": null,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T2->T4": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": false,
+    "null_median_gap_months": -8,
+    "null_p90": 45,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T3->T4": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": true,
+    "null_median_gap_months": null,
+    "null_p90": null,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   }
+  },
+  "tiers": {
+   "T1": {
+    "name": "INTENT (search)",
+    "hits": [],
+    "misses": [],
+    "false_positives": [],
+    "true_negatives": [],
+    "positives_abstained": [
+     "adhd",
+     "glp1",
+     "menopause",
+     "trt",
+     "hair",
+     "autism",
+     "privategp",
+     "ivf"
+    ],
+    "graveyard_abstained": [
+     "cbd",
+     "ivdrip",
+     "cryo",
+     "coldwater",
+     "psychedelics",
+     "hbot",
+     "redlight"
+    ],
+    "hit_rate": null,
+    "informative_positives": 0,
+    "informative_negatives": 0,
+    "fp_rate_honest": null,
+    "fp_rate_credulous": 0.0,
+    "discrimination_fisher_p": null,
+    "amplitude_test_peak_z": null,
+    "left_censored": [],
+    "already_booming": [],
+    "specificity_measurable": false,
+    "abstention_warning": "This tier's specificity rests on 0 of 7 graveyard niches; 7 ABSTAINED. WITH ZERO INFORMATIVE NEGATIVES ITS FALSE-POSITIVE RATE DOES NOT EXIST. It has not been shown to discriminate; it has not been TESTED."
+   },
+   "T2": {
+    "name": "ENTRY (new companies)",
+    "hits": [],
+    "misses": [
+     "autism"
+    ],
+    "false_positives": [],
+    "true_negatives": [],
+    "positives_abstained": [
+     "adhd",
+     "glp1",
+     "menopause",
+     "trt",
+     "hair",
+     "privategp",
+     "ivf"
+    ],
+    "graveyard_abstained": [
+     "cbd",
+     "ivdrip",
+     "cryo",
+     "coldwater",
+     "psychedelics",
+     "hbot",
+     "redlight"
+    ],
+    "hit_rate": 0.0,
+    "informative_positives": 1,
+    "informative_negatives": 0,
+    "fp_rate_honest": null,
+    "fp_rate_credulous": 0.0,
+    "discrimination_fisher_p": null,
+    "amplitude_test_peak_z": null,
+    "left_censored": [],
+    "already_booming": [],
+    "specificity_measurable": false,
+    "abstention_warning": "This tier's specificity rests on 0 of 7 graveyard niches; 7 ABSTAINED. WITH ZERO INFORMATIVE NEGATIVES ITS FALSE-POSITIVE RATE DOES NOT EXIST. It has not been shown to discriminate; it has not been TESTED."
+   },
+   "T3": {
+    "name": "CAPACITY (new CQC clinics)",
+    "hits": [],
+    "misses": [
+     "adhd",
+     "glp1",
+     "menopause",
+     "hair",
+     "autism",
+     "privategp",
+     "ivf"
+    ],
+    "false_positives": [],
+    "true_negatives": [],
+    "positives_abstained": [
+     "trt"
+    ],
+    "graveyard_abstained": [
+     "cbd",
+     "ivdrip",
+     "cryo",
+     "coldwater",
+     "psychedelics",
+     "hbot",
+     "redlight"
+    ],
+    "hit_rate": 0.0,
+    "informative_positives": 7,
+    "informative_negatives": 0,
+    "fp_rate_honest": null,
+    "fp_rate_credulous": 0.0,
+    "discrimination_fisher_p": null,
+    "amplitude_test_peak_z": null,
+    "left_censored": [],
+    "already_booming": [],
+    "specificity_measurable": false,
+    "abstention_warning": "This tier's specificity rests on 0 of 7 graveyard niches; 7 ABSTAINED. WITH ZERO INFORMATIVE NEGATIVES ITS FALSE-POSITIVE RATE DOES NOT EXIST. It has not been shown to discriminate; it has not been TESTED."
+   },
+   "T4": {
+    "name": "CONSUMPTION (NHS prescribing)",
+    "hits": [
+     "glp1",
+     "menopause"
+    ],
+    "misses": [
+     "adhd",
+     "trt"
+    ],
+    "false_positives": [],
+    "true_negatives": [],
+    "positives_abstained": [
+     "hair",
+     "autism",
+     "privategp",
+     "ivf"
+    ],
+    "graveyard_abstained": [
+     "cbd",
+     "ivdrip",
+     "cryo",
+     "coldwater",
+     "psychedelics",
+     "hbot",
+     "redlight"
+    ],
+    "hit_rate": 0.5,
+    "informative_positives": 4,
+    "informative_negatives": 0,
+    "fp_rate_honest": null,
+    "fp_rate_credulous": 0.0,
+    "discrimination_fisher_p": null,
+    "amplitude_test_peak_z": null,
+    "left_censored": [],
+    "already_booming": [],
+    "specificity_measurable": false,
+    "abstention_warning": "This tier's specificity rests on 0 of 7 graveyard niches; 7 ABSTAINED. WITH ZERO INFORMATIVE NEGATIVES ITS FALSE-POSITIVE RATE DOES NOT EXIST. It has not been shown to discriminate; it has not been TESTED."
+   }
+  },
+  "disconfirming": [],
+  "low_count_onsets": [],
+  "left_censored_onsets": [],
+  "already_booming": [],
+  "estimator_disagreements": [
+   {
+    "niche": "adhd",
+    "tier": "T4",
+    "robust": null,
+    "spec": "2019-08",
+    "spec_blind_months": 0
+   },
+   {
+    "niche": "glp1",
+    "tier": "T4",
+    "robust": "2025-04",
+    "spec": "2018-10",
+    "spec_blind_months": 0
+   },
+   {
+    "niche": "menopause",
+    "tier": "T4",
+    "robust": "2022-05",
+    "spec": "2021-08",
+    "spec_blind_months": 0
+   },
+   {
+    "niche": "trt",
+    "tier": "T4",
+    "robust": null,
+    "spec": "2023-10",
+    "spec_blind_months": 0
+   }
+  ]
+ },
+ "analysis_no_autism": {
+  "excluded": [
+   "autism"
+  ],
+  "lead_times": {
+   "T1->T2": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": true,
+    "null_median_gap_months": 11,
+    "null_p90": 19,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T1->T3": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": false,
+    "null_median_gap_months": null,
+    "null_p90": null,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T1->T4": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": false,
+    "null_median_gap_months": 3.0,
+    "null_p90": 4,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T2->T3": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": true,
+    "null_median_gap_months": null,
+    "null_p90": null,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T2->T4": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": false,
+    "null_median_gap_months": -8,
+    "null_p90": 45,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T3->T4": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": true,
+    "null_median_gap_months": null,
+    "null_p90": null,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   }
+  },
+  "tiers": {
+   "T1": {
+    "name": "INTENT (search)",
+    "hits": [],
+    "misses": [],
+    "false_positives": [],
+    "true_negatives": [],
+    "positives_abstained": [
+     "adhd",
+     "glp1",
+     "menopause",
+     "trt",
+     "hair",
+     "privategp",
+     "ivf"
+    ],
+    "graveyard_abstained": [
+     "cbd",
+     "ivdrip",
+     "cryo",
+     "coldwater",
+     "psychedelics",
+     "nad",
+     "hbot",
+     "redlight"
+    ],
+    "hit_rate": null,
+    "informative_positives": 0,
+    "informative_negatives": 0,
+    "fp_rate_honest": null,
+    "fp_rate_credulous": 0.0,
+    "discrimination_fisher_p": null,
+    "amplitude_test_peak_z": null,
+    "left_censored": [],
+    "already_booming": [],
+    "specificity_measurable": false,
+    "abstention_warning": "This tier's specificity rests on 0 of 8 graveyard niches; 8 ABSTAINED. WITH ZERO INFORMATIVE NEGATIVES ITS FALSE-POSITIVE RATE DOES NOT EXIST. It has not been shown to discriminate; it has not been TESTED."
+   },
+   "T2": {
+    "name": "ENTRY (new companies)",
+    "hits": [],
+    "misses": [],
+    "false_positives": [],
+    "true_negatives": [],
+    "positives_abstained": [
+     "adhd",
+     "glp1",
+     "menopause",
+     "trt",
+     "hair",
+     "privategp",
+     "ivf"
+    ],
+    "graveyard_abstained": [
+     "cbd",
+     "ivdrip",
+     "cryo",
+     "coldwater",
+     "psychedelics",
+     "nad",
+     "hbot",
+     "redlight"
+    ],
+    "hit_rate": null,
+    "informative_positives": 0,
+    "informative_negatives": 0,
+    "fp_rate_honest": null,
+    "fp_rate_credulous": 0.0,
+    "discrimination_fisher_p": null,
+    "amplitude_test_peak_z": null,
+    "left_censored": [],
+    "already_booming": [],
+    "specificity_measurable": false,
+    "abstention_warning": "This tier's specificity rests on 0 of 8 graveyard niches; 8 ABSTAINED. WITH ZERO INFORMATIVE NEGATIVES ITS FALSE-POSITIVE RATE DOES NOT EXIST. It has not been shown to discriminate; it has not been TESTED."
+   },
+   "T3": {
+    "name": "CAPACITY (new CQC clinics)",
+    "hits": [],
+    "misses": [
+     "adhd",
+     "glp1",
+     "menopause",
+     "hair",
+     "privategp",
+     "ivf"
+    ],
+    "false_positives": [],
+    "true_negatives": [],
+    "positives_abstained": [
+     "trt"
+    ],
+    "graveyard_abstained": [
+     "cbd",
+     "ivdrip",
+     "cryo",
+     "coldwater",
+     "psychedelics",
+     "nad",
+     "hbot",
+     "redlight"
+    ],
+    "hit_rate": 0.0,
+    "informative_positives": 6,
+    "informative_negatives": 0,
+    "fp_rate_honest": null,
+    "fp_rate_credulous": 0.0,
+    "discrimination_fisher_p": null,
+    "amplitude_test_peak_z": null,
+    "left_censored": [],
+    "already_booming": [],
+    "specificity_measurable": false,
+    "abstention_warning": "This tier's specificity rests on 0 of 8 graveyard niches; 8 ABSTAINED. WITH ZERO INFORMATIVE NEGATIVES ITS FALSE-POSITIVE RATE DOES NOT EXIST. It has not been shown to discriminate; it has not been TESTED."
+   },
+   "T4": {
+    "name": "CONSUMPTION (NHS prescribing)",
+    "hits": [
+     "glp1",
+     "menopause"
+    ],
+    "misses": [
+     "adhd",
+     "trt"
+    ],
+    "false_positives": [],
+    "true_negatives": [],
+    "positives_abstained": [
+     "hair",
+     "privategp",
+     "ivf"
+    ],
+    "graveyard_abstained": [
+     "cbd",
+     "ivdrip",
+     "cryo",
+     "coldwater",
+     "psychedelics",
+     "nad",
+     "hbot",
+     "redlight"
+    ],
+    "hit_rate": 0.5,
+    "informative_positives": 4,
+    "informative_negatives": 0,
+    "fp_rate_honest": null,
+    "fp_rate_credulous": 0.0,
+    "discrimination_fisher_p": null,
+    "amplitude_test_peak_z": null,
+    "left_censored": [],
+    "already_booming": [],
+    "specificity_measurable": false,
+    "abstention_warning": "This tier's specificity rests on 0 of 8 graveyard niches; 8 ABSTAINED. WITH ZERO INFORMATIVE NEGATIVES ITS FALSE-POSITIVE RATE DOES NOT EXIST. It has not been shown to discriminate; it has not been TESTED."
+   }
+  },
+  "disconfirming": [],
+  "low_count_onsets": [],
+  "left_censored_onsets": [],
+  "already_booming": [],
+  "estimator_disagreements": [
+   {
+    "niche": "adhd",
+    "tier": "T4",
+    "robust": null,
+    "spec": "2019-08",
+    "spec_blind_months": 0
+   },
+   {
+    "niche": "glp1",
+    "tier": "T4",
+    "robust": "2025-04",
+    "spec": "2018-10",
+    "spec_blind_months": 0
+   },
+   {
+    "niche": "menopause",
+    "tier": "T4",
+    "robust": "2022-05",
+    "spec": "2021-08",
+    "spec_blind_months": 0
+   },
+   {
+    "niche": "trt",
+    "tier": "T4",
+    "robust": null,
+    "spec": "2023-10",
+    "spec_blind_months": 0
+   }
+  ]
+ },
+ "sensitivity": {
+  "1.25": {
+   "T1->T2": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": true,
+    "null_median_gap_months": 11,
+    "null_p90": 19,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T1->T3": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": false,
+    "null_median_gap_months": null,
+    "null_p90": null,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T1->T4": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": false,
+    "null_median_gap_months": 3.0,
+    "null_p90": 4,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T2->T3": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": true,
+    "null_median_gap_months": null,
+    "null_p90": null,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T2->T4": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": false,
+    "null_median_gap_months": -8,
+    "null_p90": 45,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T3->T4": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": true,
+    "null_median_gap_months": null,
+    "null_p90": null,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   }
+  },
+  "1.5": {
+   "T1->T2": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": true,
+    "null_median_gap_months": 11,
+    "null_p90": 19,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T1->T3": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": false,
+    "null_median_gap_months": null,
+    "null_p90": null,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T1->T4": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": false,
+    "null_median_gap_months": 3.0,
+    "null_p90": 4,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T2->T3": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": true,
+    "null_median_gap_months": null,
+    "null_p90": null,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T2->T4": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": false,
+    "null_median_gap_months": -8,
+    "null_p90": 45,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T3->T4": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": true,
+    "null_median_gap_months": null,
+    "null_p90": null,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   }
+  },
+  "2.0": {
+   "T1->T2": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": true,
+    "null_median_gap_months": 11,
+    "null_p90": 19,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T1->T3": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": false,
+    "null_median_gap_months": null,
+    "null_p90": null,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T1->T4": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": false,
+    "null_median_gap_months": 3.0,
+    "null_p90": 4,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T2->T3": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": true,
+    "null_median_gap_months": null,
+    "null_p90": null,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T2->T4": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": false,
+    "null_median_gap_months": -8,
+    "null_p90": 45,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   },
+   "T3->T4": {
+    "n": 0,
+    "detail": [],
+    "median_gap_months": null,
+    "range": null,
+    "median_95ci": null,
+    "n_in_predicted_order": 0,
+    "sign_test_p_naive_vs_coinflip": null,
+    "power": null,
+    "adjacent": true,
+    "null_median_gap_months": null,
+    "null_p90": null,
+    "null_order_rate": null,
+    "excess_over_null_months": null,
+    "beats_null": null,
+    "sign_test_p_calibrated": null
+   }
+  }
+ }
+}
