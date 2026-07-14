@@ -552,11 +552,13 @@ function panelTable(){
     '<th data-k="growth">Growth</th><th class="l">First seen</th>'+
     '<th class="l q">Who just added it</th></tr></thead><tbody>';
   P.forEach(function(r,i){
-    var g=(r.growth==null)?'<span class="na">&ndash;</span>':
-      '<span class="'+(r.growth>=25?'up':'')+'">'+(r.growth>=0?'+':'')+Math.round(r.growth)+'%</span>';
+    // panel.py returns growth as a RATIO (1.0 = doubled), not a percentage.
+    var gp=(r.growth==null)?null:r.growth*100;
+    var g=(gp==null)?'<span class="na">&ndash;</span>':
+      '<span class="'+(gp>=25?'up':'')+'">'+(gp>=0?'+':'')+Math.round(gp)+'%</span>';
     var who=(r.new_adopters||[]).slice(0,3).join(', ');
     h+='<tr data-now="'+(r.clinics_now||0)+'" data-prior="'+(r.clinics_prior||0)+
-       '" data-growth="'+(r.growth==null?-9999:r.growth)+'"><td class="rk">'+(i+1)+'</td>'+
+       '" data-growth="'+(gp==null?-9999:gp)+'"><td class="rk">'+(i+1)+'</td>'+
        '<td class="nm">'+r.term+(r.niche?'<span class="niche">'+r.niche+'</span>':
          '<span class="newtag">no known niche</span>')+'</td>'+
        '<td class="num">'+num(r.clinics_now)+'</td><td class="num">'+num(r.clinics_prior)+'</td>'+

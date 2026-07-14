@@ -636,38 +636,74 @@ def whats_moved(tr, inc, cq, presc=None):
 
 
 # ------------------------------------------------------------------- render
-def safe(fn, label, *a, key=None, **k):
-    """A dead source must degrade the dashboard, never kill the build - and it must
-    never MASQUERADE as a real empty result either. `key` is the data.json key this
-    call feeds; STATUS[key] records ok/failed so the front-end can print "source
-    failed today" rather than "there is nothing here". A None return is a failure by
-    module convention (unreachable / no API key) - distinct from an empty list,
-    which is a real result."""
+SOURCE_BUDGET = int(os.environ.get("SOURCE_BUDGET_SECS", "420"))   # 7 minutes each
+
+
+class _Timeout(Exception):
+    pass
+
+
+def safe(fn, label, *a, **k):
+    """A dead source must degrade the dashboard, never kill or hang the build.
+
+    HARD WALL-CLOCK BUDGET. A source that is BLOCKED rather than broken (connections
+    refused, sockets timing out - which is what the Internet Archive and OpenPrescribing
+    both do to GitHub's datacentre IPs) will sit there retrying until the 6-hour job
+    limit kills it. That happened: two consecutive daily builds had to be cancelled and
+    the dashboard went stale. Per-request timeouts do not save you. Only a wall clock does.
+    """
+    import signal
+    key = k.pop("key", None)
+
+    def _bang(signum, frame):
+        raise _Timeout()
+
+    old = None
+    try:
+        old = signal.signal(signal.SIGALRM, _bang)
+        signal.alarm(SOURCE_BUDGET)
+    except Exception:
+        old = None                      # not POSIX - run without the wall clock
+    t0 = datetime.now(timezone.utc)
     try:
         r = fn(*a, **k)
+        secs = (datetime.now(timezone.utc) - t0).total_seconds()
+        if r is None:
+            print(f"  {label}: unavailable (source returned None) [{secs:.0f}s]")
+            DIAG.setdefault("failed_sources", []).append(label)
+            if key:
+                STATUS[key] = "failed"
+            return None
+        print(f"  {label}: {len(r) if hasattr(r, '__len__') else 'ok'} [{secs:.0f}s]")
+        if key:
+            STATUS[key] = "ok"
+        return r
+    except _Timeout:
+        print(f"  {label}: TIMED OUT after {SOURCE_BUDGET}s - abandoned, build continues")
+        DIAG.setdefault("failed_sources", []).append(label + " (timed out)")
+        DIAG.setdefault("timed_out", []).append(label)
+        if key:
+            STATUS[key] = "failed"
+        return None
     except Exception as e:
         print(f"  {label}: FAILED {repr(e)[:120]}")
         DIAG.setdefault("failed_sources", []).append(label)
         if key:
             STATUS[key] = "failed"
         return None
-    if r is None:
-        print(f"  {label}: unavailable (source returned None)")
-        DIAG.setdefault("failed_sources", []).append(label)
-        if key:
-            STATUS[key] = "failed"
-        return None
-    print(f"  {label}: {len(r) if hasattr(r, '__len__') else 'ok'}")
-    if key:
-        STATUS[key] = "ok"
-    return r
+    finally:
+        try:
+            signal.alarm(0)
+            if old is not None:
+                signal.signal(signal.SIGALRM, old)
+        except Exception:
+            pass
 
 
 def main():
     import nhs_rtt, aesthetics as aes_mod, investability2 as inv2
     import discovery2 as disc_mod, interpret as interp
     import nhsbsa_epd, trends_open as t_open, catalysts as cat_mod
-    import panel as panel_mod
 
     inc = safe(incorporations, "T2 incorporations", key="inc") or []
     ods = safe(fetch_cqc_ods, "CQC ods (one download, ONE shared parse)")
@@ -705,6 +741,9 @@ def main():
     # served only 60 months and 403s Actions, which is why T4 used to be client-side.
     # Real lag is ~2.5 months, not the 12+ we assumed.
     presc = safe(nhsbsa_epd.epd, "T4 prescribing (NHSBSA)", key="presc") or []
+    tracked = [r for r in presc if r.get("kind") != "discovery"]
+    drugdisc = [r for r in presc if r.get("kind") == "discovery"]
+    STATUS["drugdisc"] = STATUS.get("presc", "failed")
 
     # SEARCH-SIDE OPEN LAYER: Google's own RISING queries, harvested from broad seeds on
     # a rotating budget. A fixed watchlist can never surface a term nobody thought of;
@@ -717,35 +756,28 @@ def main():
     # (no new molecule created it), so it is a side panel, never a scoring tier.
     cats = safe(cat_mod.catalysts, "Catalysts (MHRA licences)", key="cats") or []
 
-    # ADOPTION, not entry. Every other supply signal is name-mining: it sees a company
-    # being incorporated or a clinic being registered. But an EXISTING clinic that adds
-    # a new service line files nothing - it just changes a page on its website. That is
-    # invisible to the rest of this dashboard, and it is plausibly how ADHD actually
-    # spread (existing psychiatry/GP practices adding assessment, not founders
-    # incorporating "ADHD Ltd"). This panel watches a fixed cohort of real UK clinic
-    # websites via the Internet Archive and counts DISTINCT CLINICS adopting a service.
-    # Budgeted and resumable - it backfills over several runs, then only tracks forward.
-    pnl = safe(panel_mod.panel, "Panel (service adoption)", niche_of,
-               cdx_budget=120, key="panel") or []
-    tracked = [r for r in presc if r.get("kind") != "discovery"]
-    drugdisc = [r for r in presc if r.get("kind") == "discovery"]
-    STATUS["drugdisc"] = STATUS.get("presc", "failed")  # same source, 2nd payload key
+    # ADOPTION, not entry - the one sensor that can see an EXISTING clinic add a service
+    # (it files no company and registers no location; it changes a page on its website).
+    #
+    # BUT: the Internet Archive REFUSES GitHub's datacentre IPs. Verified - the cohort
+    # built fine (207 clinics) and then every single CDX call came back
+    # ConnectionRefused / timed out. Same class of block as OpenPrescribing. So the panel
+    # is NOT fetched here. It is backfilled from a real browser and committed, and this
+    # just reads the result. Never let a blocked source hang the daily build.
+    pnl = load("data/panel_rows.json", []) or []
+    STATUS["panel"] = "ok" if pnl else "failed"
+    DIAG["panel"] = ("read %d rows from the committed backfill" % len(pnl)) if pnl else \
+        "no backfill yet - the Internet Archive blocks datacentre IPs, so this must be run from a browser"
 
     tr = safe(trends, "T1 trends", discovered_terms(inc, cq + aes), key="trends") or []
-    # Terms fed back from T2/T3 keep found=True and are shown, but get ZERO votes:
-    # if T1 only lights up because T2 told it what to search for, "T1 and T2 agree"
-    # is plumbing, not evidence. The front-end enforces this via aggB(independentOnly).
+    # Terms fed back from T2/T3 keep found=True and are shown, but get ZERO votes: if T1
+    # only lights up because T2 told it what to search for, "T1 and T2 agree" is plumbing,
+    # not evidence. The front-end enforces this via aggB(independentOnly).
     tr_indep, tr_found = interp.decontaminate(tr)
     DIAG["t1_independent"] = len(tr_indep)
     DIAG["t1_auto_found"] = len(tr_found)
     jobs = []          # Adzuna REMOVED: its ToS forbids aggregation/vacancy counts.
     moved = whats_moved(tr_indep, inc, cq, tracked)
-
-    # targets.py is NOT called. It builds a list of named clinic owners annotated with
-    # an INFERRED claim that they may want to sell - a roll-up tool, and this is a
-    # trend tracker. It stays in the repo only because investability2 reuses its
-    # owner-dedupe (grouping providers that share a director or registered address).
-    DIAG["targets_enabled"] = False
 
     updated = datetime.now(timezone.utc).strftime("%d %b %Y, %H:%M UTC")
     data = {"waits": waits, "trends": tr, "inc": inc, "aes": aes, "cqc": cq,
@@ -758,6 +790,22 @@ def main():
     save("data.json", dict(updated=datetime.now(timezone.utc).isoformat(), **data))
     with open("dashboard.html", "w", encoding="utf-8") as f:
         f.write(TEMPLATE.replace("{{UPDATED}}", updated).replace("{{DATA}}", payload))
+
+    # THE PRE-REGISTERED FORECAST LOG. A backtest looks backwards and can be tuned until
+    # it agrees with us. A forward call, timestamped and hash-chained before the fact,
+    # cannot be. Each week it freezes the radar's top 3 AND draws a random control niche
+    # from the same board: if the picks do not beat random, the radar has no skill and
+    # the log will say so. This is the only mechanism that can ever earn this thing trust,
+    # and the clock only starts once. It will say "too few matured calls to say anything"
+    # for about a year. That is correct, and it must keep saying it.
+    try:
+        import forecast as fc
+        picks, graded, card = fc.forecast(data)
+        DIAG["forecast"] = {"picks": len(picks or []), "graded": len(graded or []),
+                            "verdict": (card or {}).get("verdict")}
+        print("  forecast:", (card or {}).get("verdict", "logged"))
+    except Exception as e:
+        print("  forecast FAILED:", repr(e)[:120])
 
     try:
         import digest as dg

@@ -95,6 +95,9 @@ RUN
     python3 backtest3.py                 # full run: T2 + T3 + T4. No SerpApi spend.
     python3 backtest3.py --trends        # ...also T1. Cached forever after the first.
     python3 backtest3.py --cutoff 2022-03    # move the "standing in early 2022" line.
+    python3 backtest3.py --minutes 50        # wall-clock budget: when spent, SAVE the
+                                             #   caches, write a partial report, exit 0.
+                                             #   The next run RESUMES; nothing repeats.
 
 Needs CH_API_KEY for T2 (free, instant). T4 needs nothing. T1 needs SERPAPI_KEY.
 Writes _agent3/backtest3.md and _agent3/backtest3.json.
@@ -114,6 +117,13 @@ import itertools
 import statistics
 import urllib.parse
 import urllib.request
+import time
+import shutil
+import tempfile
+import threading
+import traceback
+import concurrent.futures as _futures
+from collections import deque
 
 HERE = os.path.dirname(os.path.abspath(__file__))       # .../radar-app/_agent3
 ROOT = os.path.dirname(HERE)                            # .../radar-app
@@ -338,6 +348,252 @@ GRAVEYARDS = [n for n in NICHES if n["cls"] == GRAVEYARD]
 DIAG = bt2.DIAG          # backtest2's fetchers write here; share the dict
 
 
+# =============================================================================
+#  2b. THE T2 FETCHER, REBUILT SO A CI JOB ACTUALLY FINISHES
+# =============================================================================
+# WHAT KILLED THE FIRST RUN. bt2.fetch_t2 is SERIAL: one HTTP round-trip at a time. Its
+# throttle permits 500 requests / 5 min, but a serial loop's true rate is 1/latency -
+# ~0.3 req/s from a GitHub Actions runner - so ~5,970 cells took ~6 hours, the job hit
+# the Actions 6h limit, was killed before the commit step, and the cache died with the
+# runner. Every run started from zero. Three fixes, all here:
+#
+#   1. PARALLEL: N workers behind ONE thread-safe sliding-window throttle, so the pipe
+#      runs at the documented limit (we stay at bt2.CH_RATE = 500/5min, inside CH's
+#      600/5min). 5,970 cells / (500/300s) = ~60 minutes of rate time, ONCE, EVER -
+#      every (keyword, month) hits-count is immutable and cached forever.
+#   2. WALL-CLOCK BUDGET: --minutes sets a deadline; when it passes the fetch saves,
+#      flags itself, and the run still writes a (labelled) partial report and exits 0.
+#      The workflow commits the cache with `if: always()`, so the next run RESUMES.
+#      Three 50-minute runs that finish beat one 6-hour run that dies.
+#   3. PRIORITY: keywords are fetched most-load-bearing-first (ADHD, then the other
+#      positives' primaries, then the graveyard primaries), keyword-by-keyword, so a
+#      partial cache answers the benchmark question before it answers anything else.
+
+PROGRESS = os.path.join(DATA, "backtest3_progress.json")
+T2_WORKERS = 8
+_RESERVE_S = 8 * 60      # wall-clock held back for the null calibration + the report
+
+
+class SafeThrottle:
+    """Thread-safe sliding-window limiter. bt2.Throttle is correct but assumes one
+    caller; this serialises the window under a lock so N workers share ONE budget.
+    Same numbers as bt2: 500 req / 300 s, inside Companies House's documented 600."""
+
+    def __init__(self, n=None, per=None, clock=time.monotonic, sleep=time.sleep):
+        self.n = n or bt2.CH_RATE
+        self.per = per or bt2.CH_PER
+        self.hist = deque()
+        self.lock = threading.Lock()
+        self.clock, self.sleep = clock, sleep
+
+    def wait(self):
+        while True:
+            with self.lock:
+                now = self.clock()
+                while self.hist and now - self.hist[0] > self.per:
+                    self.hist.popleft()
+                if len(self.hist) < self.n:
+                    self.hist.append(now)
+                    return
+                nap = self.per - (now - self.hist[0]) + 0.25
+            self.sleep(max(nap, 0.05))
+
+
+class _NoThrottle:                       # injected by the selftest; never sleeps
+    def wait(self):
+        pass
+
+
+def _t2_keyword_order():
+    """Fetch order = how much the REPORT needs each keyword. ADHD's primary first (the
+    benchmark question), then every other positive's primary, then the graveyard
+    primaries (specificity is the most important possible result), then secondaries.
+    A run that dies early therefore dies holding the most informative partial dataset;
+    half-fetched keywords are withheld by the coverage floor, never zero-filled."""
+    order, seen = [], set()
+    ranked = ([BY_KEY["adhd"]] + [n for n in POSITIVES if n["key"] != "adhd"]
+              + GRAVEYARDS)
+    for n in ranked:
+        k = n["ch"][0]
+        if k not in seen:
+            seen.add(k)
+            order.append(k)
+    for n in ranked:
+        for k in n["ch"][1:]:
+            if k not in seen:
+                seen.add(k)
+                order.append(k)
+    for k in bt2.ALL_KEYWORDS:           # safety net: anything not reachable via NICHES
+        if k not in seen:
+            seen.add(k)
+            order.append(k)
+    return order
+
+
+def _t2_one(fetch, kw, m, thr):
+    try:
+        return fetch(kw, m, thr)
+    except Exception as e:               # counted as an error, never hidden
+        return None, "EXC:%s" % type(e).__name__
+
+
+def fetch_t2_parallel(max_calls, force=False, deadline=None, fetch_fn=None,
+                      probe_fn=None, workers=T2_WORKERS, save_every=200,
+                      clock=time.monotonic, throttle=None):
+    """{keyword: {month: hits}} - same shape, same cache files as bt2.fetch_t2, but
+    parallel, deadline-aware and priority-ordered (see the section header above).
+
+    Resumable BY CONSTRUCTION: a cell is fetched only if absent from the cache, the
+    cache is saved every `save_every` cells AND in a finally-block, and a cell's value
+    is immutable (the number of companies incorporated in March 2019 will never
+    change). So kill this anywhere, restart it, and it converges on the identical
+    cache without refetching - the selftest proves exactly that, offline, by injecting
+    fetch_fn/probe_fn/throttle/clock."""
+    months = axis(T2_START)
+    cache = {} if force else (load(bt2.CH_CACHE) or {})
+    probes = {} if force else (load(bt2.CH_PROBE) or {})
+    fetch = fetch_fn or bt2.ch_month_hits
+    probe = probe_fn or bt2.ch_precision_probe
+    thr = throttle or SafeThrottle()
+
+    kw_order = _t2_keyword_order()
+    todo_n = sum(1 for k in kw_order for m in months
+                 if cache.get(k, {}).get(m) is None)
+    DIAG["t2_cells_total"] = len(kw_order) * len(months)
+    DIAG["t2_cells_cached"] = DIAG["t2_cells_total"] - todo_n
+    DIAG.pop("t2_hit_budget_cap", None)
+    DIAG.pop("t2_deadline_hit", None)
+
+    if fetch_fn is None and not bt2.CH_KEY:
+        DIAG["t2"] = ("CH_API_KEY not set. T2 uses the cache only (%d/%d cells). Get a "
+                      "free key at developer.company-information.service.gov.uk."
+                      % (DIAG["t2_cells_cached"], DIAG["t2_cells_total"]))
+        return cache, probes
+
+    def spent():
+        return deadline is not None and clock() >= deadline
+
+    calls, errs, unsaved, fatal = 0, {}, 0, None
+    print("  T2: %d keywords x %d months = %d cells; %d cached, %d to fetch "
+          "(cap %d, %d workers, 500/5min shared)"
+          % (len(kw_order), len(months), DIAG["t2_cells_total"],
+             DIAG["t2_cells_cached"], todo_n, max_calls, workers))
+
+    ex = _futures.ThreadPoolExecutor(max_workers=max(1, workers))
+    try:
+        for kw in kw_order:
+            if fatal or spent() or calls >= max_calls:
+                break
+            if kw not in probes and calls < max_calls:
+                probes[kw] = probe(kw, thr)
+                calls += 1
+            missing = [m for m in months if cache.get(kw, {}).get(m) is None]
+            i = 0
+            while i < len(missing):
+                if fatal or spent() or calls >= max_calls:
+                    break
+                chunk = missing[i:i + min(128, max_calls - calls)]
+                i += len(chunk)
+                futs = {ex.submit(_t2_one, fetch, kw, m, thr): m for m in chunk}
+                for f in _futures.as_completed(futs):
+                    m = futs[f]
+                    h, err = f.result()   # a BaseException propagates; finally saves
+                    calls += 1
+                    if h is None:
+                        errs[err] = errs.get(err, 0) + 1
+                        if err in ("HTTP 401", "HTTP 403"):
+                            fatal = ("Companies House returned %s - the key is "
+                                     "missing, wrong, or unauthorised. Aborting T2."
+                                     % err)
+                        continue
+                    cache.setdefault(kw, {})[m] = h
+                    unsaved += 1
+                if unsaved >= save_every:
+                    save(bt2.CH_CACHE, cache)
+                    save(bt2.CH_PROBE, probes)
+                    unsaved = 0
+                    print("    ... %d calls this run, %d errors, cache saved"
+                          % (calls, sum(errs.values())))
+    finally:
+        ex.shutdown(wait=False, cancel_futures=True)
+        save(bt2.CH_CACHE, cache)
+        save(bt2.CH_PROBE, probes)
+
+    if fatal:
+        DIAG["t2_fatal"] = fatal
+    if calls >= max_calls:
+        DIAG["t2_hit_budget_cap"] = True
+    if spent():
+        DIAG["t2_deadline_hit"] = True
+    DIAG["t2_calls_spent"] = calls
+    DIAG["t2_errors"] = errs
+    filled = sum(1 for k in kw_order for m in months
+                 if cache.get(k, {}).get(m) is not None)
+    DIAG["t2_cells_new_this_run"] = filled - DIAG["t2_cells_cached"]
+    DIAG["t2_coverage"] = round(filled / max(1, DIAG["t2_cells_total"]), 3)
+    left = DIAG["t2_cells_total"] - filled
+    DIAG["t2"] = ("ok - %d/%d cells" % (filled, DIAG["t2_cells_total"]) if left == 0
+                  else "PARTIAL - %d/%d cells (%d left; re-run to resume, the cache "
+                       "persists)" % (filled, DIAG["t2_cells_total"], left))
+    return cache, probes
+
+
+def _completeness(t2, t4):
+    """How much of the study's data this run actually holds. Printed at the TOP of the
+    report, because a partial dataset presented as the full study is the report
+    lying."""
+    months2 = axis(T2_START)
+    kws = sorted(bt2.ALL_KEYWORDS)
+    cells = sum(1 for k in kws for m in months2 if t2.get(k, {}).get(m) is not None)
+    total = len(kws) * len(months2)
+    cov = {k: sum(1 for m in months2 if t2.get(k, {}).get(m) is not None)
+           / float(len(months2)) for k in kws}
+    usable = sorted(k for k in kws if cov[k] >= 0.9)
+    latest = DIAG.get("t4_latest_published") or END
+    months4 = [m for m in axis(T4_START, END) if m <= latest]
+    have4 = sum(1 for m in months4 if m in t4)
+    return {"t2_cells_fetched": cells, "t2_cells_total": total,
+            "t2_pct": round(100.0 * cells / max(1, total), 1),
+            "t2_keywords_usable": usable,
+            "t2_keywords_partial_or_missing": sorted(set(kws) - set(usable)),
+            "t4_months_fetched": have4, "t4_months_total": len(months4),
+            "t4_pct": round(100.0 * have4 / max(1, len(months4)), 1),
+            "t3_survivorship_corrected": bool(DIAG.get("cqc_survivorship_corrected")),
+            "t2_complete": cells == total,
+            "t4_complete": have4 >= 0.9 * max(1, len(months4)),
+            "complete": (cells == total
+                         and have4 >= 0.9 * max(1, len(months4)))}
+
+
+def _completeness_lines(c):
+    """The banner write_md() puts directly under the title."""
+    if c is None:
+        return []
+    if c["complete"]:
+        return ["\n> **Data completeness: FULL.** T2 %d/%d cells (100%%), T4 %d/%d "
+                "months (%.0f%%), T3 survivorship-corrected: %s.\n"
+                % (c["t2_cells_fetched"], c["t2_cells_total"], c["t4_months_fetched"],
+                   c["t4_months_total"], c["t4_pct"],
+                   "yes" if c["t3_survivorship_corrected"] else "NO")]
+    L = ["\n> **PARTIAL RUN - THE DATA BELOW IS INCOMPLETE. Numbers in this report "
+         "can change when the remaining cells arrive.**\n>"]
+    L.append("> - T2 Companies House: **%s%% of cells fetched** (%d/%d). Keywords "
+             "with >=90%% coverage, and therefore usable this run: %d/%d. Withheld "
+             "(<90%% fetched, shown as 'no data', never zero-filled): %s.\n>"
+             % (c["t2_pct"], c["t2_cells_fetched"], c["t2_cells_total"],
+                len(c["t2_keywords_usable"]),
+                len(c["t2_keywords_usable"])
+                + len(c["t2_keywords_partial_or_missing"]),
+                ", ".join(c["t2_keywords_partial_or_missing"]) or "none"))
+    L.append("> - T4 NHSBSA EPD: %s%% of months (%d/%d).\n>"
+             % (c["t4_pct"], c["t4_months_fetched"], c["t4_months_total"]))
+    L.append("> - Every fetched cell is cached and committed. A (keyword, month) "
+             "count is immutable, so re-running the workflow RESUMES; it never "
+             "repeats paid work. Run again until this banner disappears.\n")
+    return L
+
+
+
 def _validate_codes():
     """Fail loudly rather than fetch garbage.
 
@@ -437,7 +693,8 @@ def epd_latest(today=None):
     return epd.latest_published(today)
 
 
-def fetch_t4(max_calls=MAX_EPD_CALLS, force=False, getter=None, today=None):
+def fetch_t4(max_calls=MAX_EPD_CALLS, force=False, getter=None, today=None,
+             deadline=None, clock=time.monotonic, workers=4):
     """{month: {code: items}}. Resumable; a published month is immutable, so cached
     months are never refetched and the deep backfill fills in over a few runs."""
     hist = {} if force else (load(EPD_CACHE) or {})
@@ -462,19 +719,61 @@ def fetch_t4(max_calls=MAX_EPD_CALLS, force=False, getter=None, today=None):
     print("  T4: %d months 2014-01..%s; %d cached, %d to fetch (cap %d)"
           % (len(months), latest, DIAG["t4_months_cached"], len(todo), max_calls))
     calls, bad = 0, []
-    for m in todo:
-        if calls >= max_calls:
-            DIAG["t4_hit_budget_cap"] = True
-            break
-        got = epd_fetch_month(m, all_codes, getter=getter)
-        calls += 1
-        if got is None:
-            bad.append(m)                 # ABSENT, not zero. The distinction is the point.
-            continue
-        hist[m] = got
-        if calls % 24 == 0:
-            save(EPD_CACHE, hist)
-            print("    ... %d/%d months" % (calls, min(len(todo), max_calls)))
+    DIAG.pop("t4_deadline_hit", None)
+
+    def _spent():
+        if deadline is not None and clock() >= deadline:
+            DIAG["t4_deadline_hit"] = True
+            return True
+        return False
+
+    if getter is not None or workers <= 1:      # deterministic path; the selftest uses it
+        for m in todo:
+            if calls >= max_calls:
+                DIAG["t4_hit_budget_cap"] = True
+                break
+            if _spent():
+                break
+            got = epd_fetch_month(m, all_codes, getter=getter)
+            calls += 1
+            if got is None:
+                bad.append(m)             # ABSENT, not zero. The distinction is the point.
+                continue
+            hist[m] = got
+            if calls % 24 == 0:
+                save(EPD_CACHE, hist)
+                print("    ... %d/%d months" % (calls, min(len(todo), max_calls)))
+    else:
+        # A published month is immutable and this is a bulk open-data endpoint; a
+        # handful of concurrent month-reads is polite and ~4x faster than the serial
+        # loop that used to sit here (each month is one big HTTP round-trip).
+        ex = _futures.ThreadPoolExecutor(max_workers=workers)
+        try:
+            i = 0
+            while i < len(todo):
+                if calls >= max_calls:
+                    DIAG["t4_hit_budget_cap"] = True
+                    break
+                if _spent():
+                    break
+                chunk = todo[i:i + min(workers * 3, max_calls - calls)]
+                i += len(chunk)
+                futs = {ex.submit(epd_fetch_month, m, all_codes): m for m in chunk}
+                for f in _futures.as_completed(futs):
+                    m = futs[f]
+                    try:
+                        got = f.result()
+                    except Exception:
+                        got = None
+                    calls += 1
+                    if got is None:
+                        bad.append(m)     # ABSENT, not zero. The distinction is the point.
+                    else:
+                        hist[m] = got
+                save(EPD_CACHE, hist)
+                print("    ... %d/%d months" % (calls, min(len(todo), max_calls)))
+        finally:
+            ex.shutdown(wait=False, cancel_futures=True)
     save(EPD_CACHE, hist)
 
     DIAG["t4_calls_spent"] = calls
@@ -1146,6 +1445,8 @@ def write_md(p):
     A("Generated %s. **T4 is in this study**, back to Jan-2014, via NHSBSA's own English "
       "Prescribing Dataset. The 'we cannot backtest T4' excuse is retired.\n"
       % p["generated"][:10])
+    for _ln in _completeness_lines(p.get("completeness")):
+        A(_ln)
 
     # ---------------------------------------------------------------- 0
     A("\n## 0. Read this before any number below\n")
@@ -1575,7 +1876,8 @@ def write_md(p):
 # =============================================================================
 #  9. ASSEMBLE
 # =============================================================================
-def assemble(t1, t2, t3, t4, probes=None, cutoff="2022-03", null_reps=NULL_REPS):
+def assemble(t1, t2, t3, t4, probes=None, cutoff="2022-03", null_reps=NULL_REPS,
+             comp=None):
     series = build_series(t1, t2, t3, t4)
     res = evaluate(series)
 
@@ -1655,6 +1957,7 @@ def assemble(t1, t2, t3, t4, probes=None, cutoff="2022-03", null_reps=NULL_REPS)
          "null_shapes_source": src,
          "standing": standing,
          "standing_all": standing_all,
+         "completeness": comp,
          "diag": dict(DIAG),
          "niches": res,
          "analysis": main,
@@ -1666,8 +1969,45 @@ def assemble(t1, t2, t3, t4, probes=None, cutoff="2022-03", null_reps=NULL_REPS)
     return p
 
 
+def _crash_md(exc):
+    """FAIL LOUDLY, NEVER SILENTLY. If the run dies, backtest3.md must still exist and
+    say how far it got - a six-hour job that leaves nothing behind is the exact failure
+    mode this revision exists to kill."""
+    L = ["# Backtest 3: RUN CRASHED\n",
+         "Generated %s. The run raised before a report could be assembled. This file "
+         "exists so the failure is visible in the repo, not just in a CI log that "
+         "expires.\n" % dt.datetime.now(dt.timezone.utc).isoformat()[:19],
+         "\n## What happened\n```\n",
+         "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))[-4000:],
+         "```\n",
+         "\n## How far the fetchers got (DIAG)\n```json\n",
+         json.dumps(dict(DIAG), indent=1, default=str)[:6000],
+         "\n```\n",
+         "\nEvery fetched cell is cached under `data/`. A re-run RESUMES from the "
+         "committed caches; it does not start over.\n"]
+    try:
+        with open(OUT_MD, "w", encoding="utf-8") as f:
+            f.write("".join(L))
+        print("CRASH - wrote %s" % OUT_MD, file=sys.stderr)
+    except Exception:
+        pass
+
+
 def build(args):
+    # Whatever happens, backtest3.md exists afterwards: either the report or a crash
+    # note saying how far the run got. A clean SystemExit(0) passes through untouched.
+    try:
+        return _build(args)
+    except BaseException as e:
+        if isinstance(e, SystemExit) and e.code in (0, None):
+            raise
+        _crash_md(e)
+        raise
+
+
+def _build(args):
     _repoint_caches()
+    t0 = time.monotonic()
     errs = _validate_codes()
     if errs:
         print("FATAL - the BNF codes did not validate against drugs.py:")
@@ -1675,13 +2015,23 @@ def build(args):
             print("  " + e)
         return 2
 
+    deadline = None
+    if getattr(args, "minutes", 0):
+        deadline = t0 + args.minutes * 60.0 - _RESERVE_S
+        print("WALL-CLOCK BUDGET %.0f min: fetchers get %.0f min, the last %.0f min "
+              "are reserved for the null calibration and the report. When the budget "
+              "is spent the run SAVES, writes a clearly-labelled PARTIAL report and "
+              "exits 0; the next run resumes from the committed caches.\n"
+              % (args.minutes, max(0.0, (deadline - t0) / 60.0), _RESERVE_S / 60.0))
+
     print("Backtest3   T1 %s.. | T2 %s.. | T3 %s.. | T4 %s..  -> %s\n"
           % (T1_START, T2_START, T3_START, T4_START, END))
     print("T4 NHSBSA English Prescribing Dataset (monthly, no key)")
-    t4 = fetch_t4(max_calls=args.max_epd_calls, force=args.refresh)
+    t4 = fetch_t4(max_calls=args.max_epd_calls, force=args.refresh, deadline=deadline)
     print("  %s" % DIAG.get("t4"))
-    print("\nT2 Companies House (monthly hit-counts)")
-    t2, probes = bt2.fetch_t2(args.max_calls, force=args.refresh)
+    print("\nT2 Companies House (monthly hit-counts, parallel + resumable)")
+    t2, probes = fetch_t2_parallel(args.max_calls, force=args.refresh,
+                                   deadline=deadline, workers=args.t2_workers)
     print("  %s" % DIAG.get("t2"))
     print("\nT3 CQC (active + deactivated, survivorship-corrected)")
     t3 = bt2.fetch_t3(force=args.refresh)
@@ -1689,8 +2039,36 @@ def build(args):
     t1 = bt2.fetch_t1(args.trends, force=args.refresh)
     print("  %s" % DIAG.get("t1"))
 
-    p = assemble(t1, t2, t3, t4, probes, cutoff=args.cutoff, null_reps=args.null_reps)
-    print("\nwrote %s\nwrote %s" % (OUT_JSON, OUT_MD))
+    # A keyword fetched for only SOME months would poison t2_series: months where one
+    # of a niche's keywords is missing sum to an undercount that reads as a dip, and
+    # the recovery reads as a boom. So a keyword is either >=90%-fetched or it is
+    # withheld from THIS RUN's analysis entirely - it stays in the cache and completes
+    # next run. Withheld, never zero-filled.
+    months2 = axis(T2_START)
+    floor2 = 0.9 * len(months2)
+    partial_kws = sorted(
+        k for k, v in t2.items()
+        if 0 < sum(1 for m in months2 if v.get(m) is not None) < floor2)
+    t2_use = {k: v for k, v in t2.items() if k not in set(partial_kws)}
+    if partial_kws:
+        print("\n  T2: WITHHOLDING %d partially-fetched keyword(s) from this run's "
+              "analysis (<90%% of months; they resume next run): %s"
+              % (len(partial_kws), ", ".join(partial_kws)))
+
+    comp = _completeness(t2, t4)
+    p = assemble(t1, t2_use, t3, t4, probes, cutoff=args.cutoff,
+                 null_reps=args.null_reps, comp=comp)
+    save(PROGRESS, {"complete": comp["complete"],
+                    "made_progress": (DIAG.get("t2_cells_new_this_run", 0) > 0
+                                      or DIAG.get("t4_calls_spent", 0) > 0),
+                    "t2_cells_fetched": comp["t2_cells_fetched"],
+                    "t2_cells_total": comp["t2_cells_total"],
+                    "t2_cells_new_this_run": DIAG.get("t2_cells_new_this_run", 0),
+                    "t4_months_fetched": comp["t4_months_fetched"],
+                    "t4_months_total": comp["t4_months_total"],
+                    "wall_minutes": round((time.monotonic() - t0) / 60.0, 1),
+                    "generated": dt.datetime.now(dt.timezone.utc).isoformat()})
+    print("\nwrote %s\nwrote %s\nwrote %s" % (OUT_JSON, OUT_MD, PROGRESS))
 
     a = p["analysis"]
     st = p["standing"]
@@ -1705,12 +2083,12 @@ def build(args):
 
     print("\n" + "-" * 78)
     for t in TIERS:
-        s = a["tiers"][t]
-        fp = ("%s (%d neg)" % (s["fp_rate_honest"], s["informative_negatives"])
-              if s["specificity_measurable"] else "n/a - NO INFORMATIVE NEGATIVES")
+        row = a["tiers"][t]
+        fp = ("%s (%d neg)" % (row["fp_rate_honest"], row["informative_negatives"])
+              if row["specificity_measurable"] else "n/a - NO INFORMATIVE NEGATIVES")
         print("%s %-28s hit %-5s (%d pos)   FP %-28s Fisher p=%s"
-              % (t, TIER_NAME[t], s["hit_rate"], s["informative_positives"], fp,
-                 s["discrimination_fisher_p"]))
+              % (t, TIER_NAME[t], row["hit_rate"], row["informative_positives"], fp,
+                 row["discrimination_fisher_p"]))
 
     print("\nLEAD TIMES vs THE CALIBRATED NULL (the null is what a ZERO true lead reports):")
     for pair, g in a["lead_times"].items():
@@ -1735,6 +2113,15 @@ def build(args):
         print("\nNo graveyard niche fired anywhere. CHECK THE ABSTENTION COUNTS before "
               "believing that.")
     print("=" * 78)
+
+    if not comp["complete"]:
+        print("\n" + "!" * 78)
+        print("THIS RUN IS PARTIAL: T2 %s%% of cells, T4 %s%% of months. The report "
+              "says so at the" % (comp["t2_pct"], comp["t4_pct"]))
+        print("top. Caches are saved and committed; RE-RUN THE WORKFLOW TO RESUME. "
+              "Exit 0 (a partial")
+        print("run that finished cleanly is a success, not a failure).")
+        print("!" * 78)
     return 0
 
 
@@ -2081,6 +2468,157 @@ def selftest(quick=False):
           % (pw["perfect_sweep_p"], pw["bonferroni_alpha"]))
     check("33. no 95%% CI for a median exists at n=5", median_ci([1, 2, 3, 4, 5]) is None)
 
+    # ---- 11. RESUMABILITY - the property the six-hour CI corpse was missing --
+    print("\n[11] Resumability: killed mid-run + restarted == uninterrupted, no refetch")
+    global EPD_CACHE, OUT_MD
+    tmp = tempfile.mkdtemp(prefix="bt3resume")
+    old_cch, old_cpr, old_epd, old_out = bt2.CH_CACHE, bt2.CH_PROBE, EPD_CACHE, OUT_MD
+    old_diag = dict(DIAG)
+    nothr = _NoThrottle()
+
+    def hits(kw, m):                       # deterministic fake Companies House
+        return (len(kw) * 31 + int(m[:4]) * 7 + int(m[5:7])) % 23
+
+    fk_log = []
+
+    def fk(kw, m, thr):
+        fk_log.append((kw, m))
+        return hits(kw, m), None
+
+    def pk(kw, thr):
+        return {"sampled": 100, "precision": 1.0, "examples_rejected": [],
+                "hits_total": 9}
+
+    months2 = axis(T2_START)
+    ncells = len(bt2.ALL_KEYWORDS) * len(months2)
+    try:
+        # A: one uninterrupted run = the ground truth every kill must converge on
+        bt2.CH_CACHE = os.path.join(tmp, "a.json")
+        bt2.CH_PROBE = os.path.join(tmp, "a_probe.json")
+        ca, _pa = fetch_t2_parallel(10 ** 9, fetch_fn=fk, probe_fn=pk, workers=7,
+                                    throttle=nothr, save_every=10 ** 9)
+        check("34. offline T2 fetch fills every cell (%d keywords x %d months = %d)"
+              % (len(bt2.ALL_KEYWORDS), len(months2), ncells),
+              sum(len(v) for v in ca.values()) == ncells
+              and DIAG.get("t2_coverage") == 1.0)
+
+        # B: budget-killed at 41%, then resumed
+        bt2.CH_CACHE = os.path.join(tmp, "b.json")
+        bt2.CH_PROBE = os.path.join(tmp, "b_probe.json")
+        fk_log.clear()
+        cb1, _ = fetch_t2_parallel(int(ncells * 0.41), fetch_fn=fk, probe_fn=pk,
+                                   workers=7, throttle=nothr)
+        n1 = sum(len(v) for v in cb1.values())
+        disk = load(bt2.CH_CACHE) or {}
+        check("35. a budget-killed run STOPS, flags itself, and had SAVED its cells to "
+              "disk before returning",
+              DIAG.get("t2_hit_budget_cap") is True and 0 < n1 < ncells and disk == cb1,
+              "%d/%d cells on disk" % (n1, ncells))
+        cb2, _ = fetch_t2_parallel(10 ** 9, fetch_fn=fk, probe_fn=pk, workers=7,
+                                   throttle=nothr, save_every=10 ** 9)
+        check("36. the resumed run converges on the IDENTICAL cache an uninterrupted "
+              "run produces, and no (keyword, month) cell was ever fetched twice",
+              cb2 == ca and len(fk_log) == len(set(fk_log)) == ncells,
+              "%d fetches for %d cells across both runs" % (len(fk_log), ncells))
+
+        # C: a HARD kill mid-flight (a worker raises), then resume
+        bt2.CH_CACHE = os.path.join(tmp, "c.json")
+        bt2.CH_PROBE = os.path.join(tmp, "c_probe.json")
+        boom = [0]
+
+        def fk_die(kw, m, thr):
+            boom[0] += 1
+            if boom[0] == 977:
+                raise KeyboardInterrupt("simulated kill")
+            return hits(kw, m), None
+
+        died = False
+        try:
+            fetch_t2_parallel(10 ** 9, fetch_fn=fk_die, probe_fn=pk, workers=7,
+                              throttle=nothr)
+        except KeyboardInterrupt:
+            died = True
+        disk = load(bt2.CH_CACHE) or {}
+        cc, _ = fetch_t2_parallel(10 ** 9, fetch_fn=fk, probe_fn=pk, workers=7,
+                                  throttle=nothr, save_every=10 ** 9)
+        check("37. a run KILLED mid-flight still saves its cache on the way down, and "
+              "the restart converges on the identical full cache",
+              died and disk and cc == ca,
+              "%d cells survived the kill" % sum(len(v) for v in disk.values()))
+
+        # D: the wall-clock deadline (--minutes), on a fake clock
+        bt2.CH_CACHE = os.path.join(tmp, "d.json")
+        bt2.CH_PROBE = os.path.join(tmp, "d_probe.json")
+        fake_t = [0.0]
+
+        def fk_slow(kw, m, thr):
+            fake_t[0] += 0.4
+            return hits(kw, m), None
+
+        cd1, _ = fetch_t2_parallel(10 ** 9, fetch_fn=fk_slow, probe_fn=pk, workers=1,
+                                   throttle=nothr, deadline=600.0,
+                                   clock=lambda: fake_t[0])
+        nd = sum(len(v) for v in cd1.values())
+        check("38. --minutes: when the wall-clock budget is spent the fetch saves, "
+              "flags DIAG['t2_deadline_hit'], and returns a resumable partial",
+              DIAG.get("t2_deadline_hit") is True and 0 < nd < ncells,
+              "%d/%d cells before the deadline" % (nd, ncells))
+        cd2, _ = fetch_t2_parallel(10 ** 9, fetch_fn=fk, probe_fn=pk, workers=7,
+                                   throttle=nothr, save_every=10 ** 9)
+        check("39. ...and resuming after a deadline kill also converges on the "
+              "identical cache", cd2 == ca)
+
+        # E: completeness accounting + the report banner
+        comp = _completeness(cd1, {})
+        check("40. completeness arithmetic: a partial T2 cache reports the right cell "
+              "count and marks the run INCOMPLETE",
+              comp["t2_cells_fetched"] == nd and not comp["complete"]
+              and comp["t2_pct"] == round(100.0 * nd / ncells, 1))
+        lines = "".join(_completeness_lines(comp))
+        check("41. the report banner for a partial run says PARTIAL, gives the T2 "
+              "percentage, and says withheld keywords are never zero-filled",
+              "PARTIAL RUN" in lines and ("%s%%" % comp["t2_pct"]) in lines
+              and "never zero-filled" in lines)
+        had_latest = DIAG.get("t4_latest_published")
+        DIAG["t4_latest_published"] = "2026-04"
+        compf = _completeness(ca, {m: {} for m in axis(T4_START, "2026-04")})
+        check("42. a full T2 cache + full T4 cache reports complete=True and the "
+              "banner collapses to one 'FULL' line",
+              compf["complete"] and "FULL" in "".join(_completeness_lines(compf)))
+        if had_latest is None:
+            DIAG.pop("t4_latest_published", None)
+        else:
+            DIAG["t4_latest_published"] = had_latest
+
+        # F: fetch_t4 honours the deadline too (serial getter path, fake clock)
+        EPD_CACHE = os.path.join(tmp, "epd.json")
+        seed = {"2014-01": {"0404000U0": 737, CANARY: 900000}}
+        save(EPD_CACHE, seed)
+        got_hist = fetch_t4(
+            getter=lambda u: (_ for _ in ()).throw(IOError("must not be called")),
+            deadline=0.0, clock=lambda: 1.0)
+        check("43. fetch_t4 with the budget already spent makes ZERO calls and returns "
+              "the cache untouched (a month is never half-fetched)",
+              got_hist == seed and DIAG.get("t4_deadline_hit") is True
+              and DIAG.get("t4_calls_spent", 0) == 0)
+
+        # G: the crash path - if the run dies, backtest3.md must still appear
+        OUT_MD = os.path.join(tmp, "crash.md")
+        try:
+            raise RuntimeError("synthetic crash for the selftest")
+        except RuntimeError as e:
+            _crash_md(e)
+        txt = open(OUT_MD, encoding="utf-8").read()
+        check("44. a crash still writes backtest3.md, naming the exception and how far "
+              "the fetchers got",
+              "RUN CRASHED" in txt and "RuntimeError" in txt and "DIAG" in txt)
+    finally:
+        bt2.CH_CACHE, bt2.CH_PROBE, EPD_CACHE, OUT_MD = (old_cch, old_cpr, old_epd,
+                                                         old_out)
+        DIAG.clear()
+        DIAG.update(old_diag)
+        shutil.rmtree(tmp, ignore_errors=True)
+
     print("\n" + "-" * 78)
     print("%d/%d fixtures passed" % (n_ok, n_ok + len(fails)))
     if fails:
@@ -2110,6 +2648,13 @@ def main():
                     help="the 'standing here, would it have flagged?' month")
     ap.add_argument("--refresh", "--force", dest="refresh", action="store_true",
                     help="ignore caches")
+    ap.add_argument("--minutes", type=float, default=0.0,
+                    help="wall-clock budget in minutes; when spent, save the caches, "
+                         "write a PARTIAL report and exit 0 (re-running resumes). "
+                         "0 = no budget. CI passes 50.")
+    ap.add_argument("--t2-workers", type=int, default=T2_WORKERS,
+                    help="parallel Companies House fetchers behind ONE shared "
+                         "500-per-5-min throttle")
     ap.set_defaults(trends=False)
     args = ap.parse_args()
     if args.selftest:
