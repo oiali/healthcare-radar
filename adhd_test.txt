@@ -1,4 +1,4 @@
-cohort: 5 private psychiatry / GP clinics with websites
+cohort: 207 private psychiatry / GP clinics with websites
 
 CLINICS IN THE PANEL WITH AN ADHD PAGE, BY YEAR
 (the count is cumulative: a clinic stays counted once it has one)
@@ -6,20 +6,31 @@ CLINICS IN THE PANEL WITH AN ADHD PAGE, BY YEAR
 0 of 0 clinics with an ADHD page were already showing it when the Archive first crawled them - their adoption date is unknown and they are counted in the base, never as new adopters.
 
 DIAG: {
+ "ia_errors": [
+  "TimeoutError('timed out')",
+  "TimeoutError('timed out')",
+  "URLError(ConnectionRefusedError(111, 'Connection refused'))",
+  "TimeoutError('timed out')",
+  "TimeoutError('timed out')",
+  "URLError(ConnectionRefusedError(111, 'Connection refused'))",
+  "URLError(ConnectionRefusedError(111, 'Connection refused'))",
+  "URLError(ConnectionRefusedError(111, 'Connection refused'))"
+ ],
  "cdx": {
-  "domains_due": 0,
-  "domains_indexed_this_run": 0,
-  "calls": 0,
+  "domains_due": 202,
+  "domains_indexed_this_run": 68,
+  "calls": 76,
   "budget": 400,
   "blocked": false
  },
  "panel": {
-  "cohort": 5,
-  "clinics_with_archive_history": 5,
-  "coverage_pct": 100.0,
-  "distinct_terms_observed": 4730,
+  "cohort": 207,
+  "clinics_with_archive_history": 68,
+  "coverage_pct": 32.9,
+  "distinct_terms_observed": 32890,
   "anchor_month": "2026-07",
   "months": 60,
   "text_sensor": false
- }
+ },
+ "backfill_incomplete": "139 of 207 clinics have no Archive history yet. Until that reaches ~100%, every adopter count below is an UNDERCOUNT and the ranking is provisional. Run --backfill again."
 }
