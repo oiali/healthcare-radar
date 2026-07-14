@@ -29,5 +29,53 @@
    "Mental health / psychiatry": -12.5,
    "Longevity / peptides / IV": -26.315789473684216
   }
+ },
+ {
+  "date": "2026-07-14",
+  "t1": {
+   "Weight loss / GLP-1": 203.3433438739685,
+   "Sexual health / ED": 55.24861878453038,
+   "Men's health / TRT": 53.6144578313253,
+   "Menopause / HRT": 23.663356358195543,
+   "Aesthetics / skin": 7.391754310171179,
+   "Diagnostics / imaging": 17.560975609756092,
+   "ADHD": 9.597393661387619,
+   "Tongue-tie / lactation": -16.524216524216527,
+   "Hair restoration": -18.904109589041095
+  },
+  "t2": {
+   "Dental / orthodontics": 229.38671209540033,
+   "MSK / physio": 218.40715502555366,
+   "Diagnostics / imaging": 156.18966496308917
+  },
+  "t3": {
+   "Tongue-tie / lactation": 200.0,
+   "ADHD": 112.5,
+   "Hair restoration": 100.0,
+   "Weight loss / GLP-1": 100.0,
+   "Aesthetics / skin": -16.139543799118268,
+   "Fertility / women's health": 25.0,
+   "Diagnostics / imaging": -20.957767722473605,
+   "Mental health / psychiatry": -12.5,
+   "Longevity / peptides / IV": -26.315789473684216
+  },
+  "t4": {
+   "ADHD": 39.93793411409767,
+   "Weight loss / GLP-1": 38.57312856122863,
+   "Menopause / HRT": 16.036999333410627,
+   "Men's health / TRT": 12.279556967459438,
+   "Migraine": 10.82929795937051,
+   "Diabetes": 8.338698332764372,
+   "Neurology": 7.018228343824506,
+   "Sleep": 5.26892261924885,
+   "Mental health / psychiatry": 4.7918613384253295,
+   "Fertility / women's health": 4.323592642726326,
+   "Sexual health / ED": 4.321931631400444,
+   "Bladder / continence": 4.127129092174919,
+   "Hair restoration": 3.664921465968596,
+   "Dermatology / acne": 3.6179576416805137,
+   "Allergy": 1.7892515966250855,
+   "Osteoporosis / bone": -0.6983676830252472
+  }
  }
 ]

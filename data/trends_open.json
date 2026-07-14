@@ -1,0 +1,727 @@
+{
+ "seeds": {
+  "private clinic": {
+   "polls": 1,
+   "last_polled": "2026-07-14",
+   "rows": 11
+  },
+  "private assessment": {
+   "polls": 1,
+   "last_polled": "2026-07-14",
+   "rows": 1
+  },
+  "private prescription": {
+   "polls": 1,
+   "last_polled": "2026-07-14",
+   "rows": 2
+  },
+  "private scan": {
+   "polls": 1,
+   "last_polled": "2026-07-14",
+   "rows": 3
+  },
+  "clinic": {
+   "polls": 1,
+   "last_polled": "2026-07-14",
+   "rows": 25
+  },
+  "therapy": {
+   "polls": 1,
+   "last_polled": "2026-07-14",
+   "rows": 25
+  }
+ },
+ "queries": {
+  "walmart near me": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "private clinic",
+    "clinic",
+    "therapy"
+   ],
+   "rise": 4350.0,
+   "rise_value": 4350.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 3
+  },
+  "mayo clinic": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "private clinic",
+    "clinic"
+   ],
+   "rise": 1650.0,
+   "rise_value": 1650.0,
+   "seed": "private clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 2
+  },
+  "private drug rehab clinic": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "private clinic"
+   ],
+   "rise": 1000.0,
+   "rise_value": 1000.0,
+   "seed": "private clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "private adhd assessment uk": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "private clinic"
+   ],
+   "rise": 950.0,
+   "rise_value": 950.0,
+   "seed": "private clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "private alcohol rehab clinic": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "private clinic"
+   ],
+   "rise": 650.0,
+   "rise_value": 650.0,
+   "seed": "private clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "private rehab clinic": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "private clinic",
+    "clinic"
+   ],
+   "rise": 700.0,
+   "rise_value": 700.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 2
+  },
+  "cleveland clinic": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "private clinic",
+    "clinic"
+   ],
+   "rise": 350.0,
+   "rise_value": 350.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 2
+  },
+  "meningitis b vaccine": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "private clinic"
+   ],
+   "rise": 300.0,
+   "rise_value": 300.0,
+   "seed": "private clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "mayfield clinic": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "private clinic"
+   ],
+   "rise": 180.0,
+   "rise_value": 180.0,
+   "seed": "private clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "private clinic for blood test near me": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "private clinic"
+   ],
+   "rise": 150.0,
+   "rise_value": 150.0,
+   "seed": "private clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "private travel clinic": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "private clinic"
+   ],
+   "rise": 50.0,
+   "rise_value": 50.0,
+   "seed": "private clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "vulnerability assessment": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "private assessment"
+   ],
+   "rise": "breakout",
+   "rise_value": 12200.0,
+   "seed": "private assessment",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "wegovy pill cost": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "private prescription"
+   ],
+   "rise": "breakout",
+   "rise_value": 12800.0,
+   "seed": "private prescription",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "prescription glasses": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "private prescription"
+   ],
+   "rise": 250.0,
+   "rise_value": 250.0,
+   "seed": "private prescription",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "how to scan negatives": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "private scan"
+   ],
+   "rise": "breakout",
+   "rise_value": 7250.0,
+   "seed": "private scan",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "how to scan for malware": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "private scan"
+   ],
+   "rise": "breakout",
+   "rise_value": 6900.0,
+   "seed": "private scan",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "how to scan documents to pdf": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "private scan"
+   ],
+   "rise": 4250.0,
+   "rise_value": 4250.0,
+   "seed": "private scan",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "curaleaf vs releaf": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": "breakout",
+   "rise_value": 6150.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "curaleaf clinic vs releaf.co.uk": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": "breakout",
+   "rise_value": 5750.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "curaleaf vs": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": 4650.0,
+   "rise_value": 4650.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "curaleaf clinic scam": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": 4050.0,
+   "rise_value": 4050.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "curaleaf clinic vs www.releaf.co.uk": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": 3750.0,
+   "rise_value": 3750.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "curaleaf clinic vs": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": 3700.0,
+   "rise_value": 3700.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "curaleaf clinic vs releaf": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": 2300.0,
+   "rise_value": 2300.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "mason soiza the t": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": 2300.0,
+   "rise_value": 2300.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "anxiety medication releaf.co.uk": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": 1650.0,
+   "rise_value": 1650.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "cocaine rehab clinic": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": 1100.0,
+   "rise_value": 1100.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "heroin rehab clinic": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": 1000.0,
+   "rise_value": 1000.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "cbd oil releaf.co.uk": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": 900.0,
+   "rise_value": 900.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "thc oil releaf.co.uk": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": 850.0,
+   "rise_value": 850.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "cannabis releaf.co.uk": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": 750.0,
+   "rise_value": 750.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "cannabis clinic releaf.co.uk": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": 750.0,
+   "rise_value": 750.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "adhd medication releaf.co.uk": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": 650.0,
+   "rise_value": 650.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "drug rehab clinic": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": 550.0,
+   "rise_value": 550.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "adhd medication releaf shop": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": 550.0,
+   "rise_value": 550.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "drug rehabilitation clinic": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": 500.0,
+   "rise_value": 500.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "medical cannabis releaf.co.uk": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": 500.0,
+   "rise_value": 500.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "mayo clinic london": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "clinic"
+   ],
+   "rise": 450.0,
+   "rise_value": 450.0,
+   "seed": "clinic",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "blue therapy netflix": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 2600.0,
+   "rise_value": 2600.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "karen doherty": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 1200.0,
+   "rise_value": 1200.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "veonskin led light therapy mask": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 350.0,
+   "rise_value": 350.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "espa overnight hydration therapy": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 300.0,
+   "rise_value": 300.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "dove scalp hair therapy": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 250.0,
+   "rise_value": 250.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "what does red light therapy do for your face": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 250.0,
+   "rise_value": 250.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "therapy insurance": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 250.0,
+   "rise_value": 250.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "shark red light therapy mask": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 200.0,
+   "rise_value": 200.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "lit therapy": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 170.0,
+   "rise_value": 170.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "apartment therapy": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 140.0,
+   "rise_value": 140.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "psycho therapy movie": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 140.0,
+   "rise_value": 140.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "blue therapy": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 130.0,
+   "rise_value": 130.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "red light therapy panel": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 120.0,
+   "rise_value": 120.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "pain reprocessing therapy": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 120.0,
+   "rise_value": 120.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "choose therapy": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 120.0,
+   "rise_value": 120.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "exosome therapy": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 120.0,
+   "rise_value": 120.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "red light therapy mask": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 110.0,
+   "rise_value": 110.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "act therapy": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 100.0,
+   "rise_value": 100.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "online therapy uk": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 100.0,
+   "rise_value": 100.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "online therapy": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 70.0,
+   "rise_value": 70.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "free therapy": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 70.0,
+   "rise_value": 70.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "light therapy mask": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 60.0,
+   "rise_value": 60.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "music therapy": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 50.0,
+   "rise_value": 50.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  },
+  "private therapy": {
+   "first_seen": "2026-07-14",
+   "seeds": [
+    "therapy"
+   ],
+   "rise": 40.0,
+   "rise_value": 40.0,
+   "seed": "therapy",
+   "last_seen": "2026-07-14",
+   "sightings": 1
+  }
+ },
+ "spend": {
+  "2026-07": 6
+ },
+ "last_refresh": "2026-07-14"
+}

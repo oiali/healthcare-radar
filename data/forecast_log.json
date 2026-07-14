@@ -1,0 +1,224 @@
+{
+ "note": "APPEND-ONLY pre-registered forecast log. Each entry is hash-chained to the previous one; editing any past entry is detectable and stops the module. See _agent7/forecast.py.",
+ "entries": [
+  {
+   "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+   "body": {
+    "type": "call",
+    "date": "2026-07-14",
+    "week": "2026-W29",
+    "horizon_days": 365,
+    "matures": "2027-07-14",
+    "selections": [
+     {
+      "niche": "Sexual health / ED",
+      "role": "pick",
+      "stack_position": 1,
+      "stage": "early",
+      "tiers": {
+       "t0": null,
+       "t1": 55.24861878453038,
+       "t2": null,
+       "t3": null,
+       "t4": 4.321931631400444
+      },
+      "bases": {
+       "t0": null,
+       "t1": {
+        "latest": 70,
+        "base": 45,
+        "items": 1,
+        "independent_items": 1,
+        "index": true
+       },
+       "t2": null,
+       "t3": null,
+       "t4": {
+        "latest": 401122,
+        "base": 384504,
+        "items": 1,
+        "independent_items": 1,
+        "index": false
+       }
+      },
+      "history_tiers": {
+       "t1": 55.24861878453038,
+       "t2": null,
+       "t3": null,
+       "t4": 4.321931631400444
+      },
+      "fired_at_call": 1,
+      "prediction": "By 2027-07-14, data/history.json will show Sexual health / ED firing (volume-weighted 12-month growth >= +10%) on MORE of tiers T1-T4 than the 1 it fires on today - shown either by the snapshot nearest 2027-07-14 (within 45 days) or by two sightings at least 7 days apart inside the horizon."
+     },
+     {
+      "niche": "Diagnostics / imaging",
+      "role": "pick",
+      "stack_position": 2,
+      "stage": "early",
+      "tiers": {
+       "t0": null,
+       "t1": 17.560975609756092,
+       "t2": 156.18966496308917,
+       "t3": -24.444444444444446,
+       "t4": null
+      },
+      "bases": {
+       "t0": null,
+       "t1": {
+        "latest": 60,
+        "base": 51,
+        "items": 1,
+        "independent_items": 1,
+        "index": true
+       },
+       "t2": {
+        "latest": 7,
+        "base": 3,
+        "items": 1,
+        "independent_items": 1,
+        "index": false
+       },
+       "t3": {
+        "latest": 34,
+        "base": 45,
+        "items": 4,
+        "independent_items": 4,
+        "index": false
+       },
+       "t4": null
+      },
+      "history_tiers": {
+       "t1": 17.560975609756092,
+       "t2": 156.18966496308917,
+       "t3": -20.957767722473605,
+       "t4": null
+      },
+      "fired_at_call": 2,
+      "prediction": "By 2027-07-14, data/history.json will show Diagnostics / imaging firing (volume-weighted 12-month growth >= +10%) on MORE of tiers T1-T4 than the 2 it fires on today - shown either by the snapshot nearest 2027-07-14 (within 45 days) or by two sightings at least 7 days apart inside the horizon."
+     },
+     {
+      "niche": "MSK / physio",
+      "role": "control",
+      "stack_position": null,
+      "stage": "quiet",
+      "tiers": {
+       "t0": -7.081804287178395,
+       "t1": null,
+       "t2": 218.4071550255536,
+       "t3": null,
+       "t4": null
+      },
+      "bases": {
+       "t0": {
+        "latest": 365372,
+        "base": 393219,
+        "items": 2,
+        "independent_items": 2,
+        "index": false
+       },
+       "t1": null,
+       "t2": {
+        "latest": 29,
+        "base": 9,
+        "items": 1,
+        "independent_items": 1,
+        "index": false
+       },
+       "t3": null,
+       "t4": null
+      },
+      "history_tiers": {
+       "t1": null,
+       "t2": 218.40715502555366,
+       "t3": null,
+       "t4": null
+      },
+      "fired_at_call": 1,
+      "prediction": "By 2027-07-14, data/history.json will show MSK / physio firing (volume-weighted 12-month growth >= +10%) on MORE of tiers T1-T4 than the 1 it fires on today - shown either by the snapshot nearest 2027-07-14 (within 45 days) or by two sightings at least 7 days apart inside the horizon."
+     },
+     {
+      "niche": "Weight loss / GLP-1",
+      "role": "control",
+      "stack_position": null,
+      "stage": "mainstream",
+      "tiers": {
+       "t0": null,
+       "t1": 45.33695716598993,
+       "t2": null,
+       "t3": 100.0,
+       "t4": 38.57312856122863
+      },
+      "bases": {
+       "t0": null,
+       "t1": {
+        "latest": 194,
+        "base": 133,
+        "items": 3,
+        "independent_items": 3,
+        "index": true
+       },
+       "t2": null,
+       "t3": {
+        "latest": 6,
+        "base": 3,
+        "items": 1,
+        "independent_items": 1,
+        "index": false
+       },
+       "t4": {
+        "latest": 494907,
+        "base": 357145,
+        "items": 1,
+        "independent_items": 1,
+        "index": false
+       }
+      },
+      "history_tiers": {
+       "t1": 203.3433438739685,
+       "t2": null,
+       "t3": 100.0,
+       "t4": 38.57312856122863
+      },
+      "fired_at_call": 3,
+      "prediction": "By 2027-07-14, data/history.json will show Weight loss / GLP-1 firing (volume-weighted 12-month growth >= +10%) on MORE of tiers T1-T4 than the 3 it fires on today - shown either by the snapshot nearest 2027-07-14 (within 45 days) or by two sightings at least 7 days apart inside the horizon."
+     }
+    ],
+    "pool": [
+     "ADHD",
+     "Aesthetics / skin",
+     "Audiology / hearing",
+     "Bladder / continence",
+     "Dental / orthodontics",
+     "Dermatology / acne",
+     "Fertility / women's health",
+     "Hair restoration",
+     "Longevity / peptides / IV",
+     "MSK / physio",
+     "Men's health / TRT",
+     "Menopause / HRT",
+     "Mental health / psychiatry",
+     "Migraine",
+     "Neurology",
+     "Tongue-tie / lactation",
+     "Weight loss / GLP-1"
+    ],
+    "control_seed": "radar-forecast-control|2026-W29|ADHD,Aesthetics / skin,Audiology / hearing,Bladder / continence,Dental / orthodontics,Dermatology / acne,Fertility / women's health,Hair restoration,Longevity / peptides / IV,MSK / physio,Men's health / TRT,Menopause / HRT,Mental health / psychiatry,Migraine,Neurology,Tongue-tie / lactation,Weight loss / GLP-1",
+    "sources": {
+     "inc": "ok",
+     "cqc": "ok",
+     "aes": "ok",
+     "waits": "ok",
+     "invest": "ok",
+     "disc": "ok",
+     "presc": "ok",
+     "drugdisc": "ok",
+     "topen": "ok",
+     "cats": "failed",
+     "panel": "failed",
+     "trends": "ok"
+    }
+   },
+   "hash": "a69634e57b098fb63ff06f8895bf8803e9f960ad1f8b42460f34f65f5509a195"
+  }
+ ]
+}
