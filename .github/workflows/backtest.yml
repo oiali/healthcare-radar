@@ -1,12 +1,21 @@
 name: backtest
 
-# Run on demand only. This is the credibility check, not a daily job:
-#   T2 = Companies House monthly incorporation history (works from Actions)
-#   T3 = CQC bulk file, active + DEACTIVATED locations (corrects survivorship bias)
-#   T4 = NOT here. OpenPrescribing 403s datacentre IPs, so T4 is measured in a
-#        browser via backtest_client.js and merged in by hand.
-#   T1 = Google Trends, --no-trends by default because SerpApi free tier is ~100
-#        searches/month and the weekly radar already eats ~80 of them.
+# Run on demand. This is the credibility check, not a daily job.
+#
+# WHY THIS FILE LOOKS PARANOID. The first backtest3 run fetched ~5,970 Companies House
+# cells SERIALLY (~3.6 s each), took ~6 hours, hit the Actions job limit and was killed
+# BEFORE the commit step - so the cache died with the runner and backtest3.md never
+# existed. Fixes, in order of importance:
+#   1. every step after the run is `if: always()` - a partial cache ALWAYS gets
+#      committed. A (keyword, month) incorporation count is immutable, so committing
+#      the cache is safe and means each run only ever moves FORWARD;
+#   2. backtest3.py now takes --minutes: when the wall-clock budget is spent it saves,
+#      writes a clearly-labelled PARTIAL report, and exits 0;
+#   3. the T2 fetcher is parallel behind one 500-per-5-min throttle (CH documents
+#      600/5min), so the full 5,970-cell backfill is ~60 min of rate time, once, ever;
+#   4. if the run reports itself incomplete-but-progressing, the workflow re-dispatches
+#      itself. Expected: run 1 fetches ~4,000 cells, run 2 finishes and writes the
+#      full report. Crashed runs do NOT re-dispatch (that step needs `success()`).
 
 on:
   workflow_dispatch:
@@ -15,13 +24,26 @@ on:
         description: "Also run T1 Google Trends (costs ~16 SerpApi searches, once, cached forever)"
         type: boolean
         default: false
+      minutes:
+        description: "Wall-clock budget in minutes (save + partial report + exit 0 when spent)"
+        default: "50"
+      auto_resume:
+        description: "Re-dispatch this workflow until the dataset is complete"
+        type: boolean
+        default: true
 
 permissions:
   contents: write
+  actions: write   # lets the last step re-dispatch this workflow to resume
+
+concurrency:
+  group: backtest
+  cancel-in-progress: false
 
 jobs:
   backtest:
     runs-on: ubuntu-latest
+    timeout-minutes: 80        # outer bound only; python self-limits via --minutes
     steps:
       - uses: actions/checkout@v4
 
@@ -32,32 +54,62 @@ jobs:
       - name: Prove the onset estimator works before trusting any result
         run: python backtest_core.py
 
-      - name: Run the backtest
+      - name: Prove the resume/budget machinery works before spending the budget
+        run: python backtest3.py --selftest --quick
+
+      - name: Run the backtest (resumable; a clean partial run exits 0)
+        timeout-minutes: 70
         env:
           CH_API_KEY: ${{ secrets.CH_API_KEY }}
           SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
         run: |
-          if [ "${{ inputs.trends }}" = "true" ]; then
-            python backtest3.py --trends --max-calls 5500
-          else
-            python backtest3.py --max-calls 5500
-          fi
+          EXTRA=""
+          if [ "${{ inputs.trends }}" = "true" ]; then EXTRA="--trends"; fi
+          python backtest3.py $EXTRA --max-calls 6000 --minutes "${{ inputs.minutes || '50' }}"
 
       - name: Show the result in the run log
+        if: always()
         run: cat backtest3.md || echo "no backtest3.md produced"
 
-      - name: Commit the result
+      - name: Commit the result AND the caches (the caches ARE the resume state)
+        if: always()
         run: |
           git config user.name "radar-bot"
           git config user.email "radar-bot@users.noreply.github.com"
           git add -A backtest3.md backtest3.json data || true
-          git commit -m "backtest run" || echo "no changes"
+          git commit -m "backtest run (data/backtest3_progress.json has completeness)" || echo "no changes"
+          git pull --rebase --autostash origin "${{ github.ref_name }}" || true
           git push || echo "nothing to push"
 
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: backtest
           path: |
             backtest3.md
             backtest3.json
+            data/backtest3_progress.json
           retention-days: 30
+
+      - name: Resume automatically if incomplete but progressing
+        if: success()   # a crashed run must NOT loop; exit 0 = clean (possibly partial)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ inputs.auto_resume }}" != "true" ]; then
+            echo "auto_resume off - not resuming"; exit 0
+          fi
+          if [ ! -f data/backtest3_progress.json ]; then
+            echo "no progress file - not resuming"; exit 0
+          fi
+          RESUME=$(python -c "import json; p=json.load(open('data/backtest3_progress.json')); print('yes' if (not p.get('complete')) and p.get('made_progress') else 'no')")
+          echo "progress: $(cat data/backtest3_progress.json)"
+          if [ "$RESUME" = "yes" ]; then
+            echo "dataset incomplete and still progressing - re-dispatching to resume"
+            gh workflow run backtest.yml --ref "${{ github.ref_name }}" \
+              -f trends="${{ inputs.trends }}" \
+              -f minutes="${{ inputs.minutes || '50' }}" \
+              -f auto_resume=true
+          else
+            echo "complete (or stalled with zero new cells) - not re-dispatching"
+          fi
