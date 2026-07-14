@@ -1937,8 +1937,13 @@ def _adhd_test(niche_of):
 
     Cost: one CDX request per clinic. A 120-clinic sub-cohort is ~4 minutes.
     """
-    coh = build_cohort(niche_of, size=int(os.environ.get("PANEL_COHORT_SIZE", "120")),
-                       only_niches=("Mental health / psychiatry", "Private GP"),
+    # DO NOT filter the cohort by niche. niche_of() reads the clinic's NAME, and almost
+    # no psychiatry practice is called "psychiatry" - that filter returned FIVE clinics,
+    # which is not a test of anything. The honest question is broader and easier:
+    # across a large cohort of real independent-healthcare clinics, did the number
+    # advertising an ADHD service rise through 2021-22? Use the whole cohort.
+    coh = build_cohort(niche_of, size=int(os.environ.get("PANEL_COHORT_SIZE", "400")),
+                       rebuild=(os.environ.get("PANEL_REBUILD") == "1"),
                        cohort_file=os.path.join(DATA_DIR, "panel_cohort_adhd.json"))
     if not coh:
         print("could not build the psychiatry/GP cohort")
