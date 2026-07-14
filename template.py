@@ -60,6 +60,7 @@ td.q{max-width:300px}
 &middot; what is rising, and how early &middot; click any column to sort</span></div>
 <div class="tabs">
   <div class="tab on" data-p="st">The Stack</div>
+  <div class="tab" data-p="ad">Adoption</div>
   <div class="tab" data-p="dc">Discovery</div>
   <div class="tab" data-p="ct">Catalysts</div>
   <div class="tab" data-p="wt"><span class="t">T0</span>NHS waits</div>
@@ -70,6 +71,7 @@ td.q{max-width:300px}
   <div class="tab" data-p="iv">Market structure</div>
 </div>
 <div class="panel on" id="st"><div id="stbody" class="msg">Building the stack&hellip;</div></div>
+<div class="panel" id="ad"><div id="adbody"></div></div>
 <div class="panel" id="dc"><div id="dcbody"></div></div>
 <div class="panel" id="ct"><div id="ctbody"></div></div>
 <div class="panel" id="wt"><div id="wtbody"></div></div>
@@ -443,11 +445,42 @@ document.getElementById('trbody').innerHTML=(RADAR.trends&&RADAR.trends.length?
   'window. It cannot see a multi-year build-up, and a term that has been flat-but-huge '+
   'for three years reads the same as a term nobody searches for.</div>';
 
-document.getElementById('inbody').innerHTML=
-  tableRows((RADAR.inc||[]).concat(RADAR.aes||[]),'New (3m)',{firstCol:'Niche term'})+
-  '<div class="note"><b>T2 &middot; months.</b> Words and phrases rising fastest in the <b>names</b> of newly-incorporated health companies (9 SIC codes, incl. 86210 general medical practice &mdash; where the ADHD/menopause/GLP-1 telehealth operators actually register). Incorporating is the cheapest possible bet on a niche, which is why it moves early.<br>'+
-  '<b>Aesthetics terms are mined separately and folded in here.</b> Not because aesthetics is special, but because it is the one niche CQC <b>structurally cannot see</b>: purely cosmetic treatment is not a CQC "regulated activity" (DHSC: <i>"TDDI does not include interventions carried out purely for cosmetic purposes"</i>), so a botox/filler clinic never registers. Without this miner that niche would read as zero on the supply side. It catches an estimated 20&ndash;35% of new aesthetics formation; sole traders and mobile injectors remain invisible to everything.<br>'+
-  '<b>Read a company registration as a bet, not a business.</b> It costs &pound;50 and proves only that somebody typed a name into a form.</div>';
+function t2Table(){
+  var R=(RADAR.inc||[]).concat(RADAR.aes||[]);
+  if(!R.length)return srcMsg('inc','No new-company terms cleared the floor.');
+  var b=(RADAR.diag||{}).t2_base||{};
+  var h='';
+  if(b.growth!=null){
+    h+='<div class="warn"><b>Base rate: ALL new health companies grew '+
+      (b.growth>=0?'+':'')+Math.round(b.growth)+'% over the same window</b> ('+
+      num(b.prior)+' &rarr; '+num(b.now)+'). Every figure below is <b>net of that</b> &mdash; '+
+      'it is how much faster than health incorporations as a whole. '+
+      'Without this control T2 is not a demand signal: the UK register swings &plusmn;10&ndash;12% a year on '+
+      'Companies House fee changes alone (&pound;12&rarr;&pound;50 in May 2024, &rarr;&pound;100 in Feb 2026) and on compulsory ID verification (Nov 2025).</div>';
+  }
+  h+='<table><thead><tr><th class="l">#</th><th class="l">Niche term</th>'+
+    '<th data-k="latest">New (3m)</th><th data-k="raw">Raw growth</th>'+
+    '<th data-k="g12">vs base rate</th><th class="l">95% interval</th></tr></thead><tbody>';
+  R.forEach(function(r,i){
+    var nm=r.name+(r.niche?'<span class="niche">'+r.niche+'</span>':'')+
+      (r.isnew?'<span class="newtag">new</span>':'');
+    var ci=(r.ci_lo!=null&&r.ci_hi!=null)?
+      ('<span class="den">'+(r.ci_lo>=0?'+':'')+Math.round(r.ci_lo)+'% to '+
+       (r.ci_hi>=0?'+':'')+Math.round(r.ci_hi)+'%</span>'+
+       (r.ci_lo<=0?' <span class="thin">includes zero</span>':'')):
+      '<span class="na">&ndash;</span>';
+    h+='<tr data-latest="'+(r.latest||0)+'" data-raw="'+(r.raw_g12==null?-9999:r.raw_g12)+
+       '" data-g12="'+(r.g12==null?-9999:r.g12)+'"><td class="rk">'+(i+1)+'</td>'+
+       '<td class="nm">'+nm+'</td><td class="num">'+num(r.latest)+'</td>'+
+       '<td class="num">'+fmt(r.raw_g12)+'</td><td class="num g12">'+fmt(r.g12)+'</td>'+
+       '<td class="l">'+ci+'</td></tr>';});
+  return h+'</tbody></table><div class="note"><b>T2 &middot; months. The weakest tier on the dashboard, and here is why.</b> '+
+    'An incorporation costs &pound;100 and proves only that somebody typed a name into a form. It measures the <b>cost of entry</b> at least as much as demand &mdash; so it will reliably point you at the <i>cheapest</i> niche to enter, which is not the same as the best one.<br>'+
+    '<b>The counts are tiny, so the intervals are enormous.</b> A move from 13 to 29 companies reads as "+123%", but its 95% interval is <b>+16% to +329%</b>. Any interval that includes zero means the term has not been shown to be rising at all.<br>'+
+    '<b>Known artefacts we cannot fully strip:</b> a franchise filing 16 regional companies at once; clinicians incorporating personal service companies for tax reasons; a rebranding fashion. All three produce exactly this signal.<br>'+
+    '<b>Aesthetics terms are folded in here</b> &mdash; not because aesthetics is special, but because purely cosmetic clinics are <b>not CQC-registrable</b> (DHSC: <i>"TDDI does not include interventions carried out purely for cosmetic purposes"</i>), so without this miner that niche would read as zero supply.</div>';
+}
+document.getElementById('inbody').innerHTML=t2Table();
 
 document.getElementById('cqbody').innerHTML=(RADAR.cqc&&RADAR.cqc.length?tableRows(RADAR.cqc,'New (12m)',{firstCol:'Clinic niche'}):srcMsg('cqc','No CQC registrations in the window.'))+
   '<div class="note"><b>T3 · 6–18 months.</b> Locations newly registered with CQC, clustered by the words in their names. Scope: <b>Independent Healthcare</b> only. A clinic must register before it can legally trade, so this is committed capital. Counts are small (5–20 per niche) — a lead, not a measurement. See the Aesthetics tab for what this tier structurally cannot see.</div>'+
@@ -506,6 +539,34 @@ function discTable(){
 }
 document.getElementById('dcbody').innerHTML=discTable()+risingQ()+drugDisc();
 document.getElementById('ctbody').innerHTML=catTable();
+document.getElementById('adbody').innerHTML=panelTable();
+
+// ADOPTION, not entry. The one sensor here that can see an EXISTING clinic quietly
+// adding a service - which files no company, registers no location, and is invisible
+// to every other tab. Plausibly how ADHD actually spread.
+function panelTable(){
+  var P=RADAR.panel||[];
+  if(!P.length)return srcMsg('panel','The panel is still backfilling. It walks a fixed cohort of real UK clinic websites through the Internet Archive on a budget, so it fills in over several runs before it can report a trend.');
+  var h='<table><thead><tr><th class="l">#</th><th class="l">Service</th>'+
+    '<th data-k="now">Clinics offering it</th><th data-k="prior">A year ago</th>'+
+    '<th data-k="growth">Growth</th><th class="l">First seen</th>'+
+    '<th class="l q">Who just added it</th></tr></thead><tbody>';
+  P.forEach(function(r,i){
+    var g=(r.growth==null)?'<span class="na">&ndash;</span>':
+      '<span class="'+(r.growth>=25?'up':'')+'">'+(r.growth>=0?'+':'')+Math.round(r.growth)+'%</span>';
+    var who=(r.new_adopters||[]).slice(0,3).join(', ');
+    h+='<tr data-now="'+(r.clinics_now||0)+'" data-prior="'+(r.clinics_prior||0)+
+       '" data-growth="'+(r.growth==null?-9999:r.growth)+'"><td class="rk">'+(i+1)+'</td>'+
+       '<td class="nm">'+r.term+(r.niche?'<span class="niche">'+r.niche+'</span>':
+         '<span class="newtag">no known niche</span>')+'</td>'+
+       '<td class="num">'+num(r.clinics_now)+'</td><td class="num">'+num(r.clinics_prior)+'</td>'+
+       '<td class="num g12">'+g+'</td><td class="l">'+(r.first_seen||'')+'</td>'+
+       '<td class="l q">'+who+'</td></tr>';});
+  return h+'</tbody></table><div class="note"><b>Adoption, not entry &mdash; and this is the gap everything else on the dashboard leaves open.</b><br>'+
+    'Every other supply signal here is <b>name-mining</b>: it sees a company being incorporated, or a clinic being registered with CQC. But an <b>existing</b> clinic that starts offering a new service files nothing. It does not incorporate. It does not re-register. <b>It changes a page on its website.</b> That is invisible to every other tab &mdash; and it is plausibly how the ADHD boom actually spread: existing psychiatry and GP practices adding an assessment service, not founders incorporating "ADHD Ltd".<br>'+
+    'So this tab watches a <b>fixed cohort</b> of real UK independent-healthcare clinic websites (taken from CQC\'s own directory, which publishes each location\'s website), walks them back through the <b>Internet Archive</b>, and counts how many <b>distinct clinics</b> now advertise a service that did not advertise it before. Rows tagged <span class="newtag">no known niche</span> come from an open vocabulary &mdash; a service nobody pre-listed.<br>'+
+    '<b>Honest limits.</b> The cohort only contains CQC-registered clinics with a website, so sole-practitioner consultants &mdash; who may have been the actual first wave &mdash; are under-sampled. Blog posts are excluded (a page about ADHD is not the same as offering it). And the Archive\'s first sighting of a page is the date it <i>looked</i>, not the date the page appeared, so anything seen within three months of a site\'s first-ever capture is treated as pre-existing, never as a new adoption.</div>';
+}
 
 // Google's own RISING queries, harvested from broad seeds. This is the SEARCH-side open
 // layer - the earliest place a niche nobody listed can appear, because it needs no

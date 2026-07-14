@@ -224,22 +224,78 @@ def _prior_terms(dfrom, dto):
     return cnt
 
 
+def ch_total(dfrom, dto):
+    """How many NEW HEALTH COMPANIES were incorporated in this window, in total?
+
+    THE CONTROL GROUP. Without it, T2 is not a demand signal at all. The whole UK
+    register swings +/-10-12% a year on things that have nothing to do with healthcare
+    demand: Companies House raised its incorporation fee from GBP 12 to 50 in May 2024
+    and 50 to 100 in Feb 2026, and made identity verification compulsory in Nov 2025.
+    A term that grew +30% in a year when ALL health incorporations grew +30% has not
+    grown at all. We were reporting that difference as demand. This fixes it.
+    """
+    tot = 0
+    for sic in HEALTH_SICS:
+        d = ch_page(sic, dfrom, dto, 0)
+        if isinstance(d, dict) and d.get("hits") is not None:
+            tot += int(d["hits"])
+    return tot or None
+
+
+def poisson_ci(now, prior):
+    """95% interval on a ratio of two small counts (Poisson). 13 -> 29 is +123% --
+    and its interval is +16% to +329%. Reporting the point estimate alone is a lie
+    about precision. Returns (lo_pct, hi_pct) or None."""
+    import math
+    if not now or not prior or prior <= 0:
+        return None
+    # log-ratio SE for two Poisson counts
+    se = math.sqrt(1.0 / now + 1.0 / prior)
+    r = float(now) / prior
+    lo = math.exp(math.log(r) - 1.96 * se)
+    hi = math.exp(math.log(r) + 1.96 * se)
+    return ((lo - 1) * 100.0, (hi - 1) * 100.0)
+
+
 def incorporations():
-    """T2 ENTRY - founders registering companies to serve a niche."""
+    """T2 ENTRY - founders registering companies to serve a niche.
+
+    READ THIS TIER WITH CARE. An incorporation costs GBP 100 and proves only that
+    somebody typed a name into a form. It measures COST OF ENTRY as much as demand,
+    so every number here is reported (a) net of the all-health base rate, and
+    (b) with a 95% interval, because the counts are tiny.
+    """
     if not CH_KEY:
         return None
     t = date.today().replace(day=1)
-    recent = name_terms(add_months(t, -3).isoformat(), t.isoformat())
-    prior = _prior_terms(add_months(t, -15).isoformat(),
-                         add_months(t, -12).isoformat())
+    w_now = (add_months(t, -3).isoformat(), t.isoformat())
+    w_old = (add_months(t, -15).isoformat(), add_months(t, -12).isoformat())
+
+    recent = name_terms(*w_now)
+    prior = _prior_terms(*w_old)
+
+    base_now, base_old = ch_total(*w_now), ch_total(*w_old)
+    base_g = pct(base_now, base_old) if (base_now and base_old) else None
+    DIAG["t2_base"] = {"now": base_now, "prior": base_old, "growth": base_g}
+
     rows = []
     for term, c in recent.items():
         if c < 4:
             continue
         p = prior.get(term, 0)
+        g12 = pct(c, p) if p >= 3 else None
+        ci = poisson_ci(c, p) if p >= 3 else None
+        # EXCESS over the base rate: how much faster than health incorporations
+        # as a whole. This, not g12, is the number that means anything.
+        excess = None
+        if g12 is not None and base_g is not None:
+            excess = ((1 + g12 / 100.0) / (1 + base_g / 100.0) - 1) * 100.0
         rows.append({"name": term, "niche": niche_of(term), "latest": c,
                      "g1": None, "g3": None,
-                     "g12": pct(c, p) if p >= 3 else None,
+                     "g12": excess if excess is not None else g12,
+                     "raw_g12": g12, "excess": excess,
+                     "base_growth": base_g,
+                     "ci_lo": ci[0] if ci else None, "ci_hi": ci[1] if ci else None,
                      "accel": None, "isnew": p == 0})
     rows.sort(key=lambda r: (r["g12"] is not None,
                              r["g12"] if r["g12"] is not None else 0, r["latest"]), reverse=True)
@@ -611,6 +667,7 @@ def main():
     import nhs_rtt, aesthetics as aes_mod, investability2 as inv2
     import discovery2 as disc_mod, interpret as interp
     import nhsbsa_epd, trends_open as t_open, catalysts as cat_mod
+    import panel as panel_mod
 
     inc = safe(incorporations, "T2 incorporations", key="inc") or []
     ods = safe(fetch_cqc_ods, "CQC ods (one download, ONE shared parse)")
@@ -659,6 +716,17 @@ def main():
     # licensed 24 Sep 2021, ~23 months before the UK weight-loss boom. Blind to ADHD
     # (no new molecule created it), so it is a side panel, never a scoring tier.
     cats = safe(cat_mod.catalysts, "Catalysts (MHRA licences)", key="cats") or []
+
+    # ADOPTION, not entry. Every other supply signal is name-mining: it sees a company
+    # being incorporated or a clinic being registered. But an EXISTING clinic that adds
+    # a new service line files nothing - it just changes a page on its website. That is
+    # invisible to the rest of this dashboard, and it is plausibly how ADHD actually
+    # spread (existing psychiatry/GP practices adding assessment, not founders
+    # incorporating "ADHD Ltd"). This panel watches a fixed cohort of real UK clinic
+    # websites via the Internet Archive and counts DISTINCT CLINICS adopting a service.
+    # Budgeted and resumable - it backfills over several runs, then only tracks forward.
+    pnl = safe(panel_mod.panel, "Panel (service adoption)", niche_of,
+               cdx_budget=120, key="panel") or []
     tracked = [r for r in presc if r.get("kind") != "discovery"]
     drugdisc = [r for r in presc if r.get("kind") == "discovery"]
     STATUS["drugdisc"] = STATUS.get("presc", "failed")  # same source, 2nd payload key
@@ -683,6 +751,7 @@ def main():
     data = {"waits": waits, "trends": tr, "inc": inc, "aes": aes, "cqc": cq,
             "jobs": jobs, "moved": moved, "invest": invest, "disc": disc,
             "presc": tracked, "drugdisc": drugdisc, "topen": topen, "cats": cats,
+            "panel": pnl,
             "status": STATUS, "diag": DIAG, "drugs": DRUGS,
             "nopresc": NICHES_NO_PRESCRIBING}
     payload = json.dumps(data).replace("</", "<\\/")
@@ -704,7 +773,8 @@ def main():
 
     print(f"waits={len(waits)} trends={len(tr)} inc={len(inc)} aes={len(aes)} cqc={len(cq)} "
           f"presc={len(tracked)} drugdisc={len(drugdisc)} invest={len(invest)} "
-          f"discovery={len(disc)} topen={len(topen)} catalysts={len(cats)} moved={len(moved)}")
+          f"discovery={len(disc)} topen={len(topen)} catalysts={len(cats)} "
+          f"panel={len(pnl)} moved={len(moved)}")
 
 
 from template import TEMPLATE
