@@ -1,11 +1,11 @@
 {
  "complete": false,
- "made_progress": true,
+ "made_progress": false,
  "t2_cells_fetched": 1010,
  "t2_cells_total": 5940,
- "t2_cells_new_this_run": 59,
+ "t2_cells_new_this_run": 0,
  "t4_months_fetched": 148,
  "t4_months_total": 148,
- "wall_minutes": 44.0,
- "generated": "2026-07-14T19:46:19.212347+00:00"
+ "wall_minutes": 43.1,
+ "generated": "2026-07-14T20:29:43.542815+00:00"
 }

@@ -1,5 +1,5 @@
 {
- "generated": "2026-07-14T19:46:19.208038+00:00",
+ "generated": "2026-07-14T20:29:43.538811+00:00",
  "cutoff": "2022-03",
  "windows": {
   "T1": [
@@ -1175,14 +1175,14 @@
   "t4_codes": 23,
   "t4": "cache hit - 148/148 months, 0 calls",
   "t2_cells_total": 5940,
-  "t2_cells_cached": 951,
+  "t2_cells_cached": 1010,
   "t2_deadline_hit": true,
-  "t2_calls_spent": 1427,
+  "t2_calls_spent": 1366,
   "t2_errors": {
-   "HTTP 404": 1285,
-   "exhausted": 81
+   "HTTP 404": 1303,
+   "exhausted": 63
   },
-  "t2_cells_new_this_run": 59,
+  "t2_cells_new_this_run": 0,
   "t2_coverage": 0.17,
   "t2": "PARTIAL - 1010/5940 cells (4930 left; re-run to resume, the cache persists)",
   "cqc_active_url": "https://www.cqc.org.uk/sites/default/files/2026-07/01_July_2026_HSCA_Active_Locations.ods",
