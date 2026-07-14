@@ -1,0 +1,25 @@
+cohort: 5 private psychiatry / GP clinics with websites
+
+CLINICS IN THE PANEL WITH AN ADHD PAGE, BY YEAR
+(the count is cumulative: a clinic stays counted once it has one)
+
+0 of 0 clinics with an ADHD page were already showing it when the Archive first crawled them - their adoption date is unknown and they are counted in the base, never as new adopters.
+
+DIAG: {
+ "cdx": {
+  "domains_due": 0,
+  "domains_indexed_this_run": 0,
+  "calls": 0,
+  "budget": 400,
+  "blocked": false
+ },
+ "panel": {
+  "cohort": 5,
+  "clinics_with_archive_history": 5,
+  "coverage_pct": 100.0,
+  "distinct_terms_observed": 4730,
+  "anchor_month": "2026-07",
+  "months": 60,
+  "text_sensor": false
+ }
+}
