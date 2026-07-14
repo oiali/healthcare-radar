@@ -277,12 +277,12 @@ def _tops(now, prev, weights, already):
 
 
 def _watchlist(now, weights):
-    """The acquisition window: early tiers lit, late tier dark.
+    """Still early: the lead tiers are lit and the lag tier is not.
 
-    T1 (search) and T2 (companies) are the lead indicators; T3 (CQC clinic
-    registrations) is the lag. Demand and founders present, capacity not yet built =
-    the window in which you can still buy the operators cheaply. Once T3 lights up
-    you are bidding against everyone who read the same signal.
+    T1 (search) and T2 (new companies) are the lead indicators; T3 (CQC clinic
+    registrations) is the lag. People are looking and founders are moving, but the
+    capacity has not been built yet - so you are seeing it before it is obvious.
+    Once T3 lights up, everyone who reads the same signal is looking at it too.
 
     A niche with NO T3 value at all is not the same as a niche whose T3 is flat, and
     the two are labelled differently: absence of capacity and absence of measurement
@@ -499,14 +499,12 @@ def digest(data, history, state=None):
         "on a company or clinic name. Names lie, and short keys collide with "
         "surnames. Treat any single-niche number as indicative.",
         "Assumed: that a +10% weighted 12-month growth means anything. It is a line "
-        "drawn by hand, not a fitted threshold, and it has never been backtested "
-        "against a niche that actually turned out to be investable.",
-        "Not covered: Tier 4, NHS prescribing. It is fetched in your browser "
-        "(OpenPrescribing blocks datacentre IPs) so it is not in the daily data file "
-        "and cannot be in this digest. \"Nothing crossed\" does not include "
-        "prescribing - open the dashboard for that.",
-        "Also not covered: job ads. They are on the dashboard but not in the "
-        "week-on-week history, so tier 3 here means CQC registrations only.",
+        "drawn by hand, not a fitted threshold.",
+        "Tier 4 (NHS prescribing) now runs on the server, from NHSBSA's own data "
+        "with 12 years of history, so it IS in this digest. It used to be fetched in "
+        "your browser and was invisible here.",
+        "Job ads have been removed entirely: Adzuna's terms forbid using their data "
+        "in aggregation, including vacancy counts, which was exactly our use.",
         "Windows differ by tier and are not comparable: %s; %s; %s."
         % (TIER_SRC["t1"], TIER_SRC["t2"], TIER_SRC["t3"]),
         "CQC publishes monthly. A tier-3 move is a step when the new file lands, not "

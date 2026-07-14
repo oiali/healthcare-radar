@@ -2,26 +2,35 @@
 """
 UK Healthcare Niche Radar - build script (runs daily on GitHub Actions).
 
-Sources are STACKED by how early they fire in the demand chain:
+A GENERAL TREND TRACKER. Not a roll-up / M&A tool. The one question it answers:
+    what UK private-pay healthcare niche is rising, and how early am I seeing it?
 
-  T0  PRESSURE    NHS RTT waits worsening (NHS England)        the causal driver
-  T1  INTENT      Google search interest (SerpApi)             weeks,   0 lag
-  T2  ENTRY       New company incorporations (Companies House) months,  days lag
-                  + a dedicated aesthetics miner, because botox/filler-only clinics
-                    are NOT CQC-registrable and are invisible to T3
-  T3  CAPACITY    New CQC clinic registrations + job ads       6-18 mth, monthly
-  T4  CONSUMPTION NHS prescribing (OpenPrescribing)            12+ mth, 2-mth lag
+Sources, ordered by how early they fire:
 
-Plus an INVESTABILITY layer: target density + fragmentation per niche, because a
-rising niche with no acquirable population of independent operators is not a roll-up.
+  CATALYSTS  New UK medicine licences (MHRA via GOV.UK)   YEARS ahead, when a drug
+             creates a market. Wegovy was licensed 24 Sep 2021, ~23 months before the
+             UK weight-loss boom. Blind to ADHD (no new molecule) - a panel, not a tier.
+  T0  NHS RTT waits worsening (NHS England)               the upstream pressure that
+             pushes people private at all. Elective care only - blind to weight-loss/ADHD.
+  T1  Google search interest (SerpApi)                    weeks, no lag
+      + RISING QUERIES harvested from broad seeds = the search-side open layer
+  T2  New company incorporations (Companies House)        months
+      + a dedicated aesthetics miner, because botox/filler-only clinics are NOT
+        CQC-registrable and are therefore invisible to T3
+  T3  New CQC clinic registrations                        6-18 months
+  T4  NHS prescribing (NHSBSA English Prescribing Dataset) ~2.5-month lag, 12 YEARS of
+      history. Runs server-side. (OpenPrescribing served only 60 months and 403s
+      datacentre IPs - that window is why the ADHD boom once looked un-backtestable.)
 
-Every source is mapped onto a SHARED niche taxonomy so the same niche can be
-tracked across all four tiers. The Stack tab shows, per niche, which tiers have
-fired -> how far along the chain it is -> whether it is still early.
+THE OPEN LAYER is the point. A fixed taxonomy of 25 niches can only ever re-rank things
+we already thought of; it can never surface the next ADHD. So three sources feed a
+DISCOVERY surface of things that map to NO known niche: rising company/clinic name
+phrases, rising Google queries, and rising NHS chemicals.
 
-Writes dashboard.html + data.json.
-Persists data/trends.json, data/trend_terms.json, data/adzuna_history.json,
-data/history.json (for the week-on-week "what moved" panel).
+Market structure (who is in a niche: many small operators vs already consolidated) is
+CONTEXT only. It never decides a verdict.
+
+Writes dashboard.html + data.json. Persists data/*.json for week-on-week change.
 """
 
 import os, re, json, base64, shutil, zipfile, tempfile, urllib.request, urllib.parse
@@ -545,7 +554,7 @@ def safe(fn, label, *a, **k):
 
 def main():
     import nhs_rtt, aesthetics as aes_mod, investability2 as inv2
-    import discovery2 as disc_mod, interpret as interp, targets as tgt_mod
+    import discovery2 as disc_mod, interpret as interp
     import nhsbsa_epd, trends_open as t_open, catalysts as cat_mod
 
     inc = safe(incorporations, "T2 incorporations") or []
@@ -598,13 +607,11 @@ def main():
     jobs = []          # Adzuna REMOVED: its ToS forbids aggregation/vacancy counts.
     moved = whats_moved(tr_indep, inc, cq)
 
-    # Target list = named individuals + an INFERRED claim they may want to sell.
-    # The repo is PUBLIC. Publishing that would be indefensible. Off unless explicitly
-    # enabled (i.e. once the repo is private). Aggregate counts are safe and still shipped.
-    tgts = {}
-    if os.environ.get("TARGETS_OK") == "1":
-        tgts = safe(tgt_mod.targets, "targets", niche_of, path=ods, ch_budget=300) or {}
-    DIAG["targets_enabled"] = bool(tgts)
+    # targets.py is NOT called. It builds a list of named clinic owners annotated with
+    # an INFERRED claim that they may want to sell - a roll-up tool, and this is a
+    # trend tracker. It stays in the repo only because investability2 reuses its
+    # owner-dedupe (grouping providers that share a director or registered address).
+    DIAG["targets_enabled"] = False
 
     updated = datetime.now(timezone.utc).strftime("%d %b %Y, %H:%M UTC")
     data = {"waits": waits, "trends": tr, "inc": inc, "aes": aes, "cqc": cq,
