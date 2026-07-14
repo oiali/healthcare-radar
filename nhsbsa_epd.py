@@ -73,7 +73,7 @@ import json
 import math
 import urllib.parse
 import urllib.request
-from datetime import date
+from datetime import date, timedelta
 
 BASE = "https://opendata.nhsbsa.net/api/3/action/datastore_search_sql"
 UA = {"User-Agent": "Mozilla/5.0 (compatible; healthcare-radar)"}
@@ -99,6 +99,13 @@ LAGS = (0, 1, 3, 12, 60)
 # Politeness / Actions budget. A month is immutable, so a partial backfill is not a
 # failure - it just means the deep history fills in over the next few runs.
 MAX_FETCHES_PER_RUN = 8
+
+# A month that FAILS (404 / timeout / null-trap) is tombstoned for this many days
+# under hist["_failed"]. Without it, absence and failure looked identical to
+# refresh(), so a permanently-missing month was refetched EVERY day - up to
+# 8 x 120s timeouts of pure hang, spending the whole budget on the same doomed keys.
+FAILED_RETRY_DAYS = 7
+FAILED_KEY = "_failed"
 
 # A "rising chemical" must clear this in the latest month before we will show it.
 # Below it, percentage growth is noise: 3 items becoming 9 is +200% and means nothing.
@@ -276,21 +283,39 @@ def wanted_months(latest):
     return out
 
 
-def refresh(latest, hist, getter=None, budget=MAX_FETCHES_PER_RUN):
+def refresh(latest, hist, getter=None, budget=MAX_FETCHES_PER_RUN, today=None):
     """Fetch what is missing, up to the budget. Cached months are never refetched -
-    a published month is immutable."""
+    a published month is immutable.
+
+    A month that fails is recorded under hist[FAILED_KEY] with a retry-after date and
+    is not asked for again until that date. A doomed month must cost one attempt a
+    week, not two minutes of hang every day. Success clears the tombstone, so a month
+    that was merely published late is picked up on the next retry."""
+    today = today or date.today()
+    failed = hist.get(FAILED_KEY)
+    if not isinstance(failed, dict):
+        failed = {}
     fetched = 0
     for key in wanted_months(latest):
         if key in hist:
+            continue
+        retry_after = failed.get(key)
+        if retry_after and today.isoformat() < retry_after:
             continue
         if fetched >= budget:
             break
         got = fetch_month(key, getter)
         fetched += 1
         if got is None:
+            failed[key] = (today + timedelta(days=FAILED_RETRY_DAYS)).isoformat()
             continue
+        failed.pop(key, None)
         counts, names = got
         hist[key] = {"counts": counts, "names": names}
+    if failed:
+        hist[FAILED_KEY] = failed
+    else:
+        hist.pop(FAILED_KEY, None)
     return hist, fetched
 
 
@@ -410,8 +435,9 @@ def epd(niche_codes=None, getter=None, history_file=None):
         _save(path, hist)
 
     # If the newest month is not in yet (NHSBSA slips), fall back to the newest month
-    # we actually hold rather than blanking the tier.
-    have = sorted(hist)
+    # we actually hold rather than blanking the tier. Keys beginning "_" are
+    # bookkeeping (failure tombstones), never month data.
+    have = sorted(k for k in hist if not k.startswith("_"))
     if not have:
         return None
     if latest not in hist:
@@ -588,6 +614,45 @@ def _tests():
     del calls[:]
     refresh("2026-04", h2, counting_getter, budget=3)
     check("cached months are not refetched", len(calls) == 3)   # 3 NEW ones, not the 3 held
+
+    # ---- 11. failed months are TOMBSTONED, not refetched every day
+    t0 = date(2026, 7, 14)
+    calls3 = []
+
+    def dead_getter(url):
+        calls3.append(url)
+        raise IOError("NHSBSA down")
+
+    n_want = len(wanted_months("2026-04"))
+    h3, _ = refresh("2026-04", {}, dead_getter, budget=99, today=t0)
+    check("every wanted month attempted once on day 1", len(calls3) == n_want)
+    check("failed months carry a retry-after date",
+          (h3.get(FAILED_KEY) or {}).get("2026-04") == "2026-07-21")
+    check("no month entry is created for a failure",
+          all(k == FAILED_KEY for k in h3))
+    del calls3[:]
+    refresh("2026-04", h3, dead_getter, budget=99, today=t0)
+    check("inside the window a tombstoned month costs ZERO fetches",
+          len(calls3) == 0)
+    del calls3[:]
+    refresh("2026-04", h3, dead_getter, budget=99, today=date(2026, 7, 21))
+    check("on the retry-after date it is tried again", len(calls3) == n_want)
+    # the day-21 failures re-tombstoned everything until the 28th
+    h4, _ = refresh("2026-04", h3, counting_getter, budget=99, today=date(2026, 7, 28))
+    check("a success clears the tombstone",
+          "2026-04" not in (h4.get(FAILED_KEY) or {}))
+    check("tombstones never read as month data",
+          _niche_items({FAILED_KEY: {"2026-04": "2026-07-21"}}, "2026-04",
+                       ["0404000U0"]) is None)
+    import tempfile as _tf
+    _d = _tf.mkdtemp(prefix="epd_t11_")
+    _hp = os.path.join(_d, "h.json")
+    with open(_hp, "w") as _fh:
+        json.dump({FAILED_KEY: {"2099-01": "2099-01-08"},
+                   "2026-04": hist["2026-04"]}, _fh)
+    _out = epd(niche_codes=nc, getter=_boom, history_file=_hp)
+    check("epd never mistakes the _failed record for the latest month",
+          _out is not None and all(r.get("period") == "2026-04" for r in _out))
 
     print("\n%d passed, %d failed" % (len(ok), len(fail)))
     for f in fail:

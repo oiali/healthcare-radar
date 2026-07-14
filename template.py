@@ -65,7 +65,6 @@ td.q{max-width:300px}
   <div class="tab" data-p="wt"><span class="t">T0</span>NHS waits</div>
   <div class="tab" data-p="tr"><span class="t">T1</span>Search</div>
   <div class="tab" data-p="in"><span class="t">T2</span>New companies</div>
-  <div class="tab" data-p="ae"><span class="t">T2</span>Aesthetics</div>
   <div class="tab" data-p="cq"><span class="t">T3</span>New clinics</div>
   <div class="tab" data-p="pr"><span class="t">T4</span>Prescribing</div>
   <div class="tab" data-p="iv">Market structure</div>
@@ -76,7 +75,6 @@ td.q{max-width:300px}
 <div class="panel" id="wt"><div id="wtbody"></div></div>
 <div class="panel" id="tr"><div id="trbody"></div></div>
 <div class="panel" id="in"><div id="inbody"></div></div>
-<div class="panel" id="ae"><div id="aebody"></div></div>
 <div class="panel" id="cq"><div id="cqbody"></div></div>
 <div class="panel" id="pr"><div id="prbody" class="msg">Fetching live prescribing&hellip;</div></div>
 <div class="panel" id="iv"><div id="ivbody"></div></div>
@@ -87,6 +85,25 @@ var DRUGQ = RADAR.drugq||{};          // niche -> comma-separated BNF codes (bat
 var DRUGS = RADAR.drugs||{};          // code -> [name, niche, treats]
 var NOPRESC = RADAR.nopresc||[];      // niches with NO valid NHS prescribing proxy -> show n/a, not a dash
 var RISING = 10;
+var STATUS = RADAR.status||{};
+var SRCNAME = {waits:'NHS waiting times', trends:'Google search', inc:'New companies',
+  aes:'Aesthetics miner', cqc:'New CQC clinics', invest:'Market structure',
+  disc:'Discovery (open layer)', presc:'NHS prescribing', drugdisc:'Rising drugs',
+  topen:'Rising Google queries', cats:'Medicine licences'};
+function failedBanner(){
+  var bad=[];for(var k in STATUS){if(STATUS[k]==='failed')bad.push(SRCNAME[k]||k);}
+  if(!bad.length)return '';
+  return '<div class="warn"><b>'+bad.length+' source'+(bad.length>1?'s':'')+' failed today: '+
+    bad.join(', ')+'.</b> Where you see an empty tab or a dash for these, it means <b>we could '+
+    'not fetch the data</b> &mdash; not that there is nothing there. Do not read a failure as a zero.</div>';
+}
+// A source that FAILED must say so, not print a cheerful "nothing found".
+function srcMsg(key, emptyMsg){
+  if(STATUS[key]==='failed')
+    return '<div class="warn"><b>'+(SRCNAME[key]||key)+' failed to load today.</b> This is not '+
+           'an empty result &mdash; the source could not be reached. Check the run log.</div>';
+  return '<div class="msg">'+emptyMsg+'</div>';
+}
 
 function pct(a,b){return (b&&a!=null)?((a/b-1)*100):null;}
 function fmt(x){return x==null?'<span class="na">&ndash;</span>':(x>=0?'+':'')+Math.round(x)+'%';}
@@ -324,13 +341,17 @@ var STRUCTCLS={fragmented:'sp-frag',rushing:'sp-fill',consolidated:'sp-cons',
                tiny:'sp-none',unknown:'sp-unk'};
 function ivBadge(v){
   if(!v)return '<span class="iv iv-na">no data</span>';
-  var s=v.verdict||'';var c='iv-mid';
-  if(/too small|already consolidated/i.test(s))c='iv-no';
-  else if(/fragmented|runway/i.test(s))c='iv-go';
-  var tip=(v.providers!=null?v.providers+' providers, '+v.locations+' locations, '+
-    (v.single_site_pct!=null?Math.round(v.single_site_pct)+'% single-site':''):'');
-  return '<span class="iv '+c+'" title="'+tip.replace(/"/g,'&quot;')+'">'+s+'</span>';
+  // Deliberately NOT rendering investability2's own verdict string - it is written in
+  // roll-up language ("real roll-up runway"). This is a trend tracker; market structure
+  // is context. So we describe the structure and let the reader draw the conclusion.
+  var st=readStructure(v), k=st[0], er=st[1];
+  var txt=STRUCTTXT[k]||'unknown';
+  if(er!=null)txt+=' &middot; '+Math.round(er)+'% opened in the last year';
+  var tip=((v.owners_economic||v.providers||'?')+' operators, '+(v.locations||'?')+' sites'+
+    (v.single_site_pct!=null?', '+Math.round(v.single_site_pct)+'% single-site':''));
+  return '<span class="sp '+(STRUCTCLS[k]||'sp-unk')+'" title="'+tip.replace(/"/g,'&quot;')+'">'+txt+'</span>';
 }
+
 function buildStack(presc){
   var A0=aggB(RADAR.waits), A1=aggB(RADAR.trends,{index:true,independentOnly:true}),
       A2=aggB((RADAR.inc||[]).concat(RADAR.aes||[])), A3=aggB(RADAR.cqc), A4=aggB(presc);
@@ -352,7 +373,8 @@ function buildStack(presc){
     if(ya!==xa)return ya-xa;
     return (y.t2==null?-9e9:y.t2)-(x.t2==null?-9e9:x.t2);});
 
-  var h='<div class="chain"><b>What is rising, and how early are you seeing it?</b> '+
+  var h=failedBanner();
+  h+='<div class="chain"><b>What is rising, and how early are you seeing it?</b> '+
     'Read left to right: <b>T1 search</b> (weeks) &rarr; <b>T2 new companies</b> (months) &rarr; '+
     '<b>T3 new clinics</b> (6&ndash;18 mth) &rarr; <b>T4 NHS prescribing</b> (12+ mth). '+
     '<b>T0 NHS waits</b> sits upstream of all of it &mdash; it is the pressure that pushes people private in the first place.<br>'+
@@ -367,7 +389,7 @@ function buildStack(presc){
   if(RADAR.moved&&RADAR.moved.length){
     h+='<div class="mv"><b>What moved in the last 7 days</b><ul>';
     RADAR.moved.forEach(function(m){
-      h+='<li>'+m.niche+' — now firing on <b>'+m.to+'</b> of the 3 early tiers (was '+m.from+' on '+m.since+')</li>';});
+      h+='<li>'+m.niche+' — now firing on <b>'+m.to+'</b> of the 4 tiers (was '+m.from+' on '+m.since+')</li>';});
     h+='</ul></div>';
   }
 
@@ -401,12 +423,12 @@ function buildStack(presc){
 }
 
 document.getElementById('wtbody').innerHTML=(RADAR.waits&&RADAR.waits.length?
-  tableRows(RADAR.waits,'Waiting',{firstCol:'NHS specialty'}):'<div class="msg">NHS RTT data unavailable this run.</div>')+
+  tableRows(RADAR.waits,'Waiting',{firstCol:'NHS specialty'}):srcMsg('waits','No NHS RTT rows.'))+
   '<div class="note"><b>T0 · the causal driver.</b> NHS England Referral-to-Treatment waits. Growth is measured on the <b>count waiting over 18 weeks</b> — deterioration in NHS access — not on total volume. When the NHS stops coping, patients go private; everything else on this dashboard is downstream of this. <b>Limits:</b> England only, ~6 weeks in arrears, consultant-led elective care only — so it is <b>blind to weight-loss and ADHD</b>, the two biggest private-pay niches. g1 is noisy (non-submitting trusts create fake swings); trust g3/g12.</div>';
 
 document.getElementById('trbody').innerHTML=(RADAR.trends&&RADAR.trends.length?
   tableRows(RADAR.trends,'Index',{firstCol:'Search term',index:true}):
-  '<div class="msg">Search data appears after the next weekly run.</div>')+
+  srcMsg('trends','Search data appears after the next weekly run.'))+
   '<div class="note"><b>T1 &middot; the only early DEMAND signal on this dashboard.</b> '+
   'UK Google search interest (SerpApi), weekly.<br>'+
   '<b>Terms tagged <span class="auto">auto-found &middot; no vote</span> are '+
@@ -421,26 +443,21 @@ document.getElementById('trbody').innerHTML=(RADAR.trends&&RADAR.trends.length?
   'window. It cannot see a multi-year build-up, and a term that has been flat-but-huge '+
   'for three years reads the same as a term nobody searches for.</div>';
 
-document.getElementById('inbody').innerHTML=tableRows(RADAR.inc,'New (3m)',{firstCol:'Niche term'})+
-  '<div class="note"><b>T2 · months.</b> Words rising fastest in the <b>names</b> of newly-incorporated health companies (9 SIC codes incl. 86210 general medical practice, where the ADHD/menopause/GLP-1 telehealth operators register). Incorporating is the cheapest possible bet on a niche, which is why it moves early.</div>'+
-  ' <b>Read this as a WARNING, not a buy signal.</b> Every new company here is a future '+
-  'competitor and a seller who has no reason to sell. Incorporating is the cheapest '+
-  'possible bet on a niche (about £50), which is why it moves early — and why '+
-  'it proves almost nothing. Blank growth = year-ago base under 3.';
+document.getElementById('inbody').innerHTML=
+  tableRows((RADAR.inc||[]).concat(RADAR.aes||[]),'New (3m)',{firstCol:'Niche term'})+
+  '<div class="note"><b>T2 &middot; months.</b> Words and phrases rising fastest in the <b>names</b> of newly-incorporated health companies (9 SIC codes, incl. 86210 general medical practice &mdash; where the ADHD/menopause/GLP-1 telehealth operators actually register). Incorporating is the cheapest possible bet on a niche, which is why it moves early.<br>'+
+  '<b>Aesthetics terms are mined separately and folded in here.</b> Not because aesthetics is special, but because it is the one niche CQC <b>structurally cannot see</b>: purely cosmetic treatment is not a CQC "regulated activity" (DHSC: <i>"TDDI does not include interventions carried out purely for cosmetic purposes"</i>), so a botox/filler clinic never registers. Without this miner that niche would read as zero on the supply side. It catches an estimated 20&ndash;35% of new aesthetics formation; sole traders and mobile injectors remain invisible to everything.<br>'+
+  '<b>Read a company registration as a bet, not a business.</b> It costs &pound;50 and proves only that somebody typed a name into a form.</div>';
 
-document.getElementById('aebody').innerHTML=(RADAR.aes&&RADAR.aes.length?
-  tableRows(RADAR.aes,'New (12m)',{firstCol:'Aesthetics keyword'}):'<div class="msg">Aesthetics miner returned nothing this run.</div>')+
-  '<div class="note"><b>T2 · the CQC blind spot, closed.</b> Purely cosmetic treatment is <b>not</b> a CQC "regulated activity" — DHSC: <i>"TDDI does not include interventions carried out purely for cosmetic purposes."</i> So a botox/filler clinic needs no CQC registration and is <b>invisible to T3</b>. The Health and Care Act 2022 s.180 licensing scheme has <b>not commenced</b> — there is no register to read. Companies House is therefore the only national, dated record of an aesthetics business coming into existence. This tab mines 96 curated keywords (profhilo, polynucleotide, microneedling, HIFU, medispa…) across 8 SIC codes, whole-word matched. <b>Captures an estimated 20–35% of new aesthetics formation</b> (vs ~0% before); sole traders and mobile injectors — over half the entrants — remain unobservable. Read <i>latest</i> as a formation index, <b>not</b> a clinic count.</div>';
-
-document.getElementById('cqbody').innerHTML=(RADAR.cqc&&RADAR.cqc.length?tableRows(RADAR.cqc,'New (12m)',{firstCol:'Clinic niche'}):'<div class="msg">No CQC data this run.</div>')+
+document.getElementById('cqbody').innerHTML=(RADAR.cqc&&RADAR.cqc.length?tableRows(RADAR.cqc,'New (12m)',{firstCol:'Clinic niche'}):srcMsg('cqc','No CQC registrations in the window.'))+
   '<div class="note"><b>T3 · 6–18 months.</b> Locations newly registered with CQC, clustered by the words in their names. Scope: <b>Independent Healthcare</b> only. A clinic must register before it can legally trade, so this is committed capital. Counts are small (5–20 per niche) — a lead, not a measurement. See the Aesthetics tab for what this tier structurally cannot see.</div>'+
-  ' <b>Also a warning, not a buy signal.</b> A new clinic registration is committed '+
-  'capital arriving to compete with the assets you want to buy. On the Stack, T3 rising '+
-  'is what pushes a niche into <i>"Wait or build — new clinics still arriving"</i>.';
+  ' <b>Read a clinic registration as capital committed.</b> Somebody has spent real money '+
+  'and waited months for CQC. That is a much harder signal than a company registration &mdash; '+
+  'and a much later one.';
 
 function ivTable(){
   var IV=RADAR.invest||{};var ks=Object.keys(IV);
-  if(!ks.length)return '<div class="msg">Investability not computed this run.</div>';
+  if(!ks.length)return srcMsg('invest','Market structure not computed this run.');
   var rows=ks.map(function(k){var v=IV[k];v._n=k;return v;});
   rows.sort(function(a,b){return (b.providers||0)-(a.providers||0);});
   var h='<table><thead><tr><th class="l">#</th><th class="l">Niche</th><th data-k="providers">Providers</th>'+
@@ -456,36 +473,36 @@ function ivTable(){
        '<td class="num">'+(v.top5_share!=null?Math.round(v.top5_share)+'%':'&ndash;')+'</td>'+
        '<td class="l">'+ivBadge(v)+'</td></tr>';});
   return h+'</tbody></table><div class="note"><b>Who is actually in this niche?</b> Context for the Stack, not a verdict. This is the <b>entire active CQC population</b> (a stock, not a flow), grouped by <b>economic owner</b> &mdash; providers sharing a director or registered address are merged, so a group holding twelve Ltds counts once. Many small operators = a fragmented, competitive niche. A high top-5 share = someone big already owns it. The <b>entry rate</b> (share of the standing stock that registered in the last year) separates a genuine gold rush from a settled market: ~22% of weight-loss clinics opened last year; ~5% of dental practices did. <b>Two blind spots:</b> non-surgical aesthetics clinics are not CQC-registrable at all, so aesthetics is under-counted here; and owner-merging can only merge, never split, so the operator count is an upper bound.</div>'+
-  ' <b>What this tab still does not tell you:</b> whether the owners are TIRED. A '+
-  'fragmented population of 500 clinics that all opened last year is not a roll-up — '+
-  'it is a gold rush you would be bidding into. The <b>New sites</b> column on the Stack '+
-  'is the fix: it divides the new registrations by the standing stock, and it is the '+
-  'single most useful number on this dashboard for a buyer.';
+  ' <b>What this tab does NOT tell you:</b> whether a niche is any good. It only tells you '+
+  'who is in it. A fragmented niche can be fragmented because it is new and nobody has '+
+  'scaled yet, or because it is old and nobody ever will. The <b>entry rate</b> column '+
+  'separates those two: it is the share of the standing stock that registered in the '+
+  'last year.';
 }
 document.getElementById('ivbody').innerHTML=ivTable();
 
 function discTable(){
   var D=RADAR.disc||[];
-  if(!D.length)return '<div class="msg">Nothing unclassified is rising fast enough to show. That is a real result, not a failure.</div>';
+  if(!D.length)return srcMsg('disc','Nothing unclassified cleared the bar this run. That is a real result: no phrase had enough unrelated operators, across enough regions, rising by more than arrival noise can explain.');
   var h='<table><thead><tr><th class="l">#</th><th class="l">Phrase</th>'+
-    '<th data-k="ops">Distinct operators</th><th data-k="c12">Last 12m</th>'+
-    '<th data-k="prior">Prior 12m</th><th data-k="growth">Growth</th>'+
-    '<th class="l">First seen</th><th class="l">Seen in</th></tr></thead><tbody>';
+    '<th data-k="ops">Operators</th><th data-k="prior">A year ago</th>'+
+    '<th data-k="regions">Regions</th><th data-k="growth">Growth</th>'+
+    '<th class="l">Age</th><th class="l q">Why it is here</th></tr></thead><tbody>';
   D.forEach(function(r,i){
-    var g=(r.growth==null)?'<span class="na">&ndash;</span>':
-      '<span class="'+(r.growth>=25?'up':'')+'">'+(r.growth>=0?'+':'')+Math.round(r.growth)+'%</span>';
-    var tag=r.emerging?'<span class="newtag">emerging</span>':'';
-    h+='<tr data-ops="'+(r.distinct_operators||0)+'" data-c12="'+(r.count_12m||0)+
-       '" data-prior="'+(r.count_prior_12m||0)+'" data-growth="'+(r.growth==null?-9999:r.growth)+
+    var g=(r.growth_yoy==null)?'<span class="na">&ndash;</span>':
+      '<span class="'+(r.growth_yoy>=25?'up':'')+'">'+(r.growth_yoy>=0?'+':'')+Math.round(r.growth_yoy)+'%</span>';
+    var tag=r.emerging?'<span class="newtag">new</span>':(r.established?'':'');
+    h+='<tr data-ops="'+(r.distinct_operators||0)+'" data-prior="'+(r.operators_prior_12m||0)+
+       '" data-regions="'+(r.regions||0)+'" data-growth="'+(r.growth_yoy==null?-9999:r.growth_yoy)+
        '"><td class="rk">'+(i+1)+'</td><td class="nm">'+r.phrase+' '+tag+'</td>'+
        '<td class="num">'+num(r.distinct_operators)+'</td>'+
-       '<td class="num">'+num(r.count_12m)+'</td><td class="num">'+num(r.count_prior_12m)+'</td>'+
-       '<td class="num g12">'+g+'</td><td class="l">'+(r.first_seen||'&ndash;')+'</td>'+
-       '<td class="l">'+((r.sources||[]).join(', ')||'&ndash;')+'</td></tr>';});
-  return h+'</tbody></table><div class="note"><b>The open layer &mdash; the only place a niche you have never heard of can appear.</b> '+
-    'The other tabs re-rank 25 <i>pre-defined</i> niches; by construction they can never surface a new one. This tab is the <b>residue</b>: phrases mined from new company names and new clinic names that match <b>no</b> known niche.<br>'+
-    '<b>How a brand is told apart from a niche:</b> a real service is used by many unrelated operators; a brand is used many times by one. So a phrase must appear across <b>&ge;6 distinct operators</b>, in <b>&ge;3 regions</b>, at &le;3 mentions per operator, and be rising. That kills brand names, franchises, surnames and place names structurally &mdash; not with a blocklist.<br>'+
-    '<b>Read it as a question, not an answer.</b> These are unvetted strings. Most will be nothing. The point is that the machine is now able to be surprised.</div>';
+       '<td class="num">'+num(r.operators_prior_12m)+'</td>'+
+       '<td class="num">'+num(r.regions)+'</td>'+
+       '<td class="num g12">'+g+'</td><td class="l">'+(r.age||'')+'</td>'+
+       '<td class="l q">'+(r.why||'')+'</td></tr>';});
+  return h+'</tbody></table><div class="note"><b>The open layer &mdash; the only place a niche you have never heard of can appear.</b> Every other tab re-ranks 25 <i>pre-defined</i> niches and by construction can never surface a new one. This is the <b>residue</b>: phrases mined from new company and clinic names that match <b>no</b> known niche.<br>'+
+    '<b>How a real service is told apart from a brand:</b> a service is used by many unrelated operators; a brand is used many times by one. So a phrase must appear across <b>&ge;6 distinct operators</b>, in <b>&ge;3 regions</b>, at a low mentions-per-operator ratio, and have risen by more than arrival noise can explain (z &ge; 2.4 &mdash; a plain "+25% growth" rule surfaced 22 junk rows per run: surnames, towns, brand words). That kills brands, franchises, surnames and place names <b>structurally</b>, not with a blocklist.<br>'+
+    '<b>What it can never see:</b> an existing clinic quietly adding a service line. That files no company and registers no location &mdash; it just changes a page on its website. Plausibly how ADHD actually spread. So this catches the second wave, not the first.</div>';
 }
 document.getElementById('dcbody').innerHTML=discTable()+risingQ()+drugDisc();
 document.getElementById('ctbody').innerHTML=catTable();
@@ -513,7 +530,7 @@ function risingQ(){
 // New UK medicine licences for large-population conditions.
 function catTable(){
   var C=RADAR.cats||[];
-  if(!C.length)return '<div class="msg">No new large-population medicine licences found this run.</div>';
+  if(!C.length)return srcMsg('cats','No new large-population medicine licences in the window. Most of the register is rare oncology, which is stripped out.');
   var h='<table><thead><tr><th class="l">#</th><th class="l">Drug</th><th class="l">Condition</th>'+
     '<th class="l">Licensed</th><th class="l">Why it matters</th></tr></thead><tbody>';
   C.forEach(function(r,i){
@@ -553,7 +570,7 @@ document.querySelectorAll('.panel').forEach(wireSort);
 // window is why the ADHD boom (2021-23) was previously un-backtestable.
 var PRESC = RADAR.presc||[];
 document.getElementById('prbody').innerHTML=(PRESC.length?
-  tableRows(PRESC,'Items / mo',{drug:true,firstCol:'Niche'}):'<div class="msg">Prescribing unavailable this run.</div>')+
+  tableRows(PRESC,'Items / mo',{drug:true,firstCol:'Niche'}):srcMsg('presc','No prescribing rows.'))+
   '<div class="note"><b>T4 &middot; the latest tier, and the highest-confidence.</b> NHS items dispensed in England, from <b>NHSBSA\'s own open data</b> &mdash; 76 verified BNF chemical codes, 12 years of history, refreshed monthly (~2.5 months in arrears, not the 12+ we first assumed). '+
   '<b>Read T4 twice.</b> Prescribing can rise because the condition is genuinely growing &mdash; or because the NHS started FUNDING a treatment, which shrinks the private market for it. The data cannot separate those two, and neither can we. '+
   '9 niches have no valid NHS drug proxy at all (aesthetics, diagnostics, dental, tongue-tie, longevity, MSK, audiology, eye, private GP) and are marked <i>n/a</i>, never dashed.</div>';

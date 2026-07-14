@@ -363,11 +363,16 @@ def rtt():
             "name": "All specialties (England)" if is_total else tfn,
             # The roll-up row is a benchmark, not a niche - never map it.
             "niche": None if is_total else NICHE_BY_SPECIALTY.get(tfn),
-            "latest": total,
+            # latest MUST be the quantity g1/g3/g12 are computed on, or the dashboard's
+            # denominator recovery (base = latest / (1 + g12/100)) produces a fiction.
+            # We measure DETERIORATION IN ACCESS, so that quantity is the over-18-week
+            # count, not the total waiting list. The total is still carried, as `total`.
+            "latest": over18,
             "g1": _pct(over18, (m1.get(tfn) or {}).get("over18")),
             "g3": _pct(over18, (m3.get(tfn) or {}).get("over18")),
             "g12": _pct(over18, (m12.get(tfn) or {}).get("over18")),
             "over18": over18,
+            "total": total,
             "pct18": round(100.0 * over18 / total, 1),
             # extras, consistent with the other tiers
             "over52": a["over52"],

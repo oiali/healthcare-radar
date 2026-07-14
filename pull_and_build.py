@@ -41,6 +41,12 @@ from datetime import datetime, timezone, date, timedelta
 UA = {"User-Agent": "healthcare-radar"}
 BROWSER_UA = {"User-Agent": "Mozilla/5.0 (compatible; healthcare-radar)"}
 DIAG = {}
+# data.json key -> "ok" | "failed", one entry per source-backed payload key. A FAILED
+# source must never render as a legitimate empty result ("no new licences found this
+# run") - that is the bug class behind the NHSBSA null that once read as "prescribing
+# collapsed to zero". The front-end reads this to say "source failed today" instead
+# of "there is nothing here".
+STATUS = {}
 
 
 def get_json(url, headers=None, timeout=45):
@@ -101,7 +107,7 @@ def save(path, obj):
 # match as WHOLE WORDS. The old prefix-only matcher mis-classified 30 of 35 test
 # names ("Skinner"->skin->Aesthetics, "Brown"->brow, "Lipscomb"->lip).
 from taxonomy import NICHES, niche_of          # noqa: E402
-from drugs import DRUGS, NICHE_QUERY, NICHES_NO_PRESCRIBING   # noqa: E402
+from drugs import DRUGS, NICHES_NO_PRESCRIBING   # noqa: E402
 
 
 # ============================ Companies House: auto-discover niches from names
@@ -170,10 +176,15 @@ def grams(name):
     return out
 
 
+CH_PAGE_SIZE = 1000     # documented `size` range is 1..5000. aesthetics.py and
+                        # discovery2 page this same endpoint at 1000; 100 here was a
+                        # free 10x on the daily call count.
+
+
 def ch_page(sic, dfrom, dto, start):
     url = ("https://api.company-information.service.gov.uk/advanced-search/companies"
            f"?sic_codes={sic}&incorporated_from={dfrom}&incorporated_to={dto}"
-           f"&size=100&start_index={start}")
+           f"&size={CH_PAGE_SIZE}&start_index={start}")
     auth = base64.b64encode((CH_KEY + ":").encode()).decode()
     return get_json(url, {"Authorization": "Basic " + auth})
 
@@ -190,9 +201,26 @@ def name_terms(dfrom, dto):
             for it in items:
                 for g in grams(it.get("company_name")):
                     cnt[g] += 1
-            start += 100
-            if len(items) < 100:
+            start += CH_PAGE_SIZE
+            if len(items) < CH_PAGE_SIZE:
                 break
+    return cnt
+
+
+PRIOR_FILE = "data/ch_prior.json"
+
+
+def _prior_terms(dfrom, dto):
+    """The '3 months a year ago' comparison window is IMMUTABLE - an incorporation
+    date can never change - yet it was re-mined from Companies House in full every
+    day. Cached keyed by the window dates: one mine per month, when the window rolls
+    forward."""
+    cached = load(PRIOR_FILE) or {}
+    if cached.get("window") == [dfrom, dto] and cached.get("counts"):
+        return Counter(cached["counts"])
+    cnt = name_terms(dfrom, dto)
+    if cnt:             # never freeze a CH outage in as "zero prior incorporations"
+        save(PRIOR_FILE, {"window": [dfrom, dto], "counts": dict(cnt)})
     return cnt
 
 
@@ -202,7 +230,8 @@ def incorporations():
         return None
     t = date.today().replace(day=1)
     recent = name_terms(add_months(t, -3).isoformat(), t.isoformat())
-    prior = name_terms(add_months(t, -15).isoformat(), add_months(t, -12).isoformat())
+    prior = _prior_terms(add_months(t, -15).isoformat(),
+                         add_months(t, -12).isoformat())
     rows = []
     for term, c in recent.items():
         if c < 4:
@@ -217,54 +246,6 @@ def incorporations():
     return rows[:40]
 
 
-# ==================================================== T3b Adzuna job ads
-AZ_ID = os.environ.get("ADZUNA_APP_ID", "").strip()
-AZ_KEY = os.environ.get("ADZUNA_APP_KEY", "").strip()
-AZ_FILE = "data/adzuna_history.json"
-TERMS = ["aesthetics", "dermatology", "psychiatry", "ADHD", "menopause", "endocrinology",
-         "physiotherapy", "dentist", "optometrist", "audiology", "podiatry", "gynaecology",
-         "urology", "cosmetic surgery", "fertility IVF", "private GP"]
-
-
-def adzuna():
-    """T3 CAPACITY (support) - hiring to serve demand. Growth accrues from our own history."""
-    if not (AZ_ID and AZ_KEY):
-        return None
-    hist = load(AZ_FILE, {}) or {}
-    today = date.today().isoformat()
-    snap = hist.get(today, {})
-    for term in TERMS:
-        if term in snap:
-            continue
-        url = ("https://api.adzuna.com/v1/api/jobs/gb/search/1"
-               f"?app_id={AZ_ID}&app_key={AZ_KEY}&what={urllib.parse.quote(term)}"
-               "&results_per_page=1&content-type=application/json")
-        d = get_json(url)
-        if d and "count" in d:
-            snap[term] = d["count"]
-    hist[today] = snap
-    # keep 400 days
-    for k in sorted(hist)[:-400]:
-        hist.pop(k, None)
-    save(AZ_FILE, hist)
-
-    def back(days):
-        target = (date.today() - timedelta(days=days)).isoformat()
-        keys = [k for k in sorted(hist) if k <= target]
-        return hist.get(keys[-1]) if keys else None
-
-    b30, b90, b365 = back(30), back(90), back(365)
-    rows = []
-    for term, c in snap.items():
-        rows.append({"name": term.title(), "niche": niche_of(term), "latest": c,
-                     "g1": pct(c, (b30 or {}).get(term)),
-                     "g3": pct(c, (b90 or {}).get(term)),
-                     "g12": pct(c, (b365 or {}).get(term)),
-                     "accel": None})
-    rows.sort(key=lambda x: x["latest"], reverse=True)
-    return rows
-
-
 # ==================================================== T1 INTENT: Google Trends
 SERP = os.environ.get("SERPAPI_KEY", "").strip()
 CORE_Q = ["Mounjaro", "Wegovy", "ADHD assessment", "menopause clinic",
@@ -277,12 +258,28 @@ TERMS_FILE = "data/trend_terms.json"
 
 def discovered_terms(inc_rows, cqc_rows, limit=5):
     """Feed the phrases DISCOVERED by the supply-side sources back into search.
-    This is what stops T1 being a fixed watchlist of terms I picked."""
+    This is what stops T1 being a fixed watchlist of terms I picked.
+
+    Only real, searchable phrases may pass. aesthetics.py's synthetic aggregate rows
+    ("ALL aesthetics-named incorporations", "Save Face accredited clinics (register
+    size)") carry the biggest `latest` values in the list, so unfiltered they sat
+    permanently in the top discovered slots and burned ~2 paid SerpApi searches a
+    week on queries that can never return a timeline."""
+    try:
+        from aesthetics import TOTAL_ROW as _AT, SF_ROW as _AS
+        summary_rows = {_AT, _AS}
+    except Exception:                   # keep the filter even if the import breaks
+        summary_rows = {"ALL aesthetics-named incorporations",
+                        "Save Face accredited clinics (register size)"}
     cands = []
     for r in (cqc_rows or []) + (inc_rows or []):
         n = r.get("name") or ""
+        if n in summary_rows:           # aesthetics' summary rows are not phrases
+            continue
         if len(n.split()) < 2:          # need a real phrase to be a searchable query
             continue
+        if "(" in n or ")" in n or n.startswith("ALL "):
+            continue                    # aggregate / annotated rows are not queries
         cands.append((r.get("latest") or 0, n))
     cands.sort(reverse=True)
     out = []
@@ -401,7 +398,37 @@ def parse_date(s):
     return None
 
 
-def cqc():
+CQC_ODS_PATH = os.path.join(tempfile.gettempdir(), "cqc.ods")
+
+
+def load_ods_rows(path):
+    """Parse the .ods content.xml ONCE into an in-memory [(sheet, [cell, ...])] list.
+
+    investability.ods_rows is the careful parser (covered-table-cells, repeated rows)
+    that targets.scan_providers and discovery2 already stream with, so every consumer
+    of the shared parse sees identical rows; the local ods_rows is only the fallback
+    if that import breaks. Cell strings are interned through a memo - the file is
+    ~57k rows whose sector/region/flag cells repeat massively, so the list costs tens
+    of MB rather than hundreds."""
+    try:
+        from investability import ods_rows as _parser
+    except Exception:
+        _parser = ods_rows
+    memo = {}
+    out = []
+    for sheet, row in _parser(path):
+        out.append((memo.setdefault(sheet, sheet),
+                    [memo.setdefault(c, c) for c in row]))
+    return out
+
+
+def fetch_cqc_ods():
+    """Download the CQC active-locations file and parse it ONCE for every consumer.
+
+    Returns {"anchor": date, "rows": [(sheet, row), ...]} or None. This 24MB file
+    used to be iterparsed FOUR times per build (cqc(), investability2's provider
+    scan, discovery2's two-pass mine) at ~1-2 min per pass on an Actions runner -
+    the single biggest piece of the 20-minute builds."""
     url = cqc_file_url()
     DIAG["url"] = url or "page fetch failed / link not found"
     if not url:
@@ -409,13 +436,26 @@ def cqc():
     m = re.search(r"/(\d{2})_([A-Za-z]+)_(\d{4})_HSCA", url)
     anchor = (date(int(m.group(3)), MONTHS.get(m.group(2).lower(), 1), int(m.group(1)))
               if m else date.today())
-    path = os.path.join(tempfile.gettempdir(), "cqc.ods")
     try:
-        download(url, path)
-        DIAG["bytes"] = os.path.getsize(path)
+        download(url, CQC_ODS_PATH)
+        DIAG["bytes"] = os.path.getsize(CQC_ODS_PATH)
     except Exception as e:
         DIAG["download_error"] = repr(e)[:160]
         return None
+    try:
+        rows = load_ods_rows(CQC_ODS_PATH)
+    except Exception as e:
+        DIAG["parse_error"] = repr(e)[:160]
+        return None
+    DIAG["ods_rows_parsed"] = len(rows)
+    return {"anchor": anchor, "rows": rows}
+
+
+def cqc(ods):
+    """T3 CAPACITY - new clinic registrations, counted off the SHARED parse."""
+    if not ods:
+        return None
+    anchor = ods["anchor"]
 
     W = {"m1": (1, 0), "m1p": (2, 1), "m3": (3, 0), "m3p": (6, 3),
          "m12": (12, 0), "m12p": (24, 12)}
@@ -425,7 +465,7 @@ def cqc():
     rows_seen = kept = 0
     sectors = Counter()
 
-    for sheet, row in ods_rows(path):
+    for sheet, row in ods["rows"]:
         if i_name is None:
             low = [c.strip().lower() for c in row]
             short = [c if len(c) < 70 else "" for c in low]
@@ -509,10 +549,10 @@ def agg(rows):
     return {k: v[1] / v[0] for k, v in m.items() if v[0]}
 
 
-def whats_moved(tr, inc, cq):
+def whats_moved(tr, inc, cq, presc=None):
     """Compare the early tiers (T1-T3) to ~7 days ago. T4 is client-side so excluded."""
     snap = {"date": date.today().isoformat(),
-            "t1": agg(tr), "t2": agg(inc), "t3": agg(cq)}
+            "t1": agg(tr), "t2": agg(inc), "t3": agg(cq), "t4": agg(presc or [])}
     hist = load(HIST_FILE, []) or []
     hist = [h for h in hist if h.get("date") != snap["date"]] + [snap]
     hist = hist[-60:]
@@ -525,10 +565,10 @@ def whats_moved(tr, inc, cq):
     prev = older[-1]
 
     def fired(h, n):
-        return sum(1 for t in ("t1", "t2", "t3")
+        return sum(1 for t in ("t1", "t2", "t3", "t4")
                    if (h.get(t) or {}).get(n) is not None and h[t][n] >= RISING)
     names = set()
-    for t in ("t1", "t2", "t3"):
+    for t in ("t1", "t2", "t3", "t4"):
         names |= set(snap[t])
     out = []
     for n in names:
@@ -540,16 +580,31 @@ def whats_moved(tr, inc, cq):
 
 
 # ------------------------------------------------------------------- render
-def safe(fn, label, *a, **k):
-    """A dead source must degrade the dashboard, never kill the build."""
+def safe(fn, label, *a, key=None, **k):
+    """A dead source must degrade the dashboard, never kill the build - and it must
+    never MASQUERADE as a real empty result either. `key` is the data.json key this
+    call feeds; STATUS[key] records ok/failed so the front-end can print "source
+    failed today" rather than "there is nothing here". A None return is a failure by
+    module convention (unreachable / no API key) - distinct from an empty list,
+    which is a real result."""
     try:
         r = fn(*a, **k)
-        print(f"  {label}: {len(r) if hasattr(r,'__len__') else 'ok'}")
-        return r
     except Exception as e:
         print(f"  {label}: FAILED {repr(e)[:120]}")
         DIAG.setdefault("failed_sources", []).append(label)
+        if key:
+            STATUS[key] = "failed"
         return None
+    if r is None:
+        print(f"  {label}: unavailable (source returned None)")
+        DIAG.setdefault("failed_sources", []).append(label)
+        if key:
+            STATUS[key] = "failed"
+        return None
+    print(f"  {label}: {len(r) if hasattr(r, '__len__') else 'ok'}")
+    if key:
+        STATUS[key] = "ok"
+    return r
 
 
 def main():
@@ -557,11 +612,11 @@ def main():
     import discovery2 as disc_mod, interpret as interp
     import nhsbsa_epd, trends_open as t_open, catalysts as cat_mod
 
-    inc = safe(incorporations, "T2 incorporations") or []
-    cq = safe(cqc, "T3 cqc") or []
-    aes = safe(aes_mod.aesthetics, "T2b aesthetics") or []
-    waits = safe(nhs_rtt.rtt, "T0 nhs waits") or []
-    ods = os.path.join(tempfile.gettempdir(), "cqc.ods")
+    inc = safe(incorporations, "T2 incorporations", key="inc") or []
+    ods = safe(fetch_cqc_ods, "CQC ods (one download, ONE shared parse)")
+    cq = safe(cqc, "T3 cqc", ods, key="cqc") or []
+    aes = safe(aes_mod.aesthetics, "T2b aesthetics", key="aes") or []
+    waits = safe(nhs_rtt.rtt, "T0 nhs waits", key="waits") or []
 
     # Investability on ECONOMIC OWNERS, not legal entities. A PE group holding 12 Ltds
     # looked like 12 independents - that flattered every fragmentation number, and it is
@@ -569,35 +624,46 @@ def main():
     # rush nobody has consolidated because it just appeared) from fragmentation-of-
     # maturity (a real, tired, sellable population). Opposite trades; HHI scored them alike.
     invest = safe(inv2.investability2, "investability (economic owners)", niche_of,
-                  path=ods, ch_budget=250) or {}
+                  path=CQC_ODS_PATH, rows=(ods or {}).get("rows"),
+                  ch_budget=250, key="invest") or {}
+    if not invest:
+        STATUS["invest"] = "failed"     # investability2 signals failure with {}
 
     # THE OPEN LAYER. 25 fixed niches structurally cannot surface the next ADHD.
     # This is the residue: rising phrases that match NO known niche - the only place
     # a genuinely new niche can appear. Distinct-operator count is the discriminator
     # that separates a real service from one company's brand.
-    ops = safe(disc_mod.mine_cqc_ods, "cqc operator-level mine", ods) or {}
-    disc = safe(disc_mod.discovery2, "discovery (open layer)", inc, ops or cq, aes) or []
+    ops = safe(disc_mod.mine_cqc_ods, "cqc operator-level mine",
+               (ods or {}).get("rows") or CQC_ODS_PATH) or {}
+    disc = safe(disc_mod.discovery2, "discovery (open layer)", inc, ops or cq, aes,
+                key="disc") or []
+    if not ops:
+        # Without the CQC operator corpus the open layer cannot surface anything:
+        # an empty disc here is a FAILED source, not "nothing cleared the bar".
+        STATUS["disc"] = "failed"
+    ods = None        # ~57k parsed rows; every consumer has run - release them
 
     # T4 now runs SERVER-SIDE off NHSBSA's own Open Data Portal: 12 years of history
     # (back to Jan 2014), no API key, and it answers datacentre IPs. OpenPrescribing
     # served only 60 months and 403s Actions, which is why T4 used to be client-side.
     # Real lag is ~2.5 months, not the 12+ we assumed.
-    presc = safe(nhsbsa_epd.epd, "T4 prescribing (NHSBSA)") or []
+    presc = safe(nhsbsa_epd.epd, "T4 prescribing (NHSBSA)", key="presc") or []
 
     # SEARCH-SIDE OPEN LAYER: Google's own RISING queries, harvested from broad seeds on
     # a rotating budget. A fixed watchlist can never surface a term nobody thought of;
     # this can. Rows whose niche is None are the discovery rows.
-    topen = safe(t_open.trends_open, "T1b rising queries") or []
+    topen = safe(t_open.trends_open, "T1b rising queries", key="topen") or []
 
     # CATALYSTS: new UK medicine licences for LARGE-population conditions. The earliest,
     # hardest signal there is - a licence lands years before the market. Wegovy was
     # licensed 24 Sep 2021, ~23 months before the UK weight-loss boom. Blind to ADHD
     # (no new molecule created it), so it is a side panel, never a scoring tier.
-    cats = safe(cat_mod.catalysts, "Catalysts (MHRA licences)") or []
+    cats = safe(cat_mod.catalysts, "Catalysts (MHRA licences)", key="cats") or []
     tracked = [r for r in presc if r.get("kind") != "discovery"]
     drugdisc = [r for r in presc if r.get("kind") == "discovery"]
+    STATUS["drugdisc"] = STATUS.get("presc", "failed")  # same source, 2nd payload key
 
-    tr = safe(trends, "T1 trends", discovered_terms(inc, cq + aes)) or []
+    tr = safe(trends, "T1 trends", discovered_terms(inc, cq + aes), key="trends") or []
     # Terms fed back from T2/T3 keep found=True and are shown, but get ZERO votes:
     # if T1 only lights up because T2 told it what to search for, "T1 and T2 agree"
     # is plumbing, not evidence. The front-end enforces this via aggB(independentOnly).
@@ -605,7 +671,7 @@ def main():
     DIAG["t1_independent"] = len(tr_indep)
     DIAG["t1_auto_found"] = len(tr_found)
     jobs = []          # Adzuna REMOVED: its ToS forbids aggregation/vacancy counts.
-    moved = whats_moved(tr_indep, inc, cq)
+    moved = whats_moved(tr_indep, inc, cq, tracked)
 
     # targets.py is NOT called. It builds a list of named clinic owners annotated with
     # an INFERRED claim that they may want to sell - a roll-up tool, and this is a
@@ -617,7 +683,8 @@ def main():
     data = {"waits": waits, "trends": tr, "inc": inc, "aes": aes, "cqc": cq,
             "jobs": jobs, "moved": moved, "invest": invest, "disc": disc,
             "presc": tracked, "drugdisc": drugdisc, "topen": topen, "cats": cats,
-            "diag": DIAG, "drugs": DRUGS, "nopresc": NICHES_NO_PRESCRIBING}
+            "status": STATUS, "diag": DIAG, "drugs": DRUGS,
+            "nopresc": NICHES_NO_PRESCRIBING}
     payload = json.dumps(data).replace("</", "<\\/")
     save("data.json", dict(updated=datetime.now(timezone.utc).isoformat(), **data))
     with open("dashboard.html", "w", encoding="utf-8") as f:

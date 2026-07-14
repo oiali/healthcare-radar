@@ -347,8 +347,102 @@ def score(indie_owners, hhi, top5, mat):
     return int(round(raw * factor))
 
 
+# ------------------------------------------------- persistent lookup cache (disk)
+# The Companies House dedupe used to re-spend its ENTIRE daily budget (250 calls x
+# ~0.55s throttle = 4-6 min) re-checking the SAME ~83 providers: CHClient's cache is
+# in-memory only, so it died with the process, and the enrichment order is
+# deterministic, so coverage could never grow. This file persists ONE compact entry
+# per provider - the ch_match result plus the two facts the owner dedupe actually
+# consumes (director_keys, reg_office_key) - so each day's budget EXTENDS coverage
+# instead of re-buying yesterday's. Raw CHClient bodies are deliberately NOT
+# persisted: at ~10-15KB a provider the file would grow to hundreds of MB; this
+# stays a few hundred bytes per provider.
+CH_CACHE_FILE = os.environ.get("CH_CACHE_PATH", "data/ch_cache.json")
+CH_CACHE_MAX = 20000        # providers; oldest entries are trimmed first
+
+
+def _load_ch_cache(path):
+    try:
+        with open(path) as fh:
+            d = json.load(fh)
+        return d if isinstance(d, dict) else {}
+    except Exception:
+        return {}
+
+
+def _save_ch_cache(path, cache):
+    try:
+        if len(cache) > CH_CACHE_MAX:
+            for k in list(cache)[:len(cache) - CH_CACHE_MAX]:
+                cache.pop(k, None)
+        d = os.path.dirname(path)
+        if d:
+            os.makedirs(d, exist_ok=True)
+        tmp = path + ".tmp"
+        with open(tmp, "w") as fh:
+            json.dump(cache, fh)
+        os.replace(tmp, path)
+        return True
+    except Exception:
+        return False
+
+
+def _cache_put(cache, r, client):
+    """Persist one provider's lookup result - but never a budget artifact.
+
+    ch_match reports "unmatched ... not searched" when the client could not actually
+    ask (budget spent / breaker tripped / transport died). Freezing that in would
+    poison the provider forever, so anything that smells of an unanswered question
+    stays uncached and is simply re-bought on a later run - the safe direction."""
+    if cache is None:
+        return
+    ch = r.get("ch") or {}
+    status = ch.get("status")
+    if status not in ("matched", "unmatched", "ambiguous"):
+        return
+    if not client.live:
+        return                          # result may be shaped by the dead budget
+    if status == "unmatched" and "not searched" in (ch.get("note") or ""):
+        return
+    entry = {"name": r["provider_name"], "ch": dict(ch),
+             "fetched": date.today().isoformat()}
+    if status == "matched":
+        f = r.get("ch_facts") or {}
+        if f.get("partial"):
+            return                      # truncated officer list - do not freeze it
+        entry["facts"] = {"director_keys": list(f.get("director_keys") or []),
+                          "reg_office_key": f.get("reg_office_key")}
+    cache[r["provider_id"]] = entry
+
+
+def _scan(niche_of, path, rows, niches, anchor, sector_fallback, name_guard):
+    """targets.scan_providers, fed either a file path or the shared in-memory rows.
+
+    pull_and_build.fetch_cqc_ods() already parsed the 24MB .ods once for every
+    consumer; re-streaming it here was one of the four daily iterparse passes.
+    targets.py stays untouched: scan_providers resolves `ods_rows` as a global in
+    its own module, so we swap that binding to a replay of the parsed rows for the
+    duration of the call and restore it."""
+    if rows is None:
+        return scan_providers(niche_of, path, niches=niches, anchor=anchor,
+                              sector_fallback=sector_fallback, name_guard=name_guard)
+    import targets as _tgt
+    prev = _tgt.ods_rows
+
+    def _replay(_path):
+        return iter(rows)
+
+    _tgt.ods_rows = _replay
+    try:
+        return scan_providers(niche_of, path or "<in-memory rows>", niches=niches,
+                              anchor=anchor, sector_fallback=sector_fallback,
+                              name_guard=name_guard)
+    finally:
+        _tgt.ods_rows = prev
+
+
 # ============================================== Companies House: only what dedupe needs
-def _enrich_for_dedupe(client, rows, anchor, per_niche_order):
+def _enrich_for_dedupe(client, rows, anchor, per_niche_order, cache=None):
     """Spend the Companies House budget on the ONE thing the dedupe needs: who the
     directors are and where the registered office is.
 
@@ -376,7 +470,7 @@ def _enrich_for_dedupe(client, rows, anchor, per_niche_order):
             break
         i += 1
 
-    checked = skipped_personal = matched = 0
+    checked = skipped_personal = matched = cached_hits = 0
     for r in queue:
         if not client.live:
             break
@@ -387,14 +481,28 @@ def _enrich_for_dedupe(client, rows, anchor, per_niche_order):
                                "no company to link, treated as its own owner"}
             skipped_personal += 1
             continue
+        hit = cache.get(r["provider_id"]) if cache is not None else None
+        if hit and hit.get("name") == r["provider_name"] and hit.get("ch"):
+            # A previous run already bought this provider's lookups. Zero calls
+            # today - the budget goes on providers never checked, so coverage GROWS.
+            r["ch"] = dict(hit["ch"])
+            if hit.get("facts") is not None:
+                r["ch_facts"] = {
+                    "director_keys": list(hit["facts"].get("director_keys") or []),
+                    "reg_office_key": hit["facts"].get("reg_office_key")}
+            checked += 1
+            cached_hits += 1
+            if r["ch"].get("status") == "matched":
+                matched += 1
+            continue
         try:
             r["ch"] = ch_match(client, r["provider_name"], r.get("postcodes") or ())
             checked += 1
-            if r["ch"]["status"] != "matched":
-                continue
-            r["ch_facts"] = ch_facts(client, r["ch"]["company_number"], anchor,
-                                     want_charges=False, want_psc=False)
-            matched += 1
+            if r["ch"]["status"] == "matched":
+                r["ch_facts"] = ch_facts(client, r["ch"]["company_number"], anchor,
+                                         want_charges=False, want_psc=False)
+                matched += 1
+            _cache_put(cache, r, client)
         except Exception as e:
             # One malformed payload for one company must cost that company's signals, not
             # the whole run.
@@ -403,6 +511,7 @@ def _enrich_for_dedupe(client, rows, anchor, per_niche_order):
                        "confidence": None, "note": "lookup failed: %r" % e}
 
     DIAG["ch"] = {"searched": checked, "matched": matched,
+                  "from_cache": cached_hits,
                   "skipped_as_personal": skipped_personal,
                   "calls": client.calls, "budget": client.budget,
                   "blocked": client.blocked, "exhausted": client.exhausted}
@@ -412,7 +521,8 @@ def _enrich_for_dedupe(client, rows, anchor, per_niche_order):
 # ========================================================================== main
 def investability2(niche_of, path=None, niches=None, ch=True,
                    ch_budget=None, ch_client=None, anchor=None,
-                   sector_fallback=True, name_guard=True):
+                   sector_fallback=True, name_guard=True,
+                   rows=None, ch_cache_path=None):
     """Fragmentation recomputed on ECONOMIC OWNERS, plus the infancy/maturity read.
 
     Returns {niche: {
@@ -435,6 +545,13 @@ def investability2(niche_of, path=None, niches=None, ch=True,
     With ch=False, or no CH_API_KEY, the dedupe does not run: owners_economic is None, the
     legal numbers are reported UNCHANGED, and dedupe_status says so loudly. It does NOT
     quietly present the flattering numbers as if they were the honest ones.
+
+    rows: the shared in-memory [(sheet, row), ...] parse from
+    pull_and_build.fetch_cqc_ods(). When given, the .ods is never opened here -
+    re-streaming it was one of the four daily iterparse passes. ch_cache_path
+    overrides where the persistent lookup cache lives (used by the self-test); by
+    default a self-constructed client persists to CH_CACHE_FILE and an injected
+    ch_client touches no disk.
     """
     DIAG.clear()
     if not (_INV_OK and _TGT_OK):
@@ -444,37 +561,39 @@ def investability2(niche_of, path=None, niches=None, ch=True,
     anchor = anchor or date.today()
 
     # ---------------------------------------------------------------------- the file
-    path = path or os.environ.get("CQC_ODS_PATH") or None
-    if not path:
-        cached = os.path.join(tempfile.gettempdir(), "cqc.ods")
-        if os.path.exists(cached) and os.path.getsize(cached) > 1_000_000:
-            path = cached
-            DIAG["source"] = "reused " + cached
-    if not path:
-        try:
-            url = cqc_file_url()
-            DIAG["url"] = url or "CQC page fetch failed"
-            if not url:
+    if rows is not None:
+        DIAG["source"] = "shared in-memory parse (pull_and_build.fetch_cqc_ods)"
+    else:
+        path = path or os.environ.get("CQC_ODS_PATH") or None
+        if not path:
+            cached = os.path.join(tempfile.gettempdir(), "cqc.ods")
+            if os.path.exists(cached) and os.path.getsize(cached) > 1_000_000:
+                path = cached
+                DIAG["source"] = "reused " + cached
+        if not path:
+            try:
+                url = cqc_file_url()
+                DIAG["url"] = url or "CQC page fetch failed"
+                if not url:
+                    return {}
+                m = re.search(r"/(\d{2})_([A-Za-z]+)_(\d{4})_HSCA", url)
+                if m:
+                    try:
+                        anchor = date(int(m.group(3)), MONTHS.get(m.group(2).lower(), 1),
+                                      int(m.group(1)))
+                    except ValueError:
+                        pass
+                path = os.path.join(tempfile.gettempdir(), "cqc.ods")
+                _download(url, path)
+                DIAG["source"] = "downloaded " + url
+            except Exception as e:
+                DIAG["download_error"] = repr(e)[:200]
                 return {}
-            m = re.search(r"/(\d{2})_([A-Za-z]+)_(\d{4})_HSCA", url)
-            if m:
-                try:
-                    anchor = date(int(m.group(3)), MONTHS.get(m.group(2).lower(), 1),
-                                  int(m.group(1)))
-                except ValueError:
-                    pass
-            path = os.path.join(tempfile.gettempdir(), "cqc.ods")
-            _download(url, path)
-            DIAG["source"] = "downloaded " + url
-        except Exception as e:
-            DIAG["download_error"] = repr(e)[:200]
-            return {}
 
-    # -------------------------------------------------- one streaming pass, reused
+    # ------------------------------------ one pass over the file OR the shared parse
     try:
-        provs, meta = scan_providers(niche_of, path, niches=niches, anchor=anchor,
-                                     sector_fallback=sector_fallback,
-                                     name_guard=name_guard)
+        provs, meta = _scan(niche_of, path, rows, niches, anchor,
+                            sector_fallback, name_guard)
     except Exception as e:
         DIAG["parse_error"] = repr(e)[:200]
         return {}
@@ -485,7 +604,7 @@ def investability2(niche_of, path=None, niches=None, ch=True,
     # -------------------------------------------------------------- rows for dedupe
     # ONE row per provider (a legal entity), whatever niches it appears in. A provider in
     # two niches is one company and must be deduped once, not twice.
-    rows, by_niche = {}, defaultdict(list)
+    prows, by_niche = {}, defaultdict(list)
     for p in provs.values():
         if not p["niches"]:
             continue
@@ -499,38 +618,50 @@ def investability2(niche_of, path=None, niches=None, ch=True,
                    "confidence": None, "note": "Companies House not consulted"},
             "ch_facts": {},
         }
-        rows[p["provider_id"]] = r
+        prows[p["provider_id"]] = r
         for n in p["niches"]:
             by_niche[n].append(r)
     for n in by_niche:
         by_niche[n].sort(key=lambda r: r["provider_id"])
 
-    if not rows:
+    if not prows:
         return {}
 
     # ----------------------------------------------------------- Companies House
     client = ch_client or (CHClient(budget=ch_budget or CH_DEFAULT_BUDGET) if ch else None)
     dedupe_ran = bool(client is not None and client.key)
+    # Persist lookups across runs (data/ch_cache.json) so the daily budget EXTENDS
+    # coverage instead of re-buying the same deterministic ~budget/3 providers.
+    # An injected ch_client (tests) touches no disk unless ch_cache_path says so.
+    cache_path = ch_cache_path or (CH_CACHE_FILE if ch_client is None else None)
+    ch_cache = _load_ch_cache(cache_path) if (dedupe_ran and cache_path) else None
     if dedupe_ran:
-        _enrich_for_dedupe(client, list(rows.values()), anchor, by_niche)
-        pid2owner, owners, odiag = economic_owners(list(rows.values()))
+        if ch_cache is not None:
+            DIAG["ch_cache_loaded"] = len(ch_cache)
+        _enrich_for_dedupe(client, list(prows.values()), anchor, by_niche,
+                           cache=ch_cache)
+        if ch_cache is not None:
+            DIAG["ch_cache_saved"] = (len(ch_cache)
+                                      if _save_ch_cache(cache_path, ch_cache)
+                                      else "WRITE FAILED")
+        pid2owner, owners, odiag = economic_owners(list(prows.values()))
         DIAG["economic_owners"] = odiag
     else:
         # NOT "everyone is their own owner because we checked". "We did not check."
-        pid2owner = dict((pid, "OWN-" + pid) for pid in rows)
+        pid2owner = dict((pid, "OWN-" + pid) for pid in prows)
         owners = dict(("OWN-" + pid, {"owner_id": "OWN-" + pid, "providers": [pid],
                                       "n_providers": 1, "sites": r["sites"],
                                       "is_group": False, "link_reasons": []})
-                      for pid, r in rows.items())
+                      for pid, r in prows.items())
         DIAG["companies_house"] = ("skipped (no CH_API_KEY)" if not CH_KEY
                                    else "skipped (ch=False)")
 
     # An owner's FILE-WIDE site count is the sum of its providers' file-wide site counts.
     # That is what decides whether the OWNER is an acquirable independent or a group.
     owner_sites_total = Counter()
-    for pid, r in rows.items():
+    for pid, r in prows.items():
         owner_sites_total[pid2owner.get(pid, "OWN-" + pid)] += r["sites"]
-    prov_sites_total = dict((pid, r["sites"]) for pid, r in rows.items())
+    prov_sites_total = dict((pid, r["sites"]) for pid, r in prows.items())
 
     # -------------------------------------------------------------- per-niche maths
     out = {}
@@ -973,6 +1104,40 @@ def selftest():
     bad = os.path.join(tmp, "bad.ods")
     open(bad, "wb").write(b"not a zip")
     chk("corrupt file -> {}", investability2(_t_niche_of, path=bad, ch=False), {})
+
+    # -------------------------- 8. the persistent lookup cache + the shared parse
+    print("\n[8] persistent CH cache: the budget EXTENDS coverage instead of re-buying it")
+    cpath = os.path.join(tmp, "ch_cache.json")
+    c1 = CHClient(key="TEST", budget=60, fetch=_fake_ch(anchor), sleep=lambda s: None)
+    ra = investability2(_t_niche_of, path=ods, ch=True, ch_client=c1, anchor=anchor,
+                        ch_cache_path=cpath)
+    cov1 = ra["Dental / orthodontics"]["dedupe_coverage_pct"]
+    chk("run 1 spent its whole budget", c1.exhausted, True)
+    chk("cache file written", os.path.exists(cpath), True)
+    c2 = CHClient(key="TEST", budget=60, fetch=_fake_ch(anchor), sleep=lambda s: None)
+    rb = investability2(_t_niche_of, path=ods, ch=True, ch_client=c2, anchor=anchor,
+                        ch_cache_path=cpath)
+    cov2 = rb["Dental / orthodontics"]["dedupe_coverage_pct"]
+    chk("run 2, same budget: coverage GROWS (was flat forever before)",
+        cov2 > cov1, True)
+    c3 = CHClient(key="TEST", budget=5000, fetch=_fake_ch(anchor), sleep=lambda s: None)
+    investability2(_t_niche_of, path=ods, ch=True, ch_client=c3, anchor=anchor,
+                   ch_cache_path=cpath)                      # warm every provider
+    c4 = CHClient(key="TEST", budget=5000, fetch=_fake_ch(anchor), sleep=lambda s: None)
+    rd = investability2(_t_niche_of, path=ods, ch=True, ch_client=c4, anchor=anchor,
+                        ch_cache_path=cpath)
+    chk("fully-warm run costs ZERO Companies House calls", c4.calls, 0)
+    chk("...and still finds the hidden 12-Ltd group",
+        rd["Dental / orthodontics"]["owners_economic"], 239)
+    chk("...accountant trap still guarded from cache",
+        rd["Dental / orthodontics"]["hidden_groups"], 1)
+    from investability import ods_rows as _odsr
+    mem = [(s, list(r)) for s, r in _odsr(ods)]
+    c5 = CHClient(key="TEST", budget=5000, fetch=_fake_ch(anchor), sleep=lambda s: None)
+    rm = investability2(_t_niche_of, rows=mem, ch=True, ch_client=c5, anchor=anchor,
+                        ch_cache_path=cpath)
+    chk("SHARED PARSE: in-memory rows, same owners, zero calls",
+        (rm["Dental / orthodontics"]["owners_economic"], c5.calls), (239, 0))
 
     print("\n" + "=" * 72)
     if fails:

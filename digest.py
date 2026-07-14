@@ -97,19 +97,21 @@ from datetime import date, timedelta
 RISING = 10.0          # must match pull_and_build.RISING - a tier "fires" at +10%
 MARGIN = 2.0           # hysteresis: ignore crossings that clear the line by less
 MIN_BASE = 8           # row-level: min count in BOTH windows before quoting a %
-MIN_WEIGHT = {"t1": 15.0, "t2": 8.0, "t3": 8.0}   # niche-level volume floor
+MIN_WEIGHT = {"t1": 15.0, "t2": 8.0, "t3": 8.0, "t4": 500.0}  # niche-level volume floor
 TOP_N = 3              # "entered the top of a tier" means the top 3
 BASELINE_DAYS = 6      # a baseline snapshot must be at least this old
 STALE_DAYS = 14        # ...and if it is older than this, say so
 
-TIER = ("t1", "t2", "t3")
+TIER = ("t1", "t2", "t3", "t4")
 TIER_NAME = {"t1": "search interest",
              "t2": "new company incorporations",
-             "t3": "new clinic registrations"}
+             "t3": "new clinic registrations",
+             "t4": "NHS prescribing"}
 TIER_SRC = {"t1": "Google Trends GB, 4-week mean vs the same 4 weeks 12 months ago",
             "t2": "Companies House, last 3 months vs the same 3 months a year ago",
-            "t3": "CQC monthly file, last 12 months vs the 12 before"}
-TIER_KEY = {"t1": "trends", "t2": "inc", "t3": "cqc"}
+            "t3": "CQC monthly file, last 12 months vs the 12 before",
+            "t4": "NHSBSA English Prescribing Dataset, England, 12-month growth"}
+TIER_KEY = {"t1": "trends", "t2": "inc", "t3": "cqc", "t4": "presc"}
 
 STATE_FILE = "data/digest_state.json"
 

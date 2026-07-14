@@ -532,8 +532,14 @@ def mine_cqc_ods(path, anchor=None, sector_filter="independent healthcare"):
     blow-up in a nightly job is not.
 
     Windows are a FLOW, not a stock: we want what is being CREATED. A new niche has no stock.
+
+    `path` may also be the already-parsed [(sheet, row), ...] list built once by
+    pull_and_build.fetch_cqc_ods(). The daily build parses the 24MB file ONCE and the
+    two passes here become two cheap iterations of an in-memory list instead of two
+    of the four full iterparse passes the build used to pay for every day.
     """
-    if not _ODS_OK:
+    rows_mem = path if isinstance(path, (list, tuple)) else None
+    if rows_mem is None and not _ODS_OK:
         DIAG["cqc_miner"] = "investability.ods_rows unavailable"
         return []
 
@@ -551,7 +557,7 @@ def mine_cqc_ods(path, anchor=None, sector_filter="independent healthcare"):
                 return ""
             return (row[j] or "").strip()
 
-        for _sheet, row in ods_rows(path):
+        for _sheet, row in (rows_mem if rows_mem is not None else ods_rows(path)):
             if cols[0] is None:
                 # The first sheet in the real file is a README. The data sheet is the one
                 # whose header row carries a cell exactly equal to "location id".
@@ -1518,6 +1524,8 @@ def selftest():
     print("\n[3] CQC MINER - provider IDs and a three-period trajectory")
     ods = _fixture_ods(os.path.join(tmp, "cqc.ods"), anchor)
     cq = mine_cqc_ods(ods, anchor=anchor)
+    cq_mem = mine_cqc_ods([(s, list(r)) for s, r in ods_rows(ods)], anchor=anchor)
+    chk("SHARED PARSE: pre-parsed rows give identical output", cq_mem == cq, True)
     by = dict((r["name"], r) for r in cq)
     chk("miner returned rows", len(cq) > 0, True)
     chk("'microbiome' 14 DISTINCT providers", by["microbiome"]["operators"], 14)
