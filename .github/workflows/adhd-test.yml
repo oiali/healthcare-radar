@@ -32,6 +32,9 @@ jobs:
           python-version: "3.11"
 
       - name: Does the panel see the ADHD boom?
+        env:
+          PANEL_REBUILD: "1"          # the first run froze a 5-clinic cohort; rebuild it
+          PANEL_COHORT_SIZE: "400"
         run: python panel.py --adhd-test 2>&1 | tee adhd_test.txt
 
       - name: Commit the cohort + snapshot cache
